@@ -187,20 +187,24 @@ angular.module('WalkWithMeApp.controllers', ['angularMoment'])
             errorService.ShowError('Server appeared to be offline or in maintainance(HTTP), Please try again later');
             return;
         });
-
+    
+    $scope.walkNow = function(){
+        // Send the start command - if not started..start it now
+        // Go to walk now state
+    }
 })
 
 
 .controller('WalkCtrl', function($scope,$ionicLoading, $state, $window, $rootScope) {
 
     //Setting date
-    $scope.date = moment().format("DD"); 
+    $scope.date     = moment().format("DD"); 
     $scope.dateCopy = $scope.date;
-    $scope.month = moment().format("MMM"); 
-    $scope.year = moment().format("YY"); 
+    $scope.month    = moment().format("MMM"); 
+    $scope.year     = moment().format("YY"); 
     $scope.calTitle = moment().format("MMM YYYY");
-    $scope.weekOne = [];
-    $scope.weekTwo = [];
+    $scope.weekOne  = [];
+    $scope.weekTwo  = [];
 
     $scope.setThisWeek = function(){
         $scope.isFirstWeek = 1;
@@ -291,6 +295,22 @@ angular.module('WalkWithMeApp.controllers', ['angularMoment'])
 
        
     
+})
+
+
+.controller('WalkNowCtrl', function($window, $rootScope, $scope,$ionicLoading, $state, userService, errorService) {
+
+    alert("Walk Now");
+    // Set interval and get information from server
+    // If exceeding the planned time "doneWalking"
+    // Update the list of users and their walking states
+
+    // Done walking
+    $scope.doneWalking = function(){        
+        // Send the request to the server saying done
+         $state.go('menu');
+    }
+
 })
 
 .controller('InviteCtrl', function($window, $rootScope, $scope,$ionicLoading, $state, userService, errorService) {
