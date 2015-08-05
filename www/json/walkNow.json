@@ -1,0 +1,13 @@
+{"statusCode":0,"statusDes":"ok", 
+	"walkId":"905c5312-344d-11e5-9493-ec0ec40a1250",
+	"endTime" : 201511211310,
+	"participants" : [ {"id":"dc44f6db-83f3-4490-aa09-d754b13b4a4a", "nickName":"Grant Mueller", "profilePic":"img_people1.png", "status": 1},
+					   {"id":"dc44f6db-83f3-4490-aa09-d754b13b4a4b", "nickName":"Don casey", "profilePic":"img_people3.png", "status": 0},
+					   {"id":"dc44f6db-83f3-4490-aa09-d754b13b4a4c", "nickName":"Anna Johnson", "profilePic":"img_people2.png", "status": 1},
+					   {"id":"dc44f6db-83f3-4490-aa09-d754b13b4a4d", "nickName":"Amy Patrick", "profilePic":"img_no_image_yellow.png", "status": 1},
+					   {"id":"dc44f6db-83f3-4490-aa09-d754b13b4a4d", "nickName":"Jaime Robertson", "profilePic":"img_people6.png", "status": 0},
+					   {"id":"dc44f6db-83f3-4490-aa09-d754b13b4a4d", "nickName":"Julia Makinson", "profilePic":"img_people5.png", "status": 1},
+					   {"id":"dc44f6db-83f3-4490-aa09-d754b13b4a4d", "nickName":"Grace Walter", "profilePic":"img_people4.png", "status": 1}
+					 ],
+	"lastMessage" : { "messageType":0, "messageContent":"WALKIE_001", "from":"Amy", "to":"Dana"  }	
+}
