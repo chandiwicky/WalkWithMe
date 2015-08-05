@@ -298,7 +298,18 @@ angular.module('WalkWithMeApp.controllers', ['angularMoment'])
 })
 
 
-.controller('WalkNowCtrl', function($window, $rootScope, $scope,$ionicLoading, $state, userService, errorService) {
+.controller('WalkNowCtrl', function($window, $rootScope, $scope,$ionicLoading, $state, $ionicModal, userService, errorService) {
+
+    //Initialize the modal for walkies
+    $ionicModal.fromTemplateUrl('templates/walkies.html', function($ionicModal) {
+            $scope.modal = $ionicModal;
+            }, {
+            // Use our scope for the scope of the modal to keep it simple
+            scope: $scope,
+            // The animation we want to use for the modal entrance
+            animation: 'slide-in-up',
+            focusFirstInput: true
+            });
 
     // Set interval and get information from server
     // If exceeding the planned time "doneWalking"
@@ -330,6 +341,14 @@ angular.module('WalkWithMeApp.controllers', ['angularMoment'])
          $state.go('menu');
     }
 
+    $scope.showWalkies = function(){
+        $scope.modal.show();        
+    }
+
+    // Clear the modal window
+    $scope.$on('$destroy', function() {
+        $scope.modal.remove();
+    });
 })
 
 .controller('InviteCtrl', function($window, $rootScope, $scope,$ionicLoading, $state, userService, errorService) {
