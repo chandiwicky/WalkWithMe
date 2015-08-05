@@ -300,10 +300,29 @@ angular.module('WalkWithMeApp.controllers', ['angularMoment'])
 
 .controller('WalkNowCtrl', function($window, $rootScope, $scope,$ionicLoading, $state, userService, errorService) {
 
-    alert("Walk Now");
     // Set interval and get information from server
     // If exceeding the planned time "doneWalking"
     // Update the list of users and their walking states
+    userService.WalkNowService("905c5312-344d-11e5-9493-ec0ec40a1250")
+        .success(function(data) {
+
+            if ( data.statusCode > 0 ){
+                errorService.ShowError('Server appeared to be offline or in maintainance, Please try again later');
+                $state.go('menu');
+                return;
+            }            
+            
+            $scope.walkId = data.walkId;
+            $scope.participants = data.participants;
+            $scope.lastMessage = data.lastMessage;                                
+        })
+        .error(function(data) {
+            // htpp error
+            //show error message and exit the application
+            errorService.ShowError('Server appeared to be offline or in maintainance(HTTP), Please try again later');
+            $state.go('menu');
+            return;
+        }); 
 
     // Done walking
     $scope.doneWalking = function(){        

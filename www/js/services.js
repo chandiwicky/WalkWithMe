@@ -52,6 +52,14 @@ angular.module('WalkWithMeApp.services',[]).factory('userService', function($htt
                   url: 'http://localhost/WalkWithMe/php/index.php/WalkController/getHistory',
                   data : {"mobileNumber" : mobileNumber , "username" : username}
         });
+      },
+
+      WalkNowService : function (walkId){              
+              return $http({
+                  method : 'GET',
+                  url: '/json/walkNow.json',
+                  data : {"walkId" : walkId }
+              });
       }
       // end function
 
