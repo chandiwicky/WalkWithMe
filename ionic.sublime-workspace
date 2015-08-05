@@ -1,0 +1,291 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"mob",
+				"mobileNo"
+			],
+			[
+				"nick",
+				"nickName"
+			],
+			[
+				"re",
+				"registrationData"
+			],
+			[
+				"serv",
+				"services"
+			],
+			[
+				"log",
+				"loginSuccess"
+			],
+			[
+				"stat",
+				"statusCode"
+			]
+		]
+	},
+	"buffers":
+	[
+		{
+			"file": "www/js/controllers.js",
+			"settings":
+			{
+				"buffer_size": 4995,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "www/templates/registerStep1.html",
+			"settings":
+			{
+				"buffer_size": 683,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "www/json/stat.json",
+			"settings":
+			{
+				"buffer_size": 33,
+				"line_ending": "Windows"
+			}
+		}
+	],
+	"build_system": "",
+	"command_palette":
+	{
+		"height": 392.0,
+		"selected_items":
+		[
+			[
+				"",
+				"Package Control: Install Package"
+			]
+		],
+		"width": 512.0
+	},
+	"console":
+	{
+		"height": 125.0
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"file_history":
+	[
+		"/C/Users/chandimal/Documents/GitHub/WalkWithMe/www/js/services.js",
+		"/C/Users/chandimal/Documents/GitHub/WalkWithMe/www/json/register.json",
+		"/C/Users/chandimal/Documents/GitHub/WalkWithMe/www/index.html",
+		"/C/Users/chandimal/Documents/GitHub/WalkWithMe/www/json/stat.json",
+		"/C/Users/chandimal/Documents/GitHub/WalkWithMe/www/css/style.css",
+		"/C/Users/chandimal/Documents/GitHub/WalkWithMe/www/templates/history.html",
+		"/C/Users/chandimal/Documents/GitHub/WalkWithMe/www/templates/walkNow.html",
+		"/C/Users/chandimal/Documents/GitHub/WalkWithMe/www/templates/menu.html",
+		"/C/Users/chandimal/Documents/GitHub/WalkWithMe/www/templates/motivation.html",
+		"/C/Users/chandimal/Documents/GitHub/WalkWithMe/www/js/controllers.js",
+		"/C/Users/chandimal/Documents/GitHub/WalkWithMe/www/js/app.js",
+		"/C/Users/chandimal/Documents/GitHub/WalkWithMe/www/templates/start.html",
+		"/C/Users/chandimal/Documents/GitHub/WalkWithMe/www/js/angular.min.js",
+		"/C/Users/chandimal/Documents/GitHub/WalkWithMe/www/css/Home.css",
+		"/C/Users/chandimal/Documents/GitHub/WalkWithMe/www/templates/login.html",
+		"/C/Users/chandimal/Documents/GitHub/WalkWithMe/www/templates/register-step1.html",
+		"/C/Users/chandimal/Documents/GitHub/WalkWithMe/www/templates/register-step2.html",
+		"/C/Users/chandimal/Documents/GitHub/WalkWithMe/www/templates/newWalk.html",
+		"/C/Users/chandimal/Documents/GitHub/WalkWithMe/www/templates/join.html",
+		"/C/Users/chandimal/Documents/GitHub/WalkWithMe/www/LogIn.html",
+		"/C/Users/chandimal/Documents/GitHub/WalkWithMe/www/templates/chat-detail.html",
+		"/C/Users/chandimal/Documents/GitHub/WalkWithMe/server/startserver.bat",
+		"/D/Projects/JuztMove/walkwithme/temp/basic/www/css/style.css"
+	],
+	"find":
+	{
+		"height": 0.0
+	},
+	"find_in_files":
+	{
+		"height": 0.0,
+		"where_history":
+		[
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"localStorage",
+			"()\">"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 0,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "www/js/controllers.js",
+					"settings":
+					{
+						"buffer_size": 4995,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								3397,
+								3397
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 1278.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "www/templates/registerStep1.html",
+					"settings":
+					{
+						"buffer_size": 683,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								340,
+								340
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/HTML/HTML.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "www/json/stat.json",
+					"settings":
+					{
+						"buffer_size": 33,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								33,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JSON.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 35.0
+	},
+	"input":
+	{
+		"height": 31.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"replace":
+	{
+		"height": 0.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"show_minimap": true,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 303.0,
+	"status_bar_visible": true
+}

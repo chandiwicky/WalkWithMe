@@ -1,0 +1,22 @@
+<ion-pane>
+	<ion-header-bar class="panel-header-1">
+		<div class="logo">
+			<img src="img/logo_header.png"/>
+		</div>
+	</ion-header-bar>
+	<ion-content>
+		<div class="form-content">
+			<h3>Enter the pin code</h3>
+			<label>
+				<input type="text" placeholder="Eg: 2727" class="txtfield">
+			</label>
+			<button class="button-big-yellow marginTop40" ng-click="validate()">Validate Me</button>
+		</div>
+
+		<!-- show if there is a error -->
+		<div class="form-content hide">
+			<h3 class="paddingTop80">Having trouble</h3>
+			<button class="button-big-yellow marginTop24" ng-click="validate()">Send Another Code</button>
+		</div>
+	</ion-content>
+</ion-pane>

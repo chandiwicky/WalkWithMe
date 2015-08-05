@@ -1,0 +1,49 @@
+<ion-pane on-swipe-right="onSwipeRight()" data-ng-controller = "InviteCtrl">
+
+    <ion-header-bar class="panel-header-1 marginTop40">
+        <div class="logo">
+            <img src="img/logo_header.png"/>
+        </div>
+
+        <div class="title-bar">
+            <div class="back">Back</div>
+            Create New Walk
+        </div>
+    </ion-header-bar>
+
+    <ion-content class="create-walk-footer-space">
+        <div class="panel-date-created" >
+            <div>
+                <label>
+                    <span class="icon"><img src="img/icon_calendar_48.png"/></span>
+                    <h1>{{walkDate}}</h1>
+                </label>
+                <label>
+                    <span class="icon"><img src="img/icon_clock_48.png"/></span>
+                    <h1>{{walkTime}}</h1>
+                </label>
+            </div>
+        </div>
+
+        <div class="panel-single-row paddingBottom10">
+            <label class="font11 yellow-color">Invite Friends</label>
+        </div>
+
+        <div class="panel-invite-list" data-ng-repeat="invities in myInvities" data-ng-if="!isFirstTime()">
+            <img src="img/img_people1.png">
+            <h2>{{invities.username}}</h2>
+            <button>Invite</button>
+        </div>
+
+       
+    </ion-content>
+
+    <ion-footer-bar>
+        <div class="panel-create-new-footer no-color">
+            <div class="form-content">
+                <button class="button-big-yellow">Create Walk</button>
+            </div>
+        </div>
+    </ion-footer-bar>
+
+</ion-pane>

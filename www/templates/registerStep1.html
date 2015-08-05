@@ -1,0 +1,20 @@
+<ion-pane>
+	<ion-header-bar class="panel-header-1">
+		<div class="logo">
+			<img src="img/logo_header.png"/>
+		</div>
+	</ion-header-bar>
+	<ion-content>
+		<div class="form-content">
+			<h3>Mobile Number</h3>
+			<label>
+				<input type="text" placeholder="Eg: +94772225588" ng-model="registrationData.mobileNo" class="txtfield">
+			</label>
+			<h3 class="paddingTop50">Nick Name</h3>
+			<label>
+				<input type="text" placeholder="Eg: Amanda Cove" ng-model="registrationData.nickName" class="txtfield">
+			</label>
+			<button class="button-big-yellow marginTop40" ng-click="sendCode()">SMS Code</button>
+		</div>
+	</ion-content>
+</ion-pane>
