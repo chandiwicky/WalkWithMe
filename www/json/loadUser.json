@@ -1,0 +1,7 @@
+{"statusCode":0,
+
+"users":[
+	{"id":"1a32f355-aed7-4567-8754-7184d631125a","mobileNumber":"714567894","username":"Senuri Wijenayake","password":"test","createdOn":"2015-07-08 08:42:24","verificationCode":"33556"},
+
+	{"id":"dc44f6db-83f3-4490-aa09-d754b13b4a4a","mobileNumber":"774523896","username":"Amanda Millers","password":"test","createdOn":"2015-07-09 09:11:50","verificationCode":"55723"}]
+}
