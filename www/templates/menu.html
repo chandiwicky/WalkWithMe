@@ -137,17 +137,16 @@
 			<div class="panel-single-row-full marginTop30">
 				<label data-ng-repeat ="person in walks.participants track by $index">{{person.participantName}}</label>
 
-				<label>Walking with me</label>
+				<label>walking with me</label>
 			</div>
 
 			<!-- TODO logic -->
 
 			<div class="image-list">				
-				<div data-ng-repeat="participant in walkParticipants">
-		  			<img src="img/img_people{{participant}}.png">
+				<div data-ng-repeat = "person in walks.participants track by $index">
+		  			<img src="img/{{person.picture}}">
 		  		</div>				
-				<div><img src="img/img_no_image_yellow.png"></div>				
-				<div>12+</div>
+								
 			</div>
 
 		</div>
@@ -165,7 +164,7 @@
 					<table >
 						<tr >
 							
-							<td class="image"><img src="img/img_people1.png"></td>
+							<td class="image"><img src="img/{{invitation.inviterPicture}}"></td>
 							<td class="text"  >
 								<h2> with {{invitation.inviter}}<h2>
 									<h3>{{invitation.date}}<br/>{{invitation.time}}</h3>
@@ -176,7 +175,7 @@
 						<tr>
 							<td class="image"><img src="img/icon_wall_small_white.png"></td>
 							<td class="text">
-								<h3 class="marginTop6">{{inviteWalk.length}} friends walk with him</h3>
+								<h3 class="marginTop6">{{invitation.participants.length}} friends walk with you</h3>
 							</td>
 						</tr>
 					</table>

@@ -13,10 +13,11 @@ class Walk extends CI_Model {
      function getInvitations ($mobileNumber)
     {
         
-        $invitationQuery = $this->db->query("SELECT userwalks.id as `walkId`,walkparticipants.participantId as 'participantId', walkparticipants.participantStatus as 'participantStatus', userwalks.inviterId as 'inviterId' , userwalks.inviterName as `inviter`, DATE_FORMAT(userwalks.dateOfWalk, '%a %d %b %Y') as `date` , DATE_FORMAT(userwalks.dateOfWalk, '%r') as `time`
+        $invitationQuery = $this->db->query("SELECT userwalks.id as `walkId`, userwalks.inviterId as 'inviterId' , userwalks.inviterName as `inviter`, user.profilePicture as 'inviterPicture' , DATE_FORMAT(userwalks.dateOfWalk, '%a %d %b %Y') as `date` , DATE_FORMAT(userwalks.dateOfWalk, '%h.%i %p') as `time`, walkparticipants.participantStatus as 'myStatus'
                                              FROM userwalks
                                              INNER JOIN walkparticipants on userwalks.id = walkparticipants.walkId
-                                             WHERE walkparticipants.participantStatus <> 'Denied' AND userwalks.dateOfWalk >= now() AND walkparticipants.participantNum = ' ". $mobileNumber . " '
+                                             INNER JOIN user on user.mobileNumber = userwalks.inviterId
+                                             WHERE walkparticipants.participantStatus = 'Pending' AND userwalks.dateOfWalk >= now() AND walkparticipants.participantNum = $mobileNumber
                                              ORDER BY userwalks.dateOfWalk");
 
         
@@ -25,38 +26,60 @@ class Walk extends CI_Model {
     
     }
 
-    //Function to extract participants of a given walk
-    function getParticipants ($walkIdentity)
+    //Function to extract participants of a given walk excluding myself including the inviter
+    function getParticipants ($walkIdentity, $myMobileNumber)
     {
-        $participantsQuery = $this->db->query("SELECT user.mobileNumber as 'participantNumber', user.username as 'participantName'
+        $participantsQuery = $this->db->query("SELECT participantNumber, participantName, picture
+                                               FROM(
+                                               (SELECT user.mobileNumber as 'participantNumber', user.username as 'participantName', user.profilePicture as 'picture'
                                                FROM user
                                                INNER JOIN walkparticipants on user.id = walkparticipants.participantId
-                                               WHERE (walkparticipants.participantStatus <> 'Denied') AND (walkparticipants.walkId = '" .$walkIdentity. "')
-                                               LIMIT 0,7"); 
-        
+                                               WHERE (walkparticipants.participantStatus <> 'Denied') AND (walkparticipants.walkId = '$walkIdentity') AND (walkparticipants.participantNum != $myMobileNumber))
+
+                                               UNION ALL
+
+                                               (SELECT userwalks.inviterId as 'participantNumber', userwalks.inviterName as 'participantName', user.profilePicture as 'picture'
+                                               FROM userwalks
+                                               INNER JOIN user on user.mobileNumber = userwalks.inviterId
+                                               WHERE userwalks.id = '$walkIdentity' AND userwalks.inviterId != $myMobileNumber))
+
+                                               t
+                                               LIMIT 0,6"); 
         
         return $participantsQuery->result();
         
     }
 
+  //Function to extract participants of a given walk excluding the inviter
+    function getParticipantsOfInvitation ($walkIdentity, $myMobileNumber)
+    {
+        $participantsQuery = $this->db->query("SELECT user.mobileNumber as 'participantNumber', user.username as 'participantName', user.profilePicture as 'picture'
+                                               FROM user
+                                               INNER JOIN walkparticipants on user.id = walkparticipants.participantId
+                                               WHERE (walkparticipants.participantStatus = 'Joined') AND (walkparticipants.walkId = '$walkIdentity') AND (walkparticipants.participantNum != $myMobileNumber)
+                                               LIMIT 0,6"); 
+        
+        return $participantsQuery->result();
+        
+    }
     // Function to extract the next walk details
     // TODO : Replace hardcoded mobile number
     function getNextWalk ($mobileNumber)
     {
         $nextWalkQuery = $this->db->query("SELECT walkId, inviter, date ,time
                                            FROM(
-                                          (SELECT userwalks.id as 'walkId', userwalks.inviterName as 'inviter', DATE_FORMAT(userwalks.dateOfWalk, '%a %d %b %Y') as 'date' , DATE_FORMAT(userwalks.dateOfWalk, '%r') as 'time'
+                                          (SELECT userwalks.id as 'walkId', userwalks.inviterName as 'inviter', DATE_FORMAT(userwalks.dateOfWalk, '%a %d %b %Y') as 'date' , DATE_FORMAT(userwalks.dateOfWalk, '%h.%i %p') as 'time'
                                            FROM userwalks
                                            WHERE userwalks.dateOfWalk >=  now() AND userwalks.inviterId = $mobileNumber) 
                                           
                                           UNION ALL
 
-                                          (SELECT userwalks.id as 'walkId', userwalks.inviterName as 'inviter', DATE_FORMAT(userwalks.dateOfWalk, '%a %d %b %Y') as 'date' , DATE_FORMAT(userwalks.dateOfWalk, '%r') as 'time'
+                                          (SELECT userwalks.id as 'walkId', userwalks.inviterName as 'inviter', DATE_FORMAT(userwalks.dateOfWalk, '%a %d %b %Y') as 'date' , DATE_FORMAT(userwalks.dateOfWalk, '%h.%i %p') as 'time'
                                            FROM userwalks
                                            INNER JOIN walkparticipants on userwalks.id = walkparticipants.walkId
                                            WHERE  userwalks.dateOfWalk >= now() AND walkparticipants.participantNum =  $mobileNumber)
                                            )t
-                                          ORDER BY date
+                                          ORDER BY date DESC
                                           LIMIT 0,1");
       return $nextWalkQuery->result();
     }

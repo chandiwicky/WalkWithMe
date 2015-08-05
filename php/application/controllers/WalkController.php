@@ -50,7 +50,7 @@ class WalkController extends CI_Controller {
             {
                 
                $walkId = $row->walkId;
-               $row->participants = $this->Walk->getParticipants($walkId);
+               $row->participants = $this->Walk->getParticipantsOfInvitation($walkId, $mobileNumber);
                array_push($resultWalkInvitations, $row);
                
             }
@@ -64,7 +64,7 @@ class WalkController extends CI_Controller {
             {
                 
                $walkId = $row->walkId;
-               $row->participants = $this->Walk->getParticipants($walkId);
+               $row->participants = $this->Walk->getParticipants($walkId, $mobileNumber);
                
             }
         }
