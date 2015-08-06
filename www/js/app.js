@@ -17,7 +17,7 @@ angular.module('WalkWithMeApp', ['ionic', 'WalkWithMeApp.controllers', 'WalkWith
         }
     });
     // Start application here
-    $state.go('start');
+    $state.go('walkNow');
 })
 
 .constant('URLS', {      
