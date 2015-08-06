@@ -16,34 +16,19 @@
       "picture":"img_people2.png"}]}
       ],
       
-"invitations":[
-  {
-    "walkId":"b857817a-3b75-11e5-b9b8-ec0ec40a1250",
-    "inviterId":"714567894",
-    "inviter":"Senuri Wijenayake",
-    "inviterPicture":"img_people3.png",
-    "date":"Tue 18 Aug 2015",
-    "time":"07.41 PM",
-    "myStatus":"Pending",
-    "participants":[
-      {"participantNumber":"774523896",
-      "participantName":"Amanda Millers",
-      "picture":"img_people2.png"}
-      ]},
-      
-    {
-      "walkId":"b8572f1a-3b75-11e5-b9b8-ec0ec40a1250",
-      "inviterId":"714567894",
-      "inviter":"Senuri Wijenayake",
+    "invitations":[
+      {"walkId":"b857817a-3b75-11e5-b9b8-ec0ec40a1250",
+      "inviterId":"714567894","inviter":"Senuri Wijenayake",
       "inviterPicture":"img_people3.png",
-      "date":"Fri 21 Aug 2015",
-      "time":"08.15 PM",
+      "date":"Tue 18 Aug 2015",
+      "time":"07.41 PM",
       "myStatus":"Pending",
       "participants":[
         {"participantNumber":"774523896",
         "participantName":"Amanda Millers",
         "picture":"img_people2.png"}
-        ]}
+        ]
+      }
       ],
       
       "walkHistory":[

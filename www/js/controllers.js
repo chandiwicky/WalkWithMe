@@ -441,9 +441,6 @@ angular.module('WalkWithMeApp.controllers', ['angularMoment'])
     
     var mobileNumber = 713456781;
     
-    
-
-    
     $scope.onAccept = function(_walkId)
     {
         
