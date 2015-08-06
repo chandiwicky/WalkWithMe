@@ -1,9 +1,40 @@
 {"statusCode":0,
 
 "nextWalk":[
-	{"walkId":"905c5312-344d-11e5-9493-ec0ec40a1250","inviter":"Mandy Moore","date":"Wed 12 Aug 2015","time":"05:00:00 AM","participants":[]}],
-
-"invitations":[],
-
-"walkHistory":[
-		{"month":"August","countWalks":"1"},{"month":"July","countWalks":"7"},{"month":"June","countWalks":"1"}]}
+  {
+    "walkId":"905c5312-344d-11e5-9493-ec0ec40a1250",
+    "inviter":"Mandy Moore",
+    "date":"Wed 12 Aug 2015",
+    "time":"05.00 AM",
+    "participants":[
+      {"participantNumber":"714567894",
+      "participantName":"Senuri Wijenayake",
+      "picture":"img_people3.png"},
+      
+      {"participantNumber":"774523896",
+      "participantName":"Amanda Millers",
+      "picture":"img_people2.png"}]}
+      ],
+      
+    "invitations":[
+      {"walkId":"b857817a-3b75-11e5-b9b8-ec0ec40a1250",
+      "inviterId":"714567894","inviter":"Senuri Wijenayake",
+      "inviterPicture":"img_people3.png",
+      "date":"Tue 18 Aug 2015",
+      "time":"07.41 PM",
+      "myStatus":"Pending",
+      "participants":[
+        {"participantNumber":"774523896",
+        "participantName":"Amanda Millers",
+        "picture":"img_people2.png"}
+        ]
+      }
+      ],
+      
+      "walkHistory":[
+        {"month":"August","countWalks":"1"},
+        {"month":"July","countWalks":"7"},
+        {"month":"June","countWalks":"1"}
+        ]
+  
+}
