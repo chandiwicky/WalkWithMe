@@ -168,7 +168,7 @@ angular.module('WalkWithMeApp.controllers', ['angularMoment'])
                 $scope.inviteWalk = data.invitations;
                 // Setting the walking history
                 $scope.historyWalk = data.walkHistory;
-                $rootscope.joinWalk = data.invitations;
+                $rootScope.joinWalk = data.invitations;
                 $ionicLoading.hide(); 
 
                 $scope.range = function(n){
@@ -328,10 +328,10 @@ angular.module('WalkWithMeApp.controllers', ['angularMoment'])
             $scope.participants = data.participants;
             $scope.lastMessage = data.lastMessage;                                
         })
-        .error(function(data) {
+        .error(function(data, status) {
             // htpp error
-            //show error message and exit the application
-            errorService.ShowError('Server appeared to be offline or in maintainance(HTTP), Please try again later');
+            //show error message and exit the application            
+            errorService.ShowError('Server appeared to be offline or in maintainance(HTTP), Please try again later:Error:'+status+','+data);
             $state.go('menu');
             return;
         }); 

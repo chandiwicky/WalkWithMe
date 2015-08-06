@@ -20,6 +20,16 @@ angular.module('WalkWithMeApp', ['ionic', 'WalkWithMeApp.controllers', 'WalkWith
     $state.go('start');
 })
 
+.constant('URLS', {      
+    sURL_ServerStats: 'http://www.embla.no/jm_json/serverStat.json',
+    sURL_LoginService: 'http://www.embla.no/jm_json/login.json',
+    sURL_Register: 'http://www.embla.no/jm_json/register.json',
+    sURL_MenuService: 'http://www.embla.no/jm_json/menu.json',
+    sURL_InviteService: 'http://www.embla.no/jm_json/invite.json',    
+    sURL_HistoryService: 'http://www.embla.no/jm_json/history.json',
+    sURL_WalkNowService: 'http://www.embla.no/jm_json/walkNow.json'
+})
+
 /*
 .constant('URLS', {      
     sURL_ServerStats: '/json/serverStat.json',
@@ -30,7 +40,7 @@ angular.module('WalkWithMeApp', ['ionic', 'WalkWithMeApp.controllers', 'WalkWith
     sURL_HistoryService: '/json/history.json',
     sURL_WalkNowService: '/json/walkNow.json'
 })
-*/
+
 .constant('URLS', {      
     sURL_ServerStats: 'http://localhost/WalkWithMe/php/index.php/WalkController/serverStat',
     sURL_LoginService: 'http://localhost/WalkWithMe/php/index.php/WalkController/loginUser',
@@ -40,7 +50,7 @@ angular.module('WalkWithMeApp', ['ionic', 'WalkWithMeApp.controllers', 'WalkWith
     sURL_HistoryService: 'http://localhost/WalkWithMe/php/index.php/WalkController/getHistory',
     sURL_WalkNowService: '/json/walkNow.json'
 })
-
+*/
 // Create configuration parameter for
 .constant('angularMomentConfig', {
     
