@@ -168,7 +168,7 @@ angular.module('WalkWithMeApp.controllers', ['angularMoment'])
                 $scope.inviteWalk = data.invitations;
                 // Setting the walking history
                 $scope.historyWalk = data.walkHistory;
-                $rootScope.joinWalk = data.invitations;
+                
                 $ionicLoading.hide(); 
 
                 $scope.range = function(n){
@@ -438,36 +438,95 @@ angular.module('WalkWithMeApp.controllers', ['angularMoment'])
 })
 
 .controller('JoinCtrl', function($window, $rootScope, $scope,$ionicLoading, $state, userService, errorService) {
-    
+
     var mobileNumber = 713456781;
     
-    $scope.onAccept = function(_walkId)
-    {
-        
-        var status = "Joined";
-        var walkId = _walkId;
-        userService.JoinService(mobileNumber,walkId,status)
-            .success(function(data){
+    userService.DisplayInvitationService(mobileNumber)
+        .success(function(data) {
 
-                if ( data.statusCode > 0 ){
+            if ( data.statusCode > 0 ){
                 errorService.ShowError('Server appeared to be offline or in maintainance, Please try again later');
-                $state.go('join');
+                $state.go('menu');
                 return;
             }
-
-            else{
-               errorService.ShowError('Successfully Updated'); 
-            }
-            });
             
-    }
+            else{
+                $scope.invites = data.invitations;
+    
+                $scope.isFirstTime = function() {
+                    return data.statusCode;
+                };
+        
+                $scope.onSwipeLeft = function(){
+                    $state.go('menu');
+                };
 
-    $scope.onMaybe = function(_walkId)
-    {
-        var status = "Maybe";
-        var walkId = _walkId;
-        userService.JoinService(mobileNumber,walkId,status)
-            .success(function(data){
+                $scope.changeStatus = function(_walkId, _status){
+                    
+                    userService.JoinService(mobileNumber,_walkId,_status)
+                        .success(function(data){
+
+                            if ( data.statusCode > 0 ){
+                                errorService.ShowError('Server appeared to be offline or in maintainance, Please try again later');
+                                $state.go('join');
+                                return;
+                            }
+
+                            else{
+                                errorService.ShowError('Successfully Updated'); 
+                            }
+                        })
+                };
+            }    
+    }) 
+       
+        .error(function(data) {
+            // htpp error
+            //show error message and exit the application
+            errorService.ShowError('Server appeared to be offline or in maintainance(HTTP), Please try again later');
+            return;
+        });
+
+})
+
+.controller('MotivationCtrl', function($scope,$ionicLoading, $state) {
+
+    // show login ctrl
+    $scope.onSwipeLeft = function(){
+        
+        $state.go('menu');
+    }
+})
+;
+
+
+/*
+$scope.onAccept = function(_walkId)
+                {
+        
+                    var status = "Joined";
+                    var walkId = _walkId;
+                    userService.JoinService(mobileNumber,walkId,status)
+                        .success(function(data){
+
+                            if ( data.statusCode > 0 ){
+                            errorService.ShowError('Server appeared to be offline or in maintainance, Please try again later');
+                            $state.go('join');
+                            return;
+                        }
+
+                        else{
+                            errorService.ShowError('Successfully Updated'); 
+                        }
+                });
+            }
+
+            $scope.onMaybe = function(_walkId)
+            {
+                var status = "Maybe";
+                var walkId = _walkId;
+                userService.JoinService(mobileNumber,walkId,status)
+                    .success(function(data){
 
                 if ( data.statusCode > 0 ){
                 errorService.ShowError('Server appeared to be offline or in maintainance, Please try again later');
@@ -499,19 +558,4 @@ angular.module('WalkWithMeApp.controllers', ['angularMoment'])
             }
             });
     }
-
-    $scope.onSwipeLeft = function(){
-        
-        $state.go('menu');
-    }
-})
-
-.controller('MotivationCtrl', function($scope,$ionicLoading, $state) {
-
-    // show login ctrl
-    $scope.onSwipeLeft = function(){
-        
-        $state.go('menu');
-    }
-})
-;
+*/

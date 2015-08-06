@@ -65,6 +65,14 @@ angular.module('WalkWithMeApp.services',[]).factory('userService', function(URLS
         });
       },
 
+      DisplayInvitationService : function (mobileNumber){              
+              return $http({
+                  method : 'GET',
+                  url: 'http://localhost/WalkWithMe/php/index.php/WalkController/getInvitations',
+                  data : {"mobileNumber" : mobileNumber}
+              });
+      },
+
       WalkNowService : function (walkId){              
               return $http({
                   method : 'GET',
