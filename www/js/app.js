@@ -20,6 +20,28 @@ angular.module('WalkWithMeApp', ['ionic', 'WalkWithMeApp.controllers', 'WalkWith
     $state.go('start');
 })
 
+/*
+.constant('URLS', {      
+    sURL_ServerStats: '/json/serverStat.json',
+    sURL_LoginService: '/json/login.json',
+    sURL_Register: '/json/register.json',
+    sURL_MenuService: '/json/menu.json',
+    sURL_InviteService: '/json/invite.json',    
+    sURL_HistoryService: '/json/history.json',
+    sURL_WalkNowService: '/json/walkNow.json'
+})
+*/
+.constant('URLS', {      
+    sURL_ServerStats: 'http://localhost/WalkWithMe/php/index.php/WalkController/serverStat',
+    sURL_LoginService: 'http://localhost/WalkWithMe/php/index.php/WalkController/loginUser',
+    sURL_Register: '/json/register.json',
+    sURL_MenuService: 'http://localhost/WalkWithMe/php/index.php/WalkController/loadMenu',
+    sURL_InviteService: 'http://localhost/WalkWithMe/php/index.php/WalkController/loadUser',    
+    sURL_HistoryService: 'http://localhost/WalkWithMe/php/index.php/WalkController/getHistory',
+    sURL_WalkNowService: '/json/walkNow.json'
+})
+
+// Create configuration parameter for
 .constant('angularMomentConfig', {
     
     timezone: 'Asia/Colombo' // optional

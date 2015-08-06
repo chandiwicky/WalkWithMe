@@ -1,22 +1,24 @@
 //TODO: Change the GET to a POST
 // User services - authentication / server stat / registration
 
-angular.module('WalkWithMeApp.services',[]).factory('userService', function($http){
+angular.module('WalkWithMeApp.services',[]).factory('userService', function(URLS,$http){
+   
     return {      
 
       // Sucessfull : {"statusCode":0,"statusDes":"ok"}
       // Error      : {"statusCode":Not zero,"statusDes":"ok"}      
-      ServerStats : function (){              
+      ServerStats : function (){        
+       
               return $http({
                   method : 'GET',
-                  url: 'http://localhost/WalkWithMe/php/index.php/WalkController/serverStat'
+                  url: URLS.sURL_ServerStats
               });
       }, // end function    
       
       LoginService : function (mobileNumber, username, password){              
               return $http({
                   method : 'GET',
-                  url: 'http://localhost/WalkWithMe/php/index.php/WalkController/loginUser',
+                  url: URLS.sURL_LoginService,
                   data : {"mobileNumber" : mobileNumber , "username" : username, "password" : password}
               });
       },
@@ -24,14 +26,14 @@ angular.module('WalkWithMeApp.services',[]).factory('userService', function($htt
       Register : function (){              
               return $http({
                   method : 'GET',
-                  url: '/json/register.json'
+                  url: URLS.sURL_Register
               });
       },
       MenuService : function (mobileNumber, username){              
               
               return $http({
                   method : 'GET',
-                  url: 'http://localhost/WalkWithMe/php/index.php/WalkController/loadMenu',
+                  url: URLS.sURL_MenuService,
                   data : {"mobileNumber" : mobileNumber , "username" : username}
         });
       },
@@ -40,7 +42,7 @@ angular.module('WalkWithMeApp.services',[]).factory('userService', function($htt
               
               return $http({
                   method : 'GET',
-                  url: 'http://localhost/WalkWithMe/php/index.php/WalkController/loadUser',
+                  url: URLS.sURL_InviteService,
                   data : {"mobileNumber" : mobileNumber , "username" : username}
         });
       },
@@ -49,7 +51,7 @@ angular.module('WalkWithMeApp.services',[]).factory('userService', function($htt
               
               return $http({
                   method : 'GET',
-                  url: 'http://localhost/WalkWithMe/php/index.php/WalkController/getHistory',
+                  url: URLS.sURL_HistoryService,
                   data : {"mobileNumber" : mobileNumber , "username" : username}
         });
       },
@@ -57,7 +59,7 @@ angular.module('WalkWithMeApp.services',[]).factory('userService', function($htt
       WalkNowService : function (walkId){              
               return $http({
                   method : 'GET',
-                  url: '/json/walkNow.json',
+                  url: URLS.sURL_WalkNowService,
                   data : {"walkId" : walkId }
               });
       }
