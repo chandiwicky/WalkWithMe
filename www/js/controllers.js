@@ -49,7 +49,7 @@ angular.module('WalkWithMeApp.controllers', ['angularMoment'])
     var password = $scope.password;
     
     $scope.login = function(){
-        alert($scope.username);
+        
         userService.LoginService(mobileNumber, username, password)
         .success(function(data) {
 
