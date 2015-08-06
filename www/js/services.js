@@ -54,6 +54,15 @@ angular.module('WalkWithMeApp.services',[]).factory('userService', function($htt
         });
       },
 
+      JoinService : function (mobileNumber, walkId, status){              
+              
+              return $http({
+                  method : 'GET',
+                  url: 'http://localhost/WalkWithMe/php/index.php/WalkController/updateInvitation',
+                  data : {"mobileNumber" : mobileNumber , "walkId" : walkId , "status" : status}
+        });
+      },
+
       WalkNowService : function (walkId){              
               return $http({
                   method : 'GET',

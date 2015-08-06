@@ -117,4 +117,18 @@ class WalkController extends CI_Controller {
 
 	}
 	
+	public function updateInvitation()
+	{
+		$data = json_decode(file_get_contents("php://input"),TRUE);
+		$mobileNumber = 713456781;
+		$walkId = "b8572f1a-3b75-11e5-b9b8-ec0ec40a1250";
+		$status = "Declined";
+		
+    	//Updating the walk status
+    	$result = $this->Walk->updateThisInvitation($mobileNumber, $walkId, $status);
+    	if($result == "Success")
+    		print_r(json_encode(array("statusCode" => (int)0000)));
+        
+	}
+
 }

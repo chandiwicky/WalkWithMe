@@ -150,7 +150,7 @@ angular.module('WalkWithMeApp.controllers', ['angularMoment'])
     // TODO : Remove Hard coding in live
     var mobileNumber = 713456781;
     var username = "Mandy Moore";
-    
+
     userService.MenuService(mobileNumber, username)
         .success(function(data) {
 
@@ -168,6 +168,7 @@ angular.module('WalkWithMeApp.controllers', ['angularMoment'])
                 $scope.inviteWalk = data.invitations;
                 // Setting the walking history
                 $scope.historyWalk = data.walkHistory;
+                $rootscope.joinWalk = data.invitations;
                 $ionicLoading.hide(); 
 
                 $scope.range = function(n){
@@ -434,6 +435,78 @@ angular.module('WalkWithMeApp.controllers', ['angularMoment'])
             return;
         });
 
+})
+
+.controller('JoinCtrl', function($window, $rootScope, $scope,$ionicLoading, $state, userService, errorService) {
+    
+    var mobileNumber = 713456781;
+    
+    
+
+    
+    $scope.onAccept = function(_walkId)
+    {
+        
+        var status = "Joined";
+        var walkId = _walkId;
+        userService.JoinService(mobileNumber,walkId,status)
+            .success(function(data){
+
+                if ( data.statusCode > 0 ){
+                errorService.ShowError('Server appeared to be offline or in maintainance, Please try again later');
+                $state.go('join');
+                return;
+            }
+
+            else{
+               errorService.ShowError('Successfully Updated'); 
+            }
+            });
+            
+    }
+
+    $scope.onMaybe = function(_walkId)
+    {
+        var status = "Maybe";
+        var walkId = _walkId;
+        userService.JoinService(mobileNumber,walkId,status)
+            .success(function(data){
+
+                if ( data.statusCode > 0 ){
+                errorService.ShowError('Server appeared to be offline or in maintainance, Please try again later');
+                $state.go('join');
+                return;
+            }
+
+            else{
+               errorService.ShowError('Successfully Updated'); 
+            }
+            });
+    }
+
+    $scope.onDecline = function(_walkId)
+    {
+        var status = "Declined";
+        var walkId = _walkId;
+        userService.JoinService(mobileNumber,walkId,status)
+            .success(function(data){
+
+                if ( data.statusCode > 0 ){
+                errorService.ShowError('Server appeared to be offline or in maintainance, Please try again later');
+                $state.go('join');
+                return;
+            }
+
+            else{
+               errorService.ShowError('Successfully Updated'); 
+            }
+            });
+    }
+
+    $scope.onSwipeLeft = function(){
+        
+        $state.go('menu');
+    }
 })
 
 .controller('MotivationCtrl', function($scope,$ionicLoading, $state) {

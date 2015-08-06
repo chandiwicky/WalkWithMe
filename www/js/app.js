@@ -75,7 +75,7 @@ angular.module('WalkWithMeApp', ['ionic', 'WalkWithMeApp.controllers', 'WalkWith
         .state('join', {
             url: "/join",
             templateUrl: "templates/join.html",
-            controller: 'WalkCtrl'
+            controller: 'JoinCtrl'
         })
 
         .state('history', {

@@ -26,6 +26,17 @@ class Walk extends CI_Model {
     
     }
 
+    //Update the participant status of a user in a given walk
+     function updateThisInvitation ($mobileNumber, $walkId, $status)
+    {
+        
+        $updateQuery = $this->db->query("UPDATE walkparticipants
+                                         SET walkparticipants.participantStatus = '$status'
+                                         WHERE walkparticipants.walkId = '$walkId' AND walkparticipants.participantNum = $mobileNumber
+                                       ");
+        return "Success";    
+    }
+
     //Function to extract participants of a given walk excluding myself including the inviter
     function getParticipants ($walkIdentity, $myMobileNumber)
     {
