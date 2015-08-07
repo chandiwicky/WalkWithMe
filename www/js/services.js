@@ -81,11 +81,11 @@ angular.module('WalkWithMeApp.services',[]).factory('userService', function(URLS
               });
       },
 
-      SendWalkieService : function (walkieId){              
+      SendWalkieService : function (toId, walkieId){              
               return $http({
                   method : 'GET',
                   url: URLS.sURL_SendWalkieService,
-                  data : {"walkieId" : walkieId }
+                  data : {"to":toId, "walkieId" : walkieId }
               });
       }
       // end function

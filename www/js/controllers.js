@@ -346,14 +346,17 @@ angular.module('WalkWithMeApp.controllers', ['angularMoment'])
          $state.go('menu');
     }
 
-    $scope.showWalkies = function(){
+    $scope.showWalkies = function(toId, toNickName){
+        $scope.sendWalkiesTo = {};
+        $scope.sendWalkiesTo.id = toId;
+        $scope.sendWalkiesTo.nickName = toNickName;
         $scope.modal.show();        
     }
 
     $scope.sendWalkie = function(walkieId){
         $ionicLoading.show({ template: 'Loading...' });
-
-        userService.SendWalkieService(walkieId)
+        console.log("Sending walkie to "+$scope.sendWalkiesTo.nickName + ","+ $scope.sendWalkiesTo.id + ",walkieId:"+walkieId);
+        userService.SendWalkieService($scope.sendWalkiesTo.id, walkieId)
         .success(function(data) {
 
             if ( data.statusCode > 0 ){
