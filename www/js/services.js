@@ -10,14 +10,14 @@ angular.module('WalkWithMeApp.services',[]).factory('userService', function(URLS
       ServerStats : function (){        
        
               return $http({
-                  method : 'GET',
+                  method : 'POST',
                   url: URLS.sURL_ServerStats
               });
       }, // end function    
       
       LoginService : function (mobileNumber, username, password){              
               return $http({
-                  method : 'GET',
+                  method : 'POST',
                   url: URLS.sURL_LoginService,
                   data : {"mobileNumber" : mobileNumber , "username" : username, "password" : password}
               });
@@ -25,14 +25,14 @@ angular.module('WalkWithMeApp.services',[]).factory('userService', function(URLS
 
       Register : function (){              
               return $http({
-                  method : 'GET',
+                  method : 'POST',
                   url: URLS.sURL_Register
               });
       },
       MenuService : function (mobileNumber, username){              
               
               return $http({
-                  method : 'GET',
+                  method : 'POST',
                   url: URLS.sURL_MenuService,
                   data : {"mobileNumber" : mobileNumber , "username" : username}
         });
@@ -41,7 +41,7 @@ angular.module('WalkWithMeApp.services',[]).factory('userService', function(URLS
       InviteService : function (mobileNumber, username){              
               
               return $http({
-                  method : 'GET',
+                  method : 'POST',
                   url: URLS.sURL_InviteService,
                   data : {"mobileNumber" : mobileNumber , "username" : username}
         });
@@ -50,7 +50,7 @@ angular.module('WalkWithMeApp.services',[]).factory('userService', function(URLS
       HistoryService : function (mobileNumber, username){              
               
               return $http({
-                  method : 'GET',
+                  method : 'POST',
                   url: URLS.sURL_HistoryService,
                   data : {"mobileNumber" : mobileNumber , "username" : username}
         });
@@ -59,33 +59,33 @@ angular.module('WalkWithMeApp.services',[]).factory('userService', function(URLS
       JoinService : function (mobileNumber, walkId, status){              
               
               return $http({
-                  method : 'GET',
-                  url: 'http://localhost/WalkWithMe/php/index.php/WalkController/updateInvitation',
+                  method : 'POST',
+                  url: URLS.sURL_JoinService,
                   data : {"mobileNumber" : mobileNumber , "walkId" : walkId , "status" : status}
         });
       },
 
       DisplayInvitationService : function (mobileNumber){              
               return $http({
-                  method : 'GET',
-                  url: 'http://localhost/WalkWithMe/php/index.php/WalkController/getInvitations',
-                  data : {"mobileNumber" : mobileNumber}
+                  method : 'POST',
+                  url: URLS.sURL_DisplayInvitationService,
+                  data : {"mobileNumber" : mobileNumber }
               });
       },
 
       WalkNowService : function (walkId){              
               return $http({
-                  method : 'GET',
+                  method : 'POST',
                   url: URLS.sURL_WalkNowService,
-                  data : {"walkId" : walkId }
+                  data : {"walkId" : walkId}
               });
       },
 
       SendWalkieService : function (toId, walkieId){              
               return $http({
-                  method : 'GET',
+                  method : 'POST',
                   url: URLS.sURL_SendWalkieService,
-                  data : {"to":toId, "walkieId" : walkieId }
+                  data : {"to":toId, "walkieId" : walkieId}
               });
       }
       // end function

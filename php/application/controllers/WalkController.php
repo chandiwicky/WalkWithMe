@@ -17,9 +17,9 @@ class WalkController extends CI_Controller {
 	public function loginUser()
 	{
 		$data = json_decode(file_get_contents("php://input"),TRUE);
-		$mobileNumber = 713456781;//(int) $data['mobileNumber'];
-		$username = "Mandy Moore";//$data['username'];
-		$password = "test";//$data['password'];
+		$mobileNumber = (int) $data['mobileNumber'];
+		$username = $data['username'];
+		$password = $data['password'];
 
 		//Get the userId for the relevant mobile number
 		$userId = $this->User->getUserId($mobileNumber);
@@ -36,8 +36,9 @@ class WalkController extends CI_Controller {
 	public function loadMenu()
 	{
 		$data = json_decode(file_get_contents("php://input"),TRUE);
-		$mobileNumber = 713456781;//(int) $data['UserId'];
-		$username = "Mandy Moore";//$data['Username'];
+		$mobileNumber = (int) $data['mobileNumber'];
+		$username = $data['username'];
+
 		$resultSet = [];
 		$resultWalkInvitations = [];
 		
@@ -82,8 +83,8 @@ class WalkController extends CI_Controller {
 	public function getHistory()
 	{
 		$data = json_decode(file_get_contents("php://input"),TRUE);
-		$mobileNumber = 713456781;//(int) $data['UserId'];
-		$username = "Mandy Moore";//$data['Username'];
+		$mobileNumber = (int) $data['mobileNumber'];
+		$username = $data['username'];
 
 		//Extracting the walking history
 		$monthZero = $this->Walk->getWalksOfMonth($mobileNumber, 0);
@@ -103,8 +104,8 @@ class WalkController extends CI_Controller {
 	public function loadUser()
 	{
 		$data = json_decode(file_get_contents("php://input"),TRUE);
-		$mobileNumber = 713456781;//(int) $data['UserId'];
-		$username = "Mandy Moore";//$data['Username'];
+		$mobileNumber = (int) $data['mobileNumber'];
+		$username = $data['username'];
 		$resultSet = [];
 		//$resultWalkInvitations = [];
 				
@@ -120,7 +121,8 @@ class WalkController extends CI_Controller {
 	public function getInvitations()
 	{
 		$data = json_decode(file_get_contents("php://input"),TRUE);
-		$mobileNumber = 713456781;
+		$mobileNumber = (int) $data['mobileNumber'];
+
 		$resultWalkInvitations = [];
 
 		//Extracting the walking invitations
@@ -146,9 +148,9 @@ class WalkController extends CI_Controller {
 	{
 		$data = json_decode(file_get_contents("php://input"),TRUE);
 		
-		$mobileNumber = 713456781;
-		$walkId = "b8572f1a-3b75-11e5-b9b8-ec0ec40a1250";
-		$status = "Declined";
+		$mobileNumber = (int) $data['mobileNumber'];//713456781;
+		$walkId = $data['walkId'];
+		$status = $data['status'];
 		
     	//Updating the walk status
     	$result = $this->Walk->updateThisInvitation($mobileNumber, $walkId, $status);
