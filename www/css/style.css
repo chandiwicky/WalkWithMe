@@ -58,6 +58,21 @@ body{
 img, p, div, a, h1, h2, h3, h4, h5, h6 {padding: 0; margin: 0; outline: 0; border: 0;}
 img {width:100%;}
 
+.clear-fix {
+    *zoom: 1;
+&:before,
+&:after {
+     display: table;
+     content: "";
+ // Fixes Opera/contenteditable bug:
+ // http://nicolasgallagher.com/micro-clearfix-hack/#comment-36952
+ line-height: 0;
+ }
+&:after {
+     clear: both;
+ }
+}
+
 /*--------------------Iconic Class ----------------------*/
 
 .pane, .view {
@@ -483,7 +498,6 @@ h6 > img {
     float: left;
 }
 
-
 .walking-list  h2 {
     font-family: 'museo700';
     font-size: 12px;
@@ -541,6 +555,124 @@ h6 > img {
     background: #fff;
 }
 
+.panel-popup{
+    background: rgba(4,140,212,0.85);
+    margin: 0;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    position: fixed;
+    z-index: 10;
+}
+
+
+.close-btn{
+    position: fixed;
+    width: 30px;
+    height: 30px;
+    background: url("../img/icon_close.png") no-repeat scroll 0 0 transparent;
+    background-size: cover;
+    border: none;
+    cursor: pointer;
+    outline: none;
+    left: 50%;
+    margin:120px 0 0 -15px;
+}
+
+.panel-popup .panel-walkies {
+    position: fixed;
+    width: 280px;
+    height: auto;
+    background: #ffd800;
+    left: 6.25%;
+    right: 6.25%;
+    border-radius: 15px;
+    padding: 40px 20px 20px 20px;
+    box-sizing: border-box;
+    font-family:'museo500';
+    text-align: center;
+    z-index: 11;
+    margin: 50px auto 0 auto;
+}
+
+.panel-popup .panel-images {
+    position: fixed;
+    width: 100%;
+    height: auto;
+    top:30%;
+    z-index: 15;
+}
+
+.panel-walkies > div:first-child{
+    width: 100%;
+    padding-bottom:5px;
+    display: block;
+    font-size: 26px;
+    color: #000;
+    float: left;
+}
+
+.panel-walkies > div:nth-child(2){
+    width: 100%;
+    padding-bottom:10px;
+    display: inline-block;
+    font-size: 14px;
+    color: #000;
+    float: left;
+}
+
+.panel-walkies > div:nth-child(3){
+    width: 240px;
+    display: block;
+    margin: 0 auto;
+}
+
+.panel-walkies > div:nth-child(3) > button{
+    width: 40px;
+    height: 40px;
+    border-radius: 20px;
+    margin: 12px 10px;
+    background: #fff;
+    float: left;
+}
+
+.walkies-button {
+    width: 40px;
+    height: 40px;
+    border-radius: 20px;
+    margin: 12px 10px;
+    background: #fff;
+    border: none;
+    cursor: pointer;
+    outline: none;
+    position: relative;
+    float: left;
+}
+.walkies-button img{
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    top:0;
+    left:0;
+}
+
+.panel-walkies  button{
+    width:auto;
+    height: 30px;
+    line-height: 25px;
+    border-radius: 15px;
+    padding: 0 20px;
+    font-family:'museo500';
+    display: block;
+    font-size: 11px;
+    color: #fff;
+    background: #048cd4;
+    letter-spacing: 0;
+    border: 0;
+    outline: none;
+    margin: 10px auto 0 auto;
+}
 
 .panel-history {
     height: 20px;
@@ -644,7 +776,7 @@ h6 > img {
     position: fixed;
     width: 100%;
     height: 94px;
-    bottom: 0;
+    bottom: 0 !important;
 }
 
 .panel-footer-walk-now .notify-bar {
