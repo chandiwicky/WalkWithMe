@@ -9,5 +9,5 @@
 					   {"id":"dc44f6db-83f3-4490-aa09-d754b13b4a4d", "nickName":"Julia Makinson", "profilePic":"img_people5.png", "status": 1},
 					   {"id":"dc44f6db-83f3-4490-aa09-d754b13b4a4d", "nickName":"Grace Walter", "profilePic":"img_people4.png", "status": 1}
 					 ],
-	"lastMessage" : { "messageType":0, "messageContent":"WALKIE_001", "from":"Amy", "to":"Dana"  }	
+	"lastMessage" : { "messageId":33445, "messageType":0, "messageContent":"WALKIE_001", "from":"Amy", "to":"Dana"  }	
 }

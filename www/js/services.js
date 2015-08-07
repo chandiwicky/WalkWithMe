@@ -79,6 +79,14 @@ angular.module('WalkWithMeApp.services',[]).factory('userService', function(URLS
                   url: URLS.sURL_WalkNowService,
                   data : {"walkId" : walkId }
               });
+      },
+
+      SendWalkieService : function (walkieId){              
+              return $http({
+                  method : 'GET',
+                  url: URLS.sURL_SendWalkieService,
+                  data : {"walkieId" : walkieId }
+              });
       }
       // end function
 
