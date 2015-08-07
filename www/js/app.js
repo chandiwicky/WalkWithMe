@@ -5,7 +5,9 @@
 // the 2nd parameter is an array of 'requires'
 angular.module('WalkWithMeApp', ['ionic', 'WalkWithMeApp.controllers', 'WalkWithMeApp.services', 'ui.router', 'angularMoment'])
 
-.run(function($ionicPlatform, $state) {
+.run(function($ionicPlatform, $state, $ionicLoading, $rootScope) {
+    // For back button counter
+    $rootScope.backButtonClickCount = 0;
     $ionicPlatform.ready(function() {
         // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
         // for form inputs)
@@ -18,9 +20,22 @@ angular.module('WalkWithMeApp', ['ionic', 'WalkWithMeApp.controllers', 'WalkWith
 
     });
 
+    // Disable back button and exit on the second press    
     $ionicPlatform.registerBackButtonAction(function (event) {
-        //navigator.app.exitApp();
+        
          event.preventDefault();
+
+         $rootScope.backButtonClickCount++;
+         if ( $rootScope.backButtonClickCount == 1){
+            $ionicLoading.show({ template: "Press back again to exit app", noBackdrop: true, duration: 1000 });
+            var backCountTimer = setInterval( function(){
+                    clearInterval(backCountTimer);                    
+                        $rootScope.backButtonClickCount=0;
+                    },10000);
+         }
+         if ( $rootScope.backButtonClickCount == 2){
+            navigator.app.exitApp();    
+         }
     }, 100);
     // Start application here
     $state.go('start');
