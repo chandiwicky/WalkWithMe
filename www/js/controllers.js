@@ -398,8 +398,13 @@ angular.module('WalkWithMeApp.controllers', ['angularMoment'])
         // TODO: play a sound
         if ( $scope.lastMessage && $scope.lastMessage.messageId != $scope.lastPlayedMessageId ){
             $scope.lastPlayedMessageId = $scope.lastMessage.messageId;
-            alert("Sound"+$scope.lastMessage.messageContent);
+            var media = new Media("/android_asset/www/walkies/WALKIE_001.mp3",  function(e){ alert("ok"+JSON.stringify(e))}, function(e){ alert("err:"+JSON.stringify(e))}, mediaStatusCallback);
+            media.play();        
         }
+    }
+
+    var mediaStatusCallback = function(status) {
+        //$ionicLoading.show({ template: "media"+status, noBackdrop: true, duration: 1000 });        
     }
 
     // Clear the modal window
