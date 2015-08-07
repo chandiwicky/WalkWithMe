@@ -5,7 +5,7 @@
     </ion-header-bar>
 
     <ion-content>
-        <div class="panel-walkies">
+        <div class="panel-walkies" ng-if="panelType == 0">
             <div>Walkies</div>
             <div>Send to {{sendWalkiesTo.id}} / {{sendWalkiesTo.nickName}}</div>
             <div>
@@ -17,9 +17,9 @@
             <div class="clear-fix"></div>
         </div>
 
-        <!--<div class="panel-images">
+        <div class="panel-images" ng-if="panelType == 1">
             <img src="img/test-image.jpg">
-        </div>-->
+        </div>
     </ion-content>
 </ion-modal-view>
 

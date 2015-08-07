@@ -110,7 +110,7 @@
 		</div>
 	</ion-content>
 </ion-pane>-->
-<ion-pane  on-swipe-right="onSwipeRight()" data-ng-controller = "MenuCtrl">
+<ion-pane  on-swipe-right="onSwipeRight()" >
 	<ion-header-bar class="panel-header-1 marginTop40">
 		<div class="logo">
 			<img src="img/logo_header.png"/>
@@ -121,8 +121,8 @@
 			<!-- bind the next walk object -->
 
 			<div class="panel-title">
-				<label class="title" ui-sref="walkNow">My Next Walk</label>
-				<button>Start Walking</button>
+				<label class="title" >My Next Walk</label>
+				<button ng-if="isStartWalking" ui-sref="walkNow">Start Walking</button>
 			</div>
 
 			<div>

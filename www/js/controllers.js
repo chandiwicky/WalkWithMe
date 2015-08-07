@@ -144,55 +144,74 @@ angular.module('WalkWithMeApp.controllers', ['angularMoment'])
     }
 })
 
-.controller('MenuCtrl', function($window, $rootScope, $scope,$ionicLoading, $state, userService, errorService) {
+.controller('MenuCtrl', function($window, $rootScope, $scope,$ionicLoading, $state, $interval, userService, errorService) {
 
     //$ionicLoading.show({ template: 'Loading...' });
     // TODO : Remove Hard coding in live
     var mobileNumber = 713456781;
     var username = "Mandy Moore";
+    
 
-    userService.MenuService(mobileNumber, username)
-        .success(function(data) {
 
-            if ( data.statusCode > 0 ){
-                errorService.ShowError('Server appeared to be offline or in maintainance, Please try again later');
-                $state.go('start');
-                return;
-            }
-            
-            else{
-                
-                // Setting my next walk data
-                $scope.myNextWalk = data.nextWalk;
-                // Setting the walking invitiations
-                $scope.inviteWalk = data.invitations;
-                // Setting the walking history
-                $scope.historyWalk = data.walkHistory;
-                
-                $ionicLoading.hide(); 
+    // Call the menu update every 1 minute and update it
+    $scope.reloadMenu = function(mobileNumber, username) {
+        console.log("Reloading menu");
+        userService.MenuService(mobileNumber, username)
+            .success(function(data) {
 
-                $scope.range = function(n){
+                if (data.statusCode > 0) {
+                    errorService.ShowError('Server appeared to be offline or in maintainance, Please try again later');
+                    $state.go('start');
+                    return;
+                } else {
+
+                    // Setting my next walk data
+                    $scope.myNextWalk = data.nextWalk;
+                    // Setting the walking invitiations
+                    $scope.inviteWalk = data.invitations;
+                    // Setting the walking history
+                    $scope.historyWalk = data.walkHistory;
+
+                    $scope.isStartWalking = true;   //TODO : Check date and time difference
+
+                    $ionicLoading.hide();
+
+                    $scope.range = function(n) {
                         return new Array(n);
-                };
+                    };
 
-                $scope.isFirstTime = function() {
-                return data.statusCode;
-                };
+                    $scope.isFirstTime = function() {
+                        return data.statusCode;
+                    };
 
-            }
-                     
-        })
-        .error(function(data) {
-            // htpp error
-            //show error message and exit the application
-            errorService.ShowError('Server appeared to be offline or in maintainance(HTTP), Please try again later');
-            return;
-        });
+                }
+
+            })
+            .error(function(data) {
+                // htpp error
+                //show error message and exit the application
+                errorService.ShowError('Server appeared to be offline or in maintainance(HTTP), Please try again later');
+                return;
+            });
+    }
+    
     
     $scope.walkNow = function(){
         // Send the start command - if not started..start it now
         // Go to walk now state
     }
+    console.log("loading menu pages")
+    menuReloadTicker = $interval( function(){
+        $scope.reloadMenu(mobileNumber, username);
+    }, 10000);
+
+    $scope.$on('$destroy', function () {
+        console.log("destroy scope")
+        $interval.cancel(menuReloadTicker);
+    });
+    //Load it first time
+    $scope.reloadMenu(mobileNumber, username);
+    
 })
 
 
@@ -346,9 +365,16 @@ angular.module('WalkWithMeApp.controllers', ['angularMoment'])
     }
 
     $scope.showWalkies = function(toId, toNickName){
+        $scope.panelType = 0; 
         $scope.sendWalkiesTo = {};
         $scope.sendWalkiesTo.id = toId;
         $scope.sendWalkiesTo.nickName = toNickName;
+        $scope.modal.show();        
+    }
+
+    $scope.showPicture = function(picId){
+        $scope.panelType = 1; 
+        $scope.picId = picId;       
         $scope.modal.show();        
     }
 
