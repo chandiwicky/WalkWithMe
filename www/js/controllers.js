@@ -328,8 +328,7 @@ angular.module('WalkWithMeApp.controllers', ['angularMoment'])
             
             $scope.walkId = data.walkId;
             $scope.participants = data.participants;
-            $scope.lastMessage = data.lastMessage;  
-            $scope.playSound();
+            $scope.lastMessage = data.lastMessage;              
             
         })
         .error(function(data, status) {
@@ -395,12 +394,17 @@ angular.module('WalkWithMeApp.controllers', ['angularMoment'])
     }
 
     $scope.playSound = function(){
-        // TODO: play a sound
-        if ( $scope.lastMessage && $scope.lastMessage.messageId != $scope.lastPlayedMessageId ){
-            $scope.lastPlayedMessageId = $scope.lastMessage.messageId;
-            var media = new Media("/android_asset/www/walkies/WALKIE_001.mp3",  function(e){ alert("ok"+JSON.stringify(e))}, function(e){ alert("err:"+JSON.stringify(e))}, mediaStatusCallback);
-            media.play();        
+        try{
+            // TODO: play a sound
+            if ( $scope.lastMessage ){//&& $scope.lastMessage.messageId != $scope.lastPlayedMessageId ){
+                $scope.lastPlayedMessageId = $scope.lastMessage.messageId;
+                var media = new Media("/android_asset/www/walkies/WALKIE_001.mp3",  null, function(e){ alert("err:"+JSON.stringify(e))}, mediaStatusCallback);
+                media.play();        
+            }
+        }catch(e){
+            console.log("error playing walkie:"+e);
         }
+        
     }
 
     var mediaStatusCallback = function(status) {
