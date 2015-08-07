@@ -5,7 +5,9 @@
 // the 2nd parameter is an array of 'requires'
 angular.module('WalkWithMeApp', ['ionic', 'WalkWithMeApp.controllers', 'WalkWithMeApp.services', 'ui.router', 'angularMoment'])
 
-.run(function($ionicPlatform, $state) {
+.run(function($ionicPlatform, $state, $ionicLoading, $rootScope) {
+    // For back button counter
+    $rootScope.backButtonClickCount = 0;
     $ionicPlatform.ready(function() {
         // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
         // for form inputs)
@@ -18,9 +20,22 @@ angular.module('WalkWithMeApp', ['ionic', 'WalkWithMeApp.controllers', 'WalkWith
 
     });
 
+    // Disable back button and exit on the second press    
     $ionicPlatform.registerBackButtonAction(function (event) {
-        //navigator.app.exitApp();
+        
          event.preventDefault();
+
+         $rootScope.backButtonClickCount++;
+         if ( $rootScope.backButtonClickCount == 1){
+            $ionicLoading.show({ template: "Press back again to exit app", noBackdrop: true, duration: 1000 });
+            var backCountTimer = setInterval( function(){
+                    clearInterval(backCountTimer);                    
+                        $rootScope.backButtonClickCount=0;
+                    },10000);
+         }
+         if ( $rootScope.backButtonClickCount == 2){
+            navigator.app.exitApp();    
+         }
     }, 100);
     // Start application here
     $state.go('start');
@@ -33,7 +48,8 @@ angular.module('WalkWithMeApp', ['ionic', 'WalkWithMeApp.controllers', 'WalkWith
     sURL_MenuService: 'http://www.embla.no/jm_json/menu.json',
     sURL_InviteService: 'http://www.embla.no/jm_json/invite.json',    
     sURL_HistoryService: 'http://www.embla.no/jm_json/history.json',
-    sURL_WalkNowService: 'http://www.embla.no/jm_json/walkNow.json'
+    sURL_WalkNowService: 'http://www.embla.no/jm_json/walkNow.json',
+    sURL_SendWalkieService : 'http://www.embla.no/jm_json/sendWalkie.json'
 })
 
 /*
@@ -44,9 +60,10 @@ angular.module('WalkWithMeApp', ['ionic', 'WalkWithMeApp.controllers', 'WalkWith
     sURL_MenuService: '/json/menu.json',
     sURL_InviteService: '/json/invite.json',    
     sURL_HistoryService: '/json/history.json',
-    sURL_WalkNowService: '/json/walkNow.json'
+    sURL_WalkNowService: '/json/walkNow.json',
+    sURL_SendWalkieService : 'http://www.embla.no/jm_json/walkNow.json'
 })
-/*
+
 .constant('URLS', {      
     sURL_ServerStats: 'http://localhost/WalkWithMe/php/index.php/WalkController/serverStat',
     sURL_LoginService: 'http://localhost/WalkWithMe/php/index.php/WalkController/loginUser',
@@ -54,9 +71,13 @@ angular.module('WalkWithMeApp', ['ionic', 'WalkWithMeApp.controllers', 'WalkWith
     sURL_MenuService: 'http://localhost/WalkWithMe/php/index.php/WalkController/loadMenu',
     sURL_InviteService: 'http://localhost/WalkWithMe/php/index.php/WalkController/loadUser',    
     sURL_HistoryService: 'http://localhost/WalkWithMe/php/index.php/WalkController/getHistory',
-    sURL_WalkNowService: '/json/walkNow.json'
-})
-*/
+    sURL_WalkNowService: '/json/walkNow.json',
+    sURL_SendWalkieService: 'http://www.embla.no/jm_json/walkNow.json',
+    sURL_DisplayInvitationService: 'http://localhost/WalkWithMe/php/index.php/WalkController/getInvitations',
+    sURL_JoinService: 'http://localhost/WalkWithMe/php/index.php/WalkController/updateInvitation'
+
+})*/
+
 // Create configuration parameter for
 .constant('angularMomentConfig', {
     

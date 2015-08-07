@@ -301,6 +301,8 @@ angular.module('WalkWithMeApp.controllers', ['angularMoment'])
 
 .controller('WalkNowCtrl', function($window, $rootScope, $scope,$ionicLoading, $state, $ionicModal, userService, errorService) {
 
+    // Initialize the last played message Id / Dont play the same message again and again
+    $scope.lastPlayedMessageId = 0;
     //Initialize the modal for walkies
     $ionicModal.fromTemplateUrl('templates/walkies.html', function($ionicModal) {
             $scope.modal = $ionicModal;
@@ -326,7 +328,9 @@ angular.module('WalkWithMeApp.controllers', ['angularMoment'])
             
             $scope.walkId = data.walkId;
             $scope.participants = data.participants;
-            $scope.lastMessage = data.lastMessage;                                
+            $scope.lastMessage = data.lastMessage;  
+            $scope.playSound();
+            
         })
         .error(function(data, status) {
             // htpp error
@@ -342,8 +346,37 @@ angular.module('WalkWithMeApp.controllers', ['angularMoment'])
          $state.go('menu');
     }
 
-    $scope.showWalkies = function(){
+    $scope.showWalkies = function(toId, toNickName){
+        $scope.sendWalkiesTo = {};
+        $scope.sendWalkiesTo.id = toId;
+        $scope.sendWalkiesTo.nickName = toNickName;
         $scope.modal.show();        
+    }
+
+    $scope.sendWalkie = function(walkieId){
+        $ionicLoading.show({ template: 'Loading...' });
+        console.log("Sending walkie to "+$scope.sendWalkiesTo.nickName + ","+ $scope.sendWalkiesTo.id + ",walkieId:"+walkieId);
+        userService.SendWalkieService($scope.sendWalkiesTo.id, walkieId)
+        .success(function(data) {
+
+            if ( data.statusCode > 0 ){
+                errorService.ShowError('Server appeared to be offline or in maintainance, Please try again later');                
+                return;
+            }            
+            
+            $scope.lastMessage  = data.lastMessage;  
+            $scope.playSound();
+            $scope.modal.hide();
+            $ionicLoading.hide();
+        })
+        .error(function(data, status) {
+            // htpp error
+            //show error message and exit the application            
+            $scope.modal.hide();
+            errorService.ShowError('Server appeared to be offline or in maintainance(HTTP), Please try again later');            
+            return;
+        }); 
+
     }
 
     $scope.showCamera = function(){
@@ -359,6 +392,14 @@ angular.module('WalkWithMeApp.controllers', ['angularMoment'])
         }, function(err) {
             alert("Err"+err);
         }, { quality: 50,   targetWidth: 320, targetHeight: 320 });
+    }
+
+    $scope.playSound = function(){
+        // TODO: play a sound
+        if ( $scope.lastMessage && $scope.lastMessage.messageId != $scope.lastPlayedMessageId ){
+            $scope.lastPlayedMessageId = $scope.lastMessage.messageId;
+            alert("Sound"+$scope.lastMessage.messageContent);
+        }
     }
 
     // Clear the modal window
@@ -515,62 +556,3 @@ angular.module('WalkWithMeApp.controllers', ['angularMoment'])
 ;
 
 
-/*
-$scope.onAccept = function(_walkId)
-                {
-        
-                    var status = "Joined";
-                    var walkId = _walkId;
-                    userService.JoinService(mobileNumber,walkId,status)
-                        .success(function(data){
-
-                            if ( data.statusCode > 0 ){
-                            errorService.ShowError('Server appeared to be offline or in maintainance, Please try again later');
-                            $state.go('join');
-                            return;
-                        }
-
-                        else{
-                            errorService.ShowError('Successfully Updated'); 
-                        }
-                });
-            }
-
-            $scope.onMaybe = function(_walkId)
-            {
-                var status = "Maybe";
-                var walkId = _walkId;
-                userService.JoinService(mobileNumber,walkId,status)
-                    .success(function(data){
-
-                if ( data.statusCode > 0 ){
-                errorService.ShowError('Server appeared to be offline or in maintainance, Please try again later');
-                $state.go('join');
-                return;
-            }
-
-            else{
-               errorService.ShowError('Successfully Updated'); 
-            }
-            });
-    }
-
-    $scope.onDecline = function(_walkId)
-    {
-        var status = "Declined";
-        var walkId = _walkId;
-        userService.JoinService(mobileNumber,walkId,status)
-            .success(function(data){
-
-                if ( data.statusCode > 0 ){
-                errorService.ShowError('Server appeared to be offline or in maintainance, Please try again later');
-                $state.go('join');
-                return;
-            }
-
-            else{
-               errorService.ShowError('Successfully Updated'); 
-            }
-            });
-    }
-*/

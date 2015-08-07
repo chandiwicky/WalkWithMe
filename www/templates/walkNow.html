@@ -12,7 +12,7 @@
 
 	<ion-content class="walking-footer-space">
 
-		<div class="panel-walking-list" data-ng-repeat="participant in participants">
+		<div class="panel-walking-list" data-ng-repeat="participant in participants" ng-click="showWalkies(participant.id,participant.nickName)">
 			<img ng-src="img/{{participant.profilePic}}">
 			<h2>{{participant.nickName}}</h2>
 
@@ -34,7 +34,7 @@
 				<h2>{{lastMessage.from}} send a walkie <img src="img/icon_walkie_30.png"/> to {{lastMessage.to}}</h2>
 			</div>
 			<div class="button-bar">
-				<a ng-click="showWalkies()">Send Walkies</a>
+				<a ng-click="showWalkies(0,'All')">Send Walkies</a>
 				<a ng-click="showCamera()">Send Picture</a>
 			</div>
 		</div>

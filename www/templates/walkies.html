@@ -3,6 +3,11 @@
       <h1 class="title">My Modal title</h1>
     </ion-header-bar>
     <ion-content>
+    Send to {{sendWalkiesTo.id}} / {{sendWalkiesTo.nickName}} <br/>
+      <button ng-click="sendWalkie('WALKIE_001')"> Walkie 1 </button>
+      <button ng-click="sendWalkie('WALKIE_002')"> Walkie 2 </button>
+      <button ng-click="sendWalkie('WALKIE_003')"> Walkie 3 </button>
+      <button ng-click="sendWalkie('WALKIE_004')"> Walkie 4 </button>
       <img ng-src="{{lastPhoto}}" style="max-width: 100%">
       <button ng-click="modal.hide()" >Close</button>
     </ion-content>
