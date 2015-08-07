@@ -138,7 +138,7 @@ angular.module('WalkWithMeApp.controllers', ['angularMoment'])
     }
 
     $scope.validate = function(){
-        alert($stateParams);
+        //alert($stateParams);
         //compair with the entered code
         $state.go('menu');
     }
@@ -347,15 +347,18 @@ angular.module('WalkWithMeApp.controllers', ['angularMoment'])
     }
 
     $scope.showCamera = function(){
-        alert("Camera");
+        
          navigator.camera.getPicture(function(imageURI) {
-
+            
+            $scope.lastPhoto = imageURI;
+            $scope.modal.show();    
+        
         // imageURI is the URL of the image that we can use for
         // an <img> element or backgroundImage.
-            alert("Done");
+            //alert("Done");
         }, function(err) {
             alert("Err"+err);
-        }, { quality: 50, destinationType: Camera.DestinationType.DATA_URL});
+        }, { quality: 50,   targetWidth: 320, targetHeight: 320 });
     }
 
     // Clear the modal window

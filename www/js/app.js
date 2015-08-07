@@ -15,9 +15,15 @@ angular.module('WalkWithMeApp', ['ionic', 'WalkWithMeApp.controllers', 'WalkWith
         if (window.StatusBar) {
             StatusBar.styleDefault();
         }
+
     });
+
+    $ionicPlatform.registerBackButtonAction(function (event) {
+        //navigator.app.exitApp();
+         event.preventDefault();
+    }, 100);
     // Start application here
-    $state.go('walkNow');
+    $state.go('start');
 })
 
 .constant('URLS', {      
@@ -40,7 +46,7 @@ angular.module('WalkWithMeApp', ['ionic', 'WalkWithMeApp.controllers', 'WalkWith
     sURL_HistoryService: '/json/history.json',
     sURL_WalkNowService: '/json/walkNow.json'
 })
-
+/*
 .constant('URLS', {      
     sURL_ServerStats: 'http://localhost/WalkWithMe/php/index.php/WalkController/serverStat',
     sURL_LoginService: 'http://localhost/WalkWithMe/php/index.php/WalkController/loginUser',
