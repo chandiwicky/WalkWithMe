@@ -151,8 +151,6 @@ angular.module('WalkWithMeApp.controllers', ['angularMoment'])
     var mobileNumber = 713456781;
     var username = "Mandy Moore";
     
-
-
     // Call the menu update every 1 minute and update it
     $scope.reloadMenu = function(mobileNumber, username) {
         console.log("Reloading menu");
@@ -408,8 +406,8 @@ angular.module('WalkWithMeApp.controllers', ['angularMoment'])
         
          navigator.camera.getPicture(function(imageURI) {
             
-            $scope.lastPhoto = imageURI;
-            $scope.modal.show();    
+            //$scope.lastPhoto = imageURI;
+            //$scope.modal.show();    
         
         // imageURI is the URL of the image that we can use for
         // an <img> element or backgroundImage.
