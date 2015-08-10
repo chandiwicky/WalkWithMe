@@ -69,15 +69,16 @@ angular.module('WalkWithMeApp', ['ionic', 'WalkWithMeApp.controllers', 'WalkWith
     sURL_LoginService: 'http://localhost/WalkWithMe/php/index.php/WalkController/loginUser',
     sURL_Register: '/json/register.json',
     sURL_MenuService: 'http://localhost/WalkWithMe/php/index.php/WalkController/loadMenu',
-    sURL_InviteService: 'http://localhost/WalkWithMe/php/index.php/WalkController/loadUser',    
+    sURL_InviteService: 'http://localhost/WalkWithMe/php/index.php/WalkController/loadUser',  
+    sURL_CreateWalkService: 'http://localhost/WalkWithMe/php/index.php/WalkController/createWalk', //added Service latest 
     sURL_HistoryService: 'http://localhost/WalkWithMe/php/index.php/WalkController/getHistory',
     sURL_WalkNowService: '/json/walkNow.json',
     sURL_SendWalkieService: 'http://www.embla.no/jm_json/walkNow.json',
     sURL_DisplayInvitationService: 'http://localhost/WalkWithMe/php/index.php/WalkController/getInvitations',
     sURL_JoinService: 'http://localhost/WalkWithMe/php/index.php/WalkController/updateInvitation'
 
-})*/
-
+})
+*/
 // Create configuration parameter for
 .constant('angularMomentConfig', {
     

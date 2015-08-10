@@ -38,6 +38,14 @@ angular.module('WalkWithMeApp.services',[]).factory('userService', function(URLS
         });
       },
 
+      CreateWalkService : function (mobileNumber, username, dateOfWalk){              
+              return $http({
+                  method : 'POST',
+                  url: URLS.sURL_CreateWalkService,
+                  data : {"mobileNumber" : mobileNumber , "username" : username, "dateOfWalk" : dateOfWalk}
+              });
+      },
+      
       InviteService : function (mobileNumber, username){              
               
               return $http({

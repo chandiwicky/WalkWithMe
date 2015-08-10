@@ -159,4 +159,22 @@ class WalkController extends CI_Controller {
         
 	}
 
+	public function createWalk()
+	{
+		$data = json_decode(file_get_contents("php://input"),TRUE);
+		$mobileNumber = (int) $data['mobileNumber'];
+		$username = $data['username'];
+		$dateOfWalk=$data['dateOfWalk'];
+		$endOfWalk ="2015-10-17 22:30:00";
+		$walkId = trim(com_create_guid(),'{}');
+		$resultSet = [];
+
+		//save a walk & get WalkId
+		$this->Walk->saveWalk($walkId,$mobileNumber,$username,$dateOfWalk,$endOfWalk);
+
+		$resultSet = array_merge(array("statusCode" => (int)0000),array("walkId" =>$walkId ));
+    	print_r(json_encode($resultSet));
+
+	}
+
 }

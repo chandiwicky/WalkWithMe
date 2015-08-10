@@ -213,7 +213,7 @@ angular.module('WalkWithMeApp.controllers', ['angularMoment'])
 })
 
 
-.controller('WalkCtrl', function($scope,$ionicLoading, $state, $window, $rootScope) {
+.controller('WalkCtrl', function($scope,$ionicLoading, $state, $window, $rootScope, userService, errorService) {
 
     //Setting date
     $scope.date     = moment().format("DD"); 
@@ -304,7 +304,36 @@ angular.module('WalkWithMeApp.controllers', ['angularMoment'])
     $scope.onCreate = function(){
         $rootScope.walkDate = $scope.selectedDate + " " + $scope.month + " " + $scope.year;
         $rootScope.walkTime = $scope.hour + "." + $scope.minutes + " " + $scope.am;
-        $state.go('invite');
+        var mobileNumber = 713456781;
+    var username = "Sachini Chathurika";
+    var dateOfWalk ="2015-10-17 20:30:00";
+
+         userService.CreateWalkService(mobileNumber, username, dateOfWalk)
+                .success(function(data) {
+
+                    if ( data.statusCode > 0 ){
+                        errorService.ShowError('Server appeared to be offline or in maintainance, Please try again later');
+                        $state.go('newWalk');
+                        return;
+                    }
+            
+                    else{
+
+                        $rootScope.walkId = data.walkId;
+                        console.log(data.walkId);
+                          $state.go('invite');
+
+
+                    }                       
+                })
+
+                .error(function(data) {
+                 // htpp error
+                //show error message and exit the application
+                errorService.ShowError('Server appeared to be offline or in maintainance(HTTP), Please try again later');
+                return;
+                }); 
+
     }
 
     $scope.onSwipeRight = function(){
