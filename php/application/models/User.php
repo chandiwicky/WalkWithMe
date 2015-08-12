@@ -23,13 +23,15 @@ class User extends CI_Model {
         return $userId->row()->id;
     }
 
-    //Chech credentials of a user at login
-     function login($userId,$password)
+    //Returns the userId if it matches
+    function login($mobileNumber,$nickName)
     {
         $credentials = null;
-        $credentials = $this->db->query("SELECT user.mobileNumber as 'mobileNumber', user.username as 'username' 
-            FROM user where user.id = '$userId' AND user.password = '$password' ");
-        return $credentials->row();
+        $credentials = $this->db->query("SELECT user.id as 'id' FROM user 
+                                        where user.mobileNumber = '$mobileNumber' AND user.nickName = '$nickName' ");
+        log_message('error', "SELECT user.id as 'id' FROM user 
+                                        where user.mobileNumber = '$mobileNumber' AND user.nickName = '$nickName' ");
+        return $credentials->row() ? $credentials->row()->id : -1;
     }
 
     // Create a new user / validation pending

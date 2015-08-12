@@ -48,17 +48,40 @@ angular.module('WalkWithMeApp.controllers', ['angularMoment'])
 .controller('LoginCtrl', function($window, $rootScope, $scope,$ionicLoading, $state, userService, errorService) {
 
     //TODO : From where is the mobile number added ?
-    var userId          = '';
-    var mobileNumber    = $scope.loginData.mobileNumber;
-    var nickName        = $scope.loginData.nickName;
+    $scope.loginData = {};
+    $scope.loginData.mobileNumber = '';
+    $scope.loginData.nickName = '';
         
     $scope.login = function(){
         
-        $ionicLoading.show({ template: 'Loading...' });
-        userService.LoginService(mobileNumber, username, password)
-        .success(function(data) {
+         var mobileNo = $scope.loginData.mobileNumber;
+            var nickName = $scope.loginData.nickName;
 
-            if ( data.statusCode > 0 ){
+            // TODO: Repeated in registration also
+            if ( !mobileNo || mobileNo == "" ){
+                errorService.ShowError('Mobile no cannot be empty');
+                return;
+            }
+
+            if ( isNaN(mobileNo) ){
+                errorService.ShowError('Mobile no has to contain numbers');
+                return;
+            }
+            if ( !nickName || nickName == "" ){
+                errorService.ShowError('Nick name no cannot be empty');
+                return;
+            }
+            if ( nickName.length < 4 ){
+                errorService.ShowError('Nick name no cannot be less than 4 characters');
+                return;
+            }
+
+        $ionicLoading.show({ template: 'Loading...' });
+        
+        userService.LoginService(mobileNo , nickName)        
+        .success(function(data) {
+            
+            if ( !angular.isDefined(data.statusCode) || data.statusCode > 0 ){
                 errorService.ShowError('The credentials you entered are incorrect. Please try again.');
                 $state.go('login');
                 return;
@@ -66,7 +89,7 @@ angular.module('WalkWithMeApp.controllers', ['angularMoment'])
             
             // Save user Id information and nickName
             $window.localStorage['userId'] = data.userId;
-            $window.localStorage['nickName'] = nickName;   
+            $window.localStorage['nickName'] = $scope.loginData.nickName;   
 
             // add to rootscope
             $rootScope.userId = $window.localStorage['userId'];
