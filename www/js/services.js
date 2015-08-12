@@ -15,11 +15,11 @@ angular.module('WalkWithMeApp.services',[]).factory('userService', function(URLS
               });
       }, // end function    
       
-      LoginService : function (mobileNumber, username, password){              
+      LoginService : function (nickName, mobileNumber){              
               return $http({
-                  method : 'GET',
+                  method : 'POST',
                   url: URLS.sURL_LoginService,
-                  data : {"mobileNumber" : mobileNumber , "username" : username, "password" : password}
+                  data : {"mobileNumber" : mobileNumber , "nickName" : nickName, "password" : password}
               });
       },
 

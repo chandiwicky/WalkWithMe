@@ -1,3 +1,10 @@
+/*
+
+    RootScope variables
+    $rootScope.userId       : userId returned by registration saved after validation ( add in login and reg-step2 )
+    $rootScope.nickName     : used for greetings ( add in login and reg-step2 )
+
+*/
 angular.module('WalkWithMeApp.controllers', ['angularMoment'])
 
 .controller('StartCtrl', function($window, $rootScope, $scope,$ionicLoading, $state, userService, errorService) {
@@ -7,17 +14,13 @@ angular.module('WalkWithMeApp.controllers', ['angularMoment'])
     userService.ServerStats()
         .success(function(data) {
             
-            // TODO : Remove Hard coding in live
-            //$window.localStorage['mobileNo'] = 713456781;
-            //$window.localStorage['nickName'] = "Mandy Moore";
-
             if ( data.statusCode > 0 ){
                 errorService.ShowError('Server appeared to be offline or in maintainance, Please try again later');
                 return;
             }
 
             //Check if the user is already logged in
-            if ( !$window.localStorage['mobileNo'] ){
+            if ( !$window.localStorage['userId'] ){
                     // Delay a little before loading the 
                     var loginTimer = setInterval( function(){
                     clearInterval(loginTimer);                    
@@ -26,7 +29,8 @@ angular.module('WalkWithMeApp.controllers', ['angularMoment'])
             }else{
                 
                 // Save to the rootScope can be used anywhere in the application
-                $rootScope.mobileNo = $window.localStorage['mobileNo'];
+                //$rootScope.mobileNo = $window.localStorage['mobileNo'];
+                $rootScope.userId = $window.localStorage['userId'];
                 $rootScope.nickName = $window.localStorage['nickName'];    
                 $state.go('menu');
             }
@@ -44,12 +48,13 @@ angular.module('WalkWithMeApp.controllers', ['angularMoment'])
 .controller('LoginCtrl', function($window, $rootScope, $scope,$ionicLoading, $state, userService, errorService) {
 
     //TODO : From where is the mobile number added ?
-    var mobileNumber = 713456781;
-    var username = $scope.username;
-    var password = $scope.password;
-    
+    var userId          = '';
+    var mobileNumber    = $scope.loginData.mobileNumber;
+    var nickName        = $scope.loginData.nickName;
+        
     $scope.login = function(){
         
+        $ionicLoading.show({ template: 'Loading...' });
         userService.LoginService(mobileNumber, username, password)
         .success(function(data) {
 
@@ -57,18 +62,19 @@ angular.module('WalkWithMeApp.controllers', ['angularMoment'])
                 errorService.ShowError('The credentials you entered are incorrect. Please try again.');
                 $state.go('login');
                 return;
-            }
+            }            
             
-            else{
-                 $ionicLoading.show({ template: 'Loading...' });
-                 $window.localStorage['mobileNo'] = mobileNumber;
-                 $window.localStorage['nickName'] = $scope.username;
-                 $rootScope.mobileNo = $window.localStorage['mobileNo'];
-                 $rootScope.nickName = $window.localStorage['nickName'];   
-                 $ionicLoading.show({ template: 'Loading...' }); 
-                 $state.go('menu');
-            }
-                     
+            // Save user Id information and nickName
+            $window.localStorage['userId'] = data.userId;
+            $window.localStorage['nickName'] = nickName;   
+
+            // add to rootscope
+            $rootScope.userId = $window.localStorage['userId'];
+            $rootScope.nickName = $window.localStorage['nickName'];
+            
+            $ionicLoading.hide(); 
+            $state.go('menu');
+                                 
         })
         .error(function(data) {
             // htpp error
@@ -85,8 +91,8 @@ angular.module('WalkWithMeApp.controllers', ['angularMoment'])
 })
 
 
-.controller('RegisterCtrl', function($scope,$ionicLoading, $state, $stateParams, userService, errorService) {
-
+.controller('RegisterCtrl', function($window, $scope, $ionicLoading, $state, $stateParams, userService, errorService) {
+    console.log("RegisterCtrl:Init");
     var registrationData = [];
     registrationData.mobileNo = "";
     registrationData.nickName = "";
@@ -132,7 +138,7 @@ angular.module('WalkWithMeApp.controllers', ['angularMoment'])
             //alert(data.content.code);
             // Save info for the second step
             // TODO: Params not working yet
-            $state.go('register-step2', { code: data.code, userId : data.userId });    
+            $state.go('register-step2', { code: data.code, userId : data.userId, nickName: $scope.registrationData.nickName });    
             
             $ionicLoading.hide();            
         }).error( function(data, status) {
@@ -150,8 +156,8 @@ angular.module('WalkWithMeApp.controllers', ['angularMoment'])
             errorService.ShowError('Sorry invalid code, please try again');
             return;  
         }
-        userId = $stateParams.userId;
 
+        userId = $stateParams.userId;
         userService.Validate(userId).success(function(data, status) {
 
             if ( data.statusCode > 0 ){
@@ -159,7 +165,10 @@ angular.module('WalkWithMeApp.controllers', ['angularMoment'])
                 return;
             }
 
-            console.log($stateParams);
+                // Save user Id information and nickName
+                $window.localStorage['userId'] = userId;
+                $window.localStorage['nickName'] = $stateParams.nickName;                
+
             $state.go('menu');  
             
             $ionicLoading.hide();            

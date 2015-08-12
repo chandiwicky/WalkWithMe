@@ -150,7 +150,7 @@ angular.module('WalkWithMeApp', ['ionic', 'WalkWithMeApp.controllers', 'WalkWith
         })
 
         .state('register-step2', {
-            url: "/register-step2/:code/:userId",
+            url: "/register-step2/:code/:userId/:nickName",
             templateUrl: "templates/registerStep2.html",
             controller: 'RegisterCtrl'
         })

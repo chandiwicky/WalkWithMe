@@ -35,10 +35,10 @@ class WalkController extends CI_Controller {
 			//TODO: log entries
 			// Save user	
 			// TODO; how to put try catch statements
-			$this->User->create($userId, $mobileNumber, $nickName, $verificationCode);
+			$retVal = $this->User->create($userId, $mobileNumber, $nickName, $verificationCode);
 
 			$registerRes = array('statusCode' => 0 , 'statusDesc' => "Ok", 'code' => $verificationCode, 'userId' => $userId );
-			print_r(json_encode($registerRes));	
+			print_r(json_encode($registerRes));				
 		}catch(Exception $e){
 			log_message('error', "register-err:".$e->getMessage());
 			$errorRes = array('statusCode' => 100 , 'statusDesc' => "Err-Register:".$e->getMessage() );
@@ -71,21 +71,31 @@ class WalkController extends CI_Controller {
 
 	public function loginUser()
 	{
-		$data = json_decode(file_get_contents("php://input"),TRUE);
-		$mobileNumber = (int) $data['mobileNumber'];
-		$username = $data['username'];
-		$password = $data['password'];
+		try {
+			$data = json_decode(file_get_contents("php://input"),TRUE);
+			// Bypass get the post data
+			$data 			= $_POST;
 
-		//Get the userId for the relevant mobile number
-		$userId = $this->User->getUserId($mobileNumber);
+			$mobileNumber 	= (int) $data['mobileNumber'];
+			$nickName 		= $data['nickName'];
 			
-		if($userId)
-			$result = $this->User->login($userId,$password);
-		if($result)
-			$status = array('statusCode' => 0 , 'statusDesc' => "Valid Credentials" );
-		else
-			$status = array('statusCode' => 1100 , 'statusDesc' => "Invalid Credentials" );
-		print_r(json_encode($status));
+			//Get the userId for the relevant mobile number
+			$userId = $this->User->getUserId($mobileNumber);
+				
+			if($userId)
+				$result = $this->User->login($userId,$password);
+
+			if($result)
+				$status = array('statusCode' => 0 , 'statusDesc' => "Valid Credentials" );
+			else
+				$status = array('statusCode' => 1100 , 'statusDesc' => "Invalid Credentials" );
+
+			print_r(json_encode($status));
+		}catch(Exception $e){
+			log_message('error', "validate-err:".$e->getMessage());
+			$errorRes = array('statusCode' => 200 , 'statusDesc' => "Err-Validate:".$e->getMessage() );
+			print_r(json_encode($errorRes));	
+		}
 	}
 
 	public function loadMenu()

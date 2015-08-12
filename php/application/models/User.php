@@ -36,8 +36,8 @@ class User extends CI_Model {
     function create($userId, $mobileNumber, $nickName, $verificationCode){
         // TODO: Do we user query for this, or something else?`
         try{
-        $saveUserQuery = $this->db->query("INSERT INTO `user`(`id`, `mobileNumber`, `username`, `nickName`, `verificationCode`)
-                                         VALUES ('".$userId."',".$mobileNumber.",'".$nickName."','".$nickName."','".$verificationCode."')");
+            $saveUserQuery = $this->db->query("INSERT INTO `user`(`id`, `mobileNumber`, `username`, `nickName`, `verificationCode`)
+                                         VALUES ('".$userId."',".$mobileNumber.",'".$nickName."','".$nickName."','".$verificationCode."')");            
         }catch(Exception $e){
             throw new Exception('Error: ' . $e->getMessage());
         }
