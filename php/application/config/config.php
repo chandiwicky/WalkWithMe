@@ -17,7 +17,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | environments.
 |
 */
-$config['base_url'] = 'http://localhost/WalkWithMe/php/index.php';
+$config['base_url'] = 'http://dev.juztmove.com/dev/walkwithme/index.php';
 
 /*
 |--------------------------------------------------------------------------

@@ -20,6 +20,7 @@ class Welcome extends CI_Controller {
 	 */
 	public function index()
 	{
+		log_message('error', 'test log dimuthu');
 		$this->load->view('welcome_message');
 	}
 

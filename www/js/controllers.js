@@ -90,7 +90,8 @@ angular.module('WalkWithMeApp.controllers', ['angularMoment'])
     var registrationData = [];
     registrationData.mobileNo = "";
     registrationData.nickName = "";
-    
+    registrationData.code = "";
+
     $scope.registrationData = registrationData;
     // show login ctrl
     $scope.sendCode = function(){
@@ -107,15 +108,21 @@ angular.module('WalkWithMeApp.controllers', ['angularMoment'])
             return;
         }
 
+        if ( isNaN(mobileNo) ){
+            errorService.ShowError('Mobile no has to contain numbers');
+            return;
+        }
         if ( !nickName || nickName == "" ){
             errorService.ShowError('Nick name no cannot be empty');
             return;
         }
-
+        if ( nickName.length < 4 ){
+            errorService.ShowError('Nick name no cannot be less than 4 characters');
+            return;
+        }
         $ionicLoading.show({ template: 'Loading...' });
 
-        userService.Register()
-        .success(function(data, status) {
+        userService.Register(mobileNo, nickName).success(function(data, status) {
 
             if ( data.statusCode > 0 ){
                 errorService.ShowError('Sorry cannot register you at this time,Please try again later');
@@ -125,7 +132,7 @@ angular.module('WalkWithMeApp.controllers', ['angularMoment'])
             //alert(data.content.code);
             // Save info for the second step
             // TODO: Params not working yet
-            $state.go('register-step2', { code: data.content.code });    
+            $state.go('register-step2', { code: data.code, userId : data.userId });    
             
             $ionicLoading.hide();            
         }).error( function(data, status) {
@@ -137,15 +144,38 @@ angular.module('WalkWithMeApp.controllers', ['angularMoment'])
         
     }
 
-    $scope.validate = function(){
-        //alert($stateParams);
+    $scope.validate = function(){        
         //compair with the entered code
-        $state.go('menu');
+        if ( $scope.registrationData.code != $stateParams.code ){
+            errorService.ShowError('Sorry invalid code, please try again');
+            return;  
+        }
+        userId = $stateParams.userId;
+
+        userService.Validate(userId).success(function(data, status) {
+
+            if ( data.statusCode > 0 ){
+                errorService.ShowError('Sorry cannot validate you at this time,Please try again later');
+                return;
+            }
+
+            console.log($stateParams);
+            $state.go('menu');  
+            
+            $ionicLoading.hide();            
+        }).error( function(data, status) {
+            // htpp error
+            //show error message and exit the application
+            errorService.ShowError('Server appeared to be offline or in maintainance(HTTP), Please try again later');
+            return;
+        });
+
+       
     }
 })
 
 .controller('MenuCtrl', function($window, $rootScope, $scope,$ionicLoading, $state, $interval, userService, errorService) {
-
+    console.log("MenuCtrl:Init");
     //$ionicLoading.show({ template: 'Loading...' });
     // TODO : Remove Hard coding in live
     var mobileNumber = 713456781;
@@ -192,23 +222,31 @@ angular.module('WalkWithMeApp.controllers', ['angularMoment'])
                 return;
             });
     }
-    
-    
+        
     $scope.walkNow = function(){
         // Send the start command - if not started..start it now
         // Go to walk now state
     }
-    console.log("loading menu pages")
-    menuReloadTicker = $interval( function(){
-        $scope.reloadMenu(mobileNumber, username);
+    
+    
+    /*
+    menuReloadTicker = $interval( function(){        
+        // hacked because dont know how to clear a interval when moving away from the current state.
+        console.log("Menu:"+$state.current.name);
+        if ( !$state.is('menu')){
+            $interval.cancel(menuReloadTicker);
+        }else{
+            $scope.reloadMenu(mobileNumber, username);
+        }
     }, 10000);
-
+    */
+    
     $scope.$on('$destroy', function () {
-        console.log("destroy scope")
-        $interval.cancel(menuReloadTicker);
+        console.log("MenuCtrl:destroy");        
     });
+    
     //Load it first time
-    $scope.reloadMenu(mobileNumber, username);
+    //$scope.reloadMenu(mobileNumber, username);
     
 })
 
@@ -345,8 +383,9 @@ angular.module('WalkWithMeApp.controllers', ['angularMoment'])
 })
 
 
-.controller('WalkNowCtrl', function($window, $rootScope, $scope,$ionicLoading, $state, $ionicModal, userService, errorService) {
-
+.controller('WalkNowCtrl', function($window, $rootScope, $scope,$ionicLoading, $state, $ionicModal, $interval, userService, errorService) {
+    // WalkCtrl initialization
+    console.log("WalkCtrl:Init");
     // Initialize the last played message Id / Dont play the same message again and again
     $scope.lastPlayedMessageId = 0;
     //Initialize the modal for walkies
@@ -363,27 +402,30 @@ angular.module('WalkWithMeApp.controllers', ['angularMoment'])
     // Set interval and get information from server
     // If exceeding the planned time "doneWalking"
     // Update the list of users and their walking states
-    userService.WalkNowService("905c5312-344d-11e5-9493-ec0ec40a1250")
-        .success(function(data) {
+    $scope.reloadWalkNow = function(){
+        console.log("reload walk now" );
+        userService.WalkNowService("905c5312-344d-11e5-9493-ec0ec40a1250")
+            .success(function(data) {
 
-            if ( data.statusCode > 0 ){
-                errorService.ShowError('Server appeared to be offline or in maintainance, Please try again later');
+                if ( data.statusCode > 0 ){
+                    errorService.ShowError('Server appeared to be offline or in maintainance, Please try again later');
+                    $state.go('menu');
+                    return;
+                }            
+                
+                $scope.walkId = data.walkId;
+                $scope.participants = data.participants;
+                $scope.lastMessage = data.lastMessage;              
+                
+            })
+            .error(function(data, status) {
+                // htpp error
+                //show error message and exit the application            
+                errorService.ShowError('Server appeared to be offline or in maintainance(HTTP), Please try again later:Error:'+status+','+data);
                 $state.go('menu');
                 return;
-            }            
-            
-            $scope.walkId = data.walkId;
-            $scope.participants = data.participants;
-            $scope.lastMessage = data.lastMessage;              
-            
-        })
-        .error(function(data, status) {
-            // htpp error
-            //show error message and exit the application            
-            errorService.ShowError('Server appeared to be offline or in maintainance(HTTP), Please try again later:Error:'+status+','+data);
-            $state.go('menu');
-            return;
-        }); 
+            }); 
+    } // end reloadWalkNow
 
     // Done walking
     $scope.doneWalking = function(){        
@@ -464,8 +506,22 @@ angular.module('WalkWithMeApp.controllers', ['angularMoment'])
         //$ionicLoading.show({ template: "media"+status, noBackdrop: true, duration: 1000 });        
     }
 
+   
+    //$scope.reloadWalkNow();
+    /*
+    walkNowReloadTicker = $interval( function(){        
+        // hacked because dont know how to clear a interval when moving away from the current state.        
+        console.log("WN:"+$state.current.name);
+        if ( !$state.is('walkNow')){
+            $interval.cancel(walkNowReloadTicker);
+        }else{
+            $scope.reloadWalkNow();
+        }
+    }, 10000)
+    */
     // Clear the modal window
     $scope.$on('$destroy', function() {
+        console.log("WalkNowCtrl:destroy");
         $scope.modal.remove();
     });
 })

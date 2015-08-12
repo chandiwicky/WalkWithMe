@@ -1,5 +1,8 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
+header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Methods: GET, POST");
+header("Access-Control-Allow-Headers: *");
 
 class WalkController extends CI_Controller {
 
@@ -11,7 +14,59 @@ class WalkController extends CI_Controller {
 	public function serverStat()
 	{
 		$status = array('statusCode' => 0 , 'statusDesc' => "Server Running" );
-		print_r(json_encode($status));
+		print_r(json_encode($status));		
+	}
+
+	/*
+	*	Register the user and issue a validation code
+	*/
+	public function register()
+	{
+		try {
+			// JSON object data
+			$data 			= json_decode(file_get_contents("php://input"),TRUE);
+			// Bypass get the post data
+			$data 			= $_POST;
+			$mobileNumber 	= (double) $data['mobileNumber'];
+			$nickName 		= $data['nickName'];		
+			$verificationCode = rand(100,900); 
+			$userId 		= trim($this->getGUID(),'{}');
+
+			//TODO: log entries
+			// Save user	
+			// TODO; how to put try catch statements
+			$this->User->create($userId, $mobileNumber, $nickName, $verificationCode);
+
+			$registerRes = array('statusCode' => 0 , 'statusDesc' => "Ok", 'code' => $verificationCode, 'userId' => $userId );
+			print_r(json_encode($registerRes));	
+		}catch(Exception $e){
+			log_message('error', "register-err:".$e->getMessage());
+			$errorRes = array('statusCode' => 100 , 'statusDesc' => "Err-Register:".$e->getMessage() );
+			print_r(json_encode($errorRes));	
+		}
+	}
+
+	/*
+	*	Validate and complete the registration
+	*/
+	public function validate()
+	{
+		try {
+			// JSON object data
+			$data 			= json_decode(file_get_contents("php://input"),TRUE);
+			// Bypass get the post data
+			$data 			= $_POST;
+			$userId 		= $data['userId'];
+			
+			$this->User->validate($userId);
+
+			$registerRes = array('statusCode' => 0 , 'statusDesc' => "Ok" );
+			print_r(json_encode($registerRes));	
+		}catch(Exception $e){
+			log_message('error', "validate-err:".$e->getMessage());
+			$errorRes = array('statusCode' => 101 , 'statusDesc' => "Err-Validate:".$e->getMessage() );
+			print_r(json_encode($errorRes));	
+		}	
 	}
 
 	public function loginUser()
@@ -39,8 +94,8 @@ class WalkController extends CI_Controller {
 		$mobileNumber = (int) $data['mobileNumber'];
 		$username = $data['username'];
 
-		$resultSet = [];
-		$resultWalkInvitations = [];
+		$resultSet = array();
+		$resultWalkInvitations = array();
 		
 		
 		//Extracting the walking invitations
@@ -106,8 +161,8 @@ class WalkController extends CI_Controller {
 		$data = json_decode(file_get_contents("php://input"),TRUE);
 		$mobileNumber = (int) $data['mobileNumber'];
 		$username = $data['username'];
-		$resultSet = [];
-		//$resultWalkInvitations = [];
+		$resultSet = array();
+		//$resultWalkInvitations = array();
 				
     	//Extracting the walkwithmeusers
     	$users = $this->User->getUsers($mobileNumber);
@@ -123,7 +178,7 @@ class WalkController extends CI_Controller {
 		$data = json_decode(file_get_contents("php://input"),TRUE);
 		$mobileNumber = (int) $data['mobileNumber'];
 
-		$resultWalkInvitations = [];
+		$resultWalkInvitations = array();
 
 		//Extracting the walking invitations
 		$result = $this->Walk->getInvitations($mobileNumber);
@@ -167,7 +222,7 @@ class WalkController extends CI_Controller {
 		$dateOfWalk=$data['dateOfWalk'];
 		$endOfWalk ="2015-10-17 22:30:00";
 		$walkId = trim(com_create_guid(),'{}');
-		$resultSet = [];
+		$resultSet = array();
 
 		//save a walk & get WalkId
 		$this->Walk->saveWalk($walkId,$mobileNumber,$username,$dateOfWalk,$endOfWalk);
@@ -175,6 +230,27 @@ class WalkController extends CI_Controller {
 		$resultSet = array_merge(array("statusCode" => (int)0000),array("walkId" =>$walkId ));
     	print_r(json_encode($resultSet));
 
+	}
+
+	/** 
+	* Utility functions area
+	*/
+	public function getGUID(){
+	    if (function_exists('com_create_guid')){
+	        return com_create_guid();
+	    }else{
+	        mt_srand((double)microtime()*10000);//optional for php 4.2.0 and up.
+	        $charid = strtoupper(md5(uniqid(rand(), true)));
+	        $hyphen = chr(45);// "-"
+	        $uuid = chr(123)// "{"
+	            .substr($charid, 0, 8).$hyphen
+	            .substr($charid, 8, 4).$hyphen
+	            .substr($charid,12, 4).$hyphen
+	            .substr($charid,16, 4).$hyphen
+	            .substr($charid,20,12)
+	            .chr(125);// "}"
+	        return $uuid;
+	    }
 	}
 
 }

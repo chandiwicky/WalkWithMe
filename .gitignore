@@ -44,3 +44,5 @@ Temporary Items
 
 #app related
 platforms
+php/application/logs/log-2015-08-11.php
+php/sftp-config.json
