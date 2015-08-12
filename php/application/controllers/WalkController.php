@@ -257,6 +257,67 @@ class WalkController extends CI_Controller {
 		}
 	}
 
+	
+	public function setStartWalk()
+	{
+		try{
+
+		$data          = json_decode(file_get_contents("php://input"),TRUE);
+		$walkId        = $data['walkId'];
+		$participantId = $data['participantId'];
+		$startTime     = $data['startTime'];
+
+		$this->walkNow->updateStartUser($startTime,$walkId,$participantId);
+		}
+
+		catch(Exception e){
+		log_message('error', "validate-err:".$e->getMessage());
+		$errorRes = array('statusCode' => 200 , 'statusDesc' => "Err-Validate:".$e->getMessage() );
+		print_r(json_encode($errorRes));
+		}
+	}
+
+
+	public function setEndWalk()
+	{
+		try{
+
+		$data          = json_decode(file_get_contents("php://input"),TRUE);
+		$walkId        = $data['walkId'];
+		$participantId = $data['participantId'];
+		$endTime       = $data['endTime'];
+
+		$this->walkNow->updateEndUser($endTime,$walkId,$participantId);
+			}
+
+		catch(Exception e){
+		log_message('error', "validate-err:".$e->getMessage());
+		$errorRes = array('statusCode' => 200 , 'statusDesc' => "Err-Validate:".$e->getMessage() );
+		print_r(json_encode($errorRes));
+		}
+	}
+
+
+	public function getJoinedUsers()
+	{
+		try {
+			// JSON object data
+			$data 			= json_decode(file_get_contents("php://input"),TRUE);
+			// Bypass get the post data
+			$walkId 		= $data['walkId'];
+			
+			$WalkingUsers=$this->WalkNow->getWalkingUsers($WalkId);
+
+			$registerRes = array_merge(array("statusCode" => (int)0000),array("participants" =>$WalkingUsers )); 
+			print_r(json_encode($registerRes));	
+		}catch(Exception $e){
+			log_message('error', "validate-err:".$e->getMessage());
+			$errorRes = array('statusCode' => 101 , 'statusDesc' => "Err-Validate:".$e->getMessage() );
+			print_r(json_encode($errorRes));	
+		}	
+	}
+
+
 	/** 
 	* Utility functions area
 	*/
