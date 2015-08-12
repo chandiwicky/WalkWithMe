@@ -48,11 +48,11 @@ angular.module('WalkWithMeApp.services',[]).factory('userService', function(URLS
         });
       },
 
-      CreateWalkService : function (mobileNumber, username, dateOfWalk){              
+      CreateWalkService : function (userId, dateOfWalk){              
               return $http({
-                  method : 'GET',
+                  method : 'POST',
                   url: URLS.sURL_CreateWalkService,
-                  data : {"mobileNumber" : mobileNumber , "username" : username, "dateOfWalk" : dateOfWalk}
+                  data : {"userId" : userId , "dateOfWalk" : dateOfWalk}
               });
       },
       

@@ -293,6 +293,8 @@ angular.module('WalkWithMeApp.controllers', ['angularMoment'])
     $scope.calTitle = moment().format("MMM YYYY");
     $scope.weekOne  = [];
     $scope.weekTwo  = [];
+    // 2015.08.12 : Get the date in one variable
+    $scope.walkDate = moment().format("YYYY-MM-DD") + " " + $scope.hour + ":"+ $scope.minutes + ":" + $scope.am;
 
     $scope.setThisWeek = function(){
         $scope.isFirstWeek = 1;
@@ -371,37 +373,28 @@ angular.module('WalkWithMeApp.controllers', ['angularMoment'])
         
     }
 
-    $scope.onCreate = function(){
-        $rootScope.walkDate = $scope.selectedDate + " " + $scope.month + " " + $scope.year;
-        $rootScope.walkTime = $scope.hour + "." + $scope.minutes + " " + $scope.am;
-        var mobileNumber = 713456781;
-    var username = "Sachini Chathurika";
-    var dateOfWalk ="2015-10-17 20:30:00";
+    $scope.createWalk = function(){
+        
+        var userId      = $rootScope.userId;        
+        var dateOfWalk  = $scope.selectedDate + " " + $scope.month + " " + $scope.year + " " + 
+                          $scope.hour + "." + $scope.minutes + " " + $scope.am;
 
-         userService.CreateWalkService(mobileNumber, username, dateOfWalk)
+        console.log("Create new walk:"+dateOfWalk);
+        $ionicLoading.show({ template: 'Loading...' });
+        userService.CreateWalkService(userId, dateOfWalk)
                 .success(function(data) {
-
-                    if ( data.statusCode > 0 ){
-                        errorService.ShowError('Server appeared to be offline or in maintainance, Please try again later');
-                        $state.go('newWalk');
+                    if ( !angular.isDefined(data.statusCode) || data.statusCode > 0 ){
+                        errorService.ShowError('Server appeared to be offline or in maintainance, Please try again later');                        
                         return;
-                    }
-            
-                    else{
+                    }                               
 
-                        $rootScope.walkId = data.walkId;
-                        console.log(data.walkId);
-                          $state.go('invite');
-
-
-                    }                       
+                    $rootScope.walkId = data.walkId;
+                    console.log("Create new walk-Ok,walkId="+data.walkId);
+                    $state.go('invite');                    
                 })
-
                 .error(function(data) {
-                 // htpp error
-                //show error message and exit the application
-                errorService.ShowError('Server appeared to be offline or in maintainance(HTTP), Please try again later');
-                return;
+                    errorService.ShowError('Server appeared to be offline or in maintainance(HTTP), Please try again later');
+                    return;
                 }); 
 
     }
