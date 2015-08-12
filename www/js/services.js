@@ -112,7 +112,7 @@ angular.module('WalkWithMeApp.services',[]).factory('userService', function(URLS
               return $http({
                   method : 'GET',
                   url: URLS.sURL_WalkNowEndTimeService,
-                  data : {"walkId" : walkId "participantId" : participantId, "endTime" : endTime}
+                  data : {"walkId" : walkId, "participantId" : participantId, "endTime" : endTime}
               });
       },
 
