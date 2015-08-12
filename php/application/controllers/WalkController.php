@@ -240,19 +240,20 @@ class WalkController extends CI_Controller {
 			$data 			= $_POST;
 			$userId 		= $data['userId'];
 			$dateOfWalk		= $data['dateOfWalk'];
-			//$endOfWalk 		= dateOfWalk+1hour;
-			
+			$endOfWalkDt	= new DateTime($dateOfWalk);
+			$endOfWalkDt->modify("+1 hours");
+			$endOfWalk 		= $endOfWalkDt->format('Y-m-d h:i:s a');
 
 			$resultSet 		= array();
 
 			//save a walk & get WalkId
-			$this->Walk->saveWalk($walkId,$mobileNumber,$username,$dateOfWalk,$endOfWalk);
+			$this->Walk->saveWalk($walkId,$userId,$dateOfWalk,$endOfWalk);
 
-			$resultSet = array_merge(array("statusCode" => (int)0000),array("walkId" =>$walkId ));
+			$resultSet = array("statusCode" => 0 , "walkId" =>$walkId );
 	    	print_r(json_encode($resultSet));
 		}catch(Exception $e){
 			log_message('error', "createWalk-err:".$e->getMessage());
-			$errorRes = array('statusCode' => 00 , 'statusDesc' => "Err-Register:".$e->getMessage() );
+			$errorRes = array('statusCode' => 180 , 'statusDesc' => "Err-Register:".$e->getMessage() );
 			print_r(json_encode($errorRes));	
 		}
 	}
@@ -270,7 +271,7 @@ class WalkController extends CI_Controller {
 		$this->walkNow->updateStartUser($startTime,$walkId,$participantId);
 		}
 
-		catch(Exception e){
+		catch(Exception $e){
 		log_message('error', "validate-err:".$e->getMessage());
 		$errorRes = array('statusCode' => 200 , 'statusDesc' => "Err-Validate:".$e->getMessage() );
 		print_r(json_encode($errorRes));
@@ -290,7 +291,7 @@ class WalkController extends CI_Controller {
 		$this->walkNow->updateEndUser($endTime,$walkId,$participantId);
 			}
 
-		catch(Exception e){
+		catch(Exception $e){
 		log_message('error', "validate-err:".$e->getMessage());
 		$errorRes = array('statusCode' => 200 , 'statusDesc' => "Err-Validate:".$e->getMessage() );
 		print_r(json_encode($errorRes));

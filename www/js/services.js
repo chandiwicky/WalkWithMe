@@ -141,9 +141,20 @@ angular.module('WalkWithMeApp.services',[]).factory('userService', function(URLS
 .factory('errorService', function($ionicLoading){
     return {      
       ShowError : function (msgHtml){              
-      	$ionicLoading.show({ template: msgHtml, noBackdrop: true, duration: 2000 });
+      	$ionicLoading.show({ template: "<div class='error'><div><span>"+msgHtml+"</span></div></div>", noBackdrop: true, duration: 2000 });
       } // end function
     }; // end return     
 })
 
+
+.factory('loadService', function($ionicLoading){
+    return {      
+      Show : function (){              
+        $ionicLoading.show({ template: "<div class='animation'><div><span>Loading</span></div></div>" });
+      }, // end function
+      Hide : function (){        
+        $ionicLoading.hide();
+      } // end function
+    }; // end return         
+})
 

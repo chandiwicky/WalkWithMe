@@ -135,9 +135,9 @@ class Walk extends CI_Model {
         return $historyQuery->result();
     }
 
-    function saveWalk($walkId,$mobileNumber,$username,$dateOfWalk,$endOfWalk){
-        $saveWalkQuery = $this->db->query("INSERT INTO `userwalks`(`id`, `inviterId`, `inviterName`, `dateOfWalk`, `suggestedEndOfWalk`, `milestone`)
-                                         VALUES ('".$walkId."','".$mobileNumber."','".$username."','".$dateOfWalk."','".$endOfWalk."','p')");                                     
+    function saveWalk($walkId,$userId,$dateOfWalk,$endOfWalk){
+        $saveWalkQuery = $this->db->query("INSERT INTO `userwalks`(`id`, `userId`, `dateOfWalk`, `suggestedEndOfWalk`, `milestone`)
+                                         VALUES ('".$walkId."','".$userId."','".$dateOfWalk."','".$endOfWalk."','p')");                                     
     }
 
 

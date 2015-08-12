@@ -283,7 +283,7 @@ angular.module('WalkWithMeApp.controllers', ['angularMoment'])
 })
 
 
-.controller('WalkCtrl', function($scope,$ionicLoading, $state, $window, $rootScope, userService, errorService) {
+.controller('WalkCtrl', function($scope,$ionicLoading, $state, $window, $rootScope, userService, errorService, loadService) {
 
     //Setting date
     $scope.date     = moment().format("DD"); 
@@ -294,7 +294,7 @@ angular.module('WalkWithMeApp.controllers', ['angularMoment'])
     $scope.weekOne  = [];
     $scope.weekTwo  = [];
     // 2015.08.12 : Get the date in one variable
-    $scope.walkDate = moment().format("YYYY-MM-DD") + " " + $scope.hour + ":"+ $scope.minutes + ":" + $scope.am;
+    $scope.walkDate = moment().format("YYYY-MM-DD") + " " + $scope.hour + ":"+ $scope.minutes + " " + $scope.am;
 
     $scope.setThisWeek = function(){
         $scope.isFirstWeek = 1;
@@ -324,7 +324,8 @@ angular.module('WalkWithMeApp.controllers', ['angularMoment'])
 
         $scope.selectedDate = _index;
         $scope.setClass(_index);
-        
+        // 2015.08.12 : Get the date in one variable
+        $scope.walkDate = moment().format("YYYY-MM-") +$scope.selectedDate+ " " + $scope.hour + ":"+ $scope.minutes + " " + $scope.am;
     }
 
     //function to set the class of the days
@@ -376,11 +377,11 @@ angular.module('WalkWithMeApp.controllers', ['angularMoment'])
     $scope.createWalk = function(){
         
         var userId      = $rootScope.userId;        
-        var dateOfWalk  = $scope.selectedDate + " " + $scope.month + " " + $scope.year + " " + 
-                          $scope.hour + "." + $scope.minutes + " " + $scope.am;
+        var dateOfWalk  = $scope.walkDate;
 
-        console.log("Create new walk:"+dateOfWalk);
-        $ionicLoading.show({ template: 'Loading...' });
+        console.log("Create new walk:"+$scope.walkDate);
+        //$ionicLoading.show({ template: '<div class="animation"><div><span>Loading</span></div></div>' });  
+        loadService.Show();
         userService.CreateWalkService(userId, dateOfWalk)
                 .success(function(data) {
                     if ( !angular.isDefined(data.statusCode) || data.statusCode > 0 ){
@@ -390,20 +391,18 @@ angular.module('WalkWithMeApp.controllers', ['angularMoment'])
 
                     $rootScope.walkId = data.walkId;
                     console.log("Create new walk-Ok,walkId="+data.walkId);
+                    loadService.Hide();
                     $state.go('invite');                    
                 })
                 .error(function(data) {
                     errorService.ShowError('Server appeared to be offline or in maintainance(HTTP), Please try again later');
                     return;
                 }); 
-
     }
 
     $scope.onSwipeRight = function(){
          $state.go('menu');
-    }
-
-       
+    }      
     
 })
 
