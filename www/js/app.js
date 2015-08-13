@@ -51,7 +51,7 @@ angular.module('WalkWithMeApp', ['ionic', 'WalkWithMeApp.controllers', 'WalkWith
     sURL_WalkNowService: 'http://www.embla.no/jm_json/walkNow.json',
     sURL_SendWalkieService : 'http://www.embla.no/jm_json/sendWalkie.json'
 })
-*/
+
 // juztMov server
 
 .constant('URLS', {      
@@ -85,7 +85,7 @@ angular.module('WalkWithMeApp', ['ionic', 'WalkWithMeApp.controllers', 'WalkWith
     sURL_WalkNowService: '/json/walkNow.json',
     sURL_SendWalkieService : 'http://www.embla.no/jm_json/walkNow.json'
 })
-
+*/
 .constant('URLS', {      
     sURL_ServerStats: 'http://localhost/WalkWithMe/php/index.php/WalkController/serverStat',
     sURL_LoginService: 'http://localhost/WalkWithMe/php/index.php/WalkController/loginUser',
@@ -94,13 +94,13 @@ angular.module('WalkWithMeApp', ['ionic', 'WalkWithMeApp.controllers', 'WalkWith
     sURL_InviteService: 'http://localhost/WalkWithMe/php/index.php/WalkController/loadUser',  
     sURL_CreateWalkService: 'http://localhost/WalkWithMe/php/index.php/WalkController/createWalk', //added Service latest 
     sURL_HistoryService: 'http://localhost/WalkWithMe/php/index.php/WalkController/getHistory',
-    sURL_WalkNowService: '/json/walkNow.json',
+    sURL_WalkNowService: 'http://localhost/WalkWithMe/php/index.php/WalkController/walkingNow',
     sURL_SendWalkieService: 'http://www.embla.no/jm_json/walkNow.json',
     sURL_DisplayInvitationService: 'http://localhost/WalkWithMe/php/index.php/WalkController/getInvitations',
     sURL_JoinService: 'http://localhost/WalkWithMe/php/index.php/WalkController/updateInvitation'
 
 })
-*/
+
 // Create configuration parameter for
 .constant('angularMomentConfig', {
     

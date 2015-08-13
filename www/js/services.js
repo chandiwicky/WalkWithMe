@@ -108,7 +108,6 @@ angular.module('WalkWithMeApp.services',[]).factory('userService', function(URLS
               });
       },
 
-
       SendStartTimeService : function (walkId){              
               return $http({
                   method : 'GET',
