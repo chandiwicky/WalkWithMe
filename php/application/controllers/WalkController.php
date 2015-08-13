@@ -4,6 +4,18 @@ header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: GET, POST");
 header("Access-Control-Allow-Headers: *");
 
+
+/*
+
+	0 	: Pending
+	1   : Accepted
+	2 	: Maybe
+	3   : Decline
+	10  : Walking
+	11  : Completed
+	12  : Completed-Forced
+
+*/
 class WalkController extends CI_Controller {
 
 	public function index()
@@ -99,51 +111,48 @@ class WalkController extends CI_Controller {
 		}
 	}
 
-	// Error code : 130+
+	/*
+	*	 Load menu - next walk /invitations/history- Error code : 130+
+	*/
 	public function loadMenu()
 	{
-		$data = json_decode(file_get_contents("php://input"),TRUE);
-		$mobileNumber = (int) $data['mobileNumber'];
-		$username = $data['username'];
+		try{
+			$data = json_decode(file_get_contents("php://input"),TRUE);
+			// Bypass get the post data
+			$data 			= $_POST;
+			$userId 		= $data['userId'];
+			
+			$resultSet = array();
+			$resultWalkInvitations = array();
+			//Extracting the walking invitations			
+			$resultWalkInvitations = $this->Walk->getInvitations($userId);
 
-		$resultSet = array();
-		$resultWalkInvitations = array();
-		
-		
-		//Extracting the walking invitations
-		$result = $this->Walk->getInvitations($mobileNumber);
-		if (count($result) > 0)
-        {
-            foreach ($result as $row)
-            {
-                
-               $walkId = $row->walkId;
-               $row->participants = $this->Walk->getParticipantsOfInvitation($walkId, $mobileNumber);
-               array_push($resultWalkInvitations, $row);
-               
-            }
-        }
-    
-		//Extracting next walk details
-		$nextWalk = $this->Walk->getNextWalk($mobileNumber);
-    	if(count($nextWalk) > 0)
-      	{
-            foreach ($nextWalk as $row)
-            {
-                
-               $walkId = $row->walkId;
-               $row->participants = $this->Walk->getParticipants($walkId, $mobileNumber);
-               
-            }
-        }
+			//Extracting next walk details
+			$nextFirstWalk = array();
+			$nextWalk = $this->Walk->getNextWalk($userId);
 
-		
-    	//Extracting the walking history
-    	$walkHistory = $this->Walk->getHistoryOfWalks($mobileNumber);
-        
-    	//merging the result array
-    	$resultSet = array_merge(array("statusCode" => (int)0000),array("nextWalk" => $nextWalk), array("invitations" => $resultWalkInvitations), array("walkHistory" => $walkHistory));
-    	print_r(json_encode($resultSet));
+	    	if(count($nextWalk) > 0)
+	      	{
+	      		$nextFirstWalk 	= $nextWalk[0];
+	            $walkId 		= $nextFirstWalk->walkId;
+	            $nextFirstWalk->participants = $this->Walk->getParticipants($walkId, $userId);
+	            //$participants 	= $this->Walk->getParticipants($walkId, $userId);	               
+	            //array_merge(array($nextFirstWalk) , array("participants" => $participants) );
+	        }
+
+			
+	    	//Extracting the walking history	    	
+	    	$walkHistory = array();
+	    	$walkHistory = $this->Walk->getHistoryOfWalks($userId);
+	        
+	    	//merging the result array
+	    	$resultSet = array_merge(array("statusCode" => 0, "nextWalk" => $nextFirstWalk), array("invitations" => $resultWalkInvitations), array("walkHistory" => $walkHistory));
+	    	print_r(json_encode($resultSet));
+	    }catch(Exception $e){
+			log_message('error', "Menu-err:".$e->getMessage());
+			$errorRes = array('statusCode' => 301 , 'statusDesc' => "Err-Menu:".$e->getMessage() );
+			print_r(json_encode($errorRes));	
+		}
 	}
 
 	// Error code : 140+
@@ -168,48 +177,87 @@ class WalkController extends CI_Controller {
     	print_r(json_encode($resultSet));
 	}
 
-	// Error code : 150+
+	/*
+	*	 Load users for invite : Error code : 150+
+	*/
 	public function loadUser()
 	{
-		$data = json_decode(file_get_contents("php://input"),TRUE);
-		$mobileNumber = (int) $data['mobileNumber'];
-		$username = $data['username'];
-		$resultSet = array();
-		//$resultWalkInvitations = array();
+		try {
+			$data = json_decode(file_get_contents("php://input"),TRUE);
+			//By pass
+			$data 			= $_POST;
+			$userId = $data['userId'];
+			$walkId = $data['walkId'];
+			$resultSet = array();
 				
-    	//Extracting the walkwithmeusers
-    	$users = $this->User->getUsers($mobileNumber);
-        
-    	//merging the result array
-    	$resultSet = array_merge(array("statusCode" => (int)0000),array("users" =>$users ));
-    	print_r(json_encode($resultSet));
+	    	//Extracting the walkwithmeusers
+	    	$users = $this->User->getUsers($walkId,$userId);
+	        
+	    	//merging the result array
+	    	$resultSet = array_merge(array("statusCode" => (int)0000),array("users" =>$users ));
+	    	print_r(json_encode($resultSet));
+	    }catch(Exception $e){
+			log_message('error', "loadusers-err:".$e->getMessage());
+			$errorRes = array('statusCode' => 150 , 'statusDesc' => "Err-loadusers:".$e->getMessage() );
+			print_r(json_encode($errorRes));	
+		}
+
+	}
+
+/*
+	*	 Load users for invite : Error code : 150+
+	*/
+	public function invite()
+	{
+		try {
+			$data = json_decode(file_get_contents("php://input"),TRUE);
+			//By pass
+			$data 			= $_POST;
+			$inviteId 		= trim($this->getGUID(),'{}');					
+			$walkId 		= $data['walkId'];
+			$participantId	= $data['userId'];
+			$resultSet 		= array();
+				
+	    	//Extracting the walkwithmeusers
+	    	$users = $this->Walk->inviteWalk($inviteId,$walkId,$participantId,0);
+	        
+	    	//merging the result array
+	    	$resultSet = array('statusCode' => 0 , 'statusDesc' => "Ok" );
+	    	print_r(json_encode($resultSet));
+	    }catch(Exception $e){
+			log_message('error', "invite-err:".$e->getMessage());
+			$errorRes = array('statusCode' => 150 , 'statusDesc' => "Err-invite:".$e->getMessage() );
+			print_r(json_encode($errorRes));	
+		}
 
 	}
 
 	// Error code : 160+
 	public function getInvitations()
 	{
-		$data = json_decode(file_get_contents("php://input"),TRUE);
-		$mobileNumber = (int) $data['mobileNumber'];
+		try {
+			$data = json_decode(file_get_contents("php://input"),TRUE);
+			//By pass
+			$data 			= $_POST;
+			$userId 		= $data['userId'];
 
-		$resultWalkInvitations = array();
-
-		//Extracting the walking invitations
-		$result = $this->Walk->getInvitations($mobileNumber);
-		if (count($result) > 0)
-        {
-            foreach ($result as $row)
-            {
-                
-               $walkId = $row->walkId;
-               $row->participants = $this->Walk->getParticipantsOfInvitation($walkId, $mobileNumber);
-               array_push($resultWalkInvitations, $row);
-               
-            }
-        }
-
-        print_r(json_encode(array("statusCode" => (int)0000, "invitations" => $resultWalkInvitations)));
-    		
+			$resultWalkInvitations = array();
+			$resultWalkInvitations = $this->Walk->getInvitations($userId);
+			
+	    	if(count($resultWalkInvitations) > 0)
+	      	{
+	      		foreach ($resultWalkInvitations as $row)
+            	{	      			
+	            	$walkId 		= $row->walkId;
+	            	$row->participants = $this->Walk->getParticipants($walkId, $userId);
+	            }	           
+	        }
+        	print_r(json_encode(array("statusCode" => (int)0000, "invitations" => $resultWalkInvitations)));
+    	 }catch(Exception $e){
+			log_message('error', "getInvites-err:".$e->getMessage());
+			$errorRes = array('statusCode' => 160 , 'statusDesc' => "Err-getInvites:".$e->getMessage() );
+			print_r(json_encode($errorRes));	
+		}	
         
 	}
 	
@@ -229,25 +277,29 @@ class WalkController extends CI_Controller {
         
 	}
 
-	// Error code : 180+
+	/*
+	*	Register the user and issue a validation code // Error code : 180+
+	*/	
 	public function createWalk()
 	{
 		try {
 			// JSON object data
 			$data 			= json_decode(file_get_contents("php://input"),TRUE);
 			// Bypass POST
-			$walkId 		= $this->getGUID();
+			$walkId 		= trim($this->getGUID(),'{}');
+			$inviteId 		= trim($this->getGUID(),'{}');
 			$data 			= $_POST;
 			$userId 		= $data['userId'];
-			$dateOfWalk		= $data['dateOfWalk'];
+			$dateOfWalk		= $data['dateOfWalk'];			
 			$endOfWalkDt	= new DateTime($dateOfWalk);
+			$startOfWalk	= $endOfWalkDt->format('Y-m-d h:i:s a');
 			$endOfWalkDt->modify("+1 hours");
 			$endOfWalk 		= $endOfWalkDt->format('Y-m-d h:i:s a');
 
 			$resultSet 		= array();
 
 			//save a walk & get WalkId
-			$this->Walk->saveWalk($walkId,$userId,$dateOfWalk,$endOfWalk);
+			$this->Walk->saveWalk($walkId,$userId,$startOfWalk,$endOfWalk,$inviteId);
 
 			$resultSet = array("statusCode" => 0 , "walkId" =>$walkId );
 	    	print_r(json_encode($resultSet));

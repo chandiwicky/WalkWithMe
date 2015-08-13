@@ -1,11 +1,11 @@
-<ion-pane  on-swipe-right="onSwipeRight()" ng-init="reloadMenu('777331370', 'chandi')" >
+<ion-pane  on-swipe-right="onSwipeRight()" >
 	<ion-header-bar class="panel-header-1 marginTop40">
 		<div class="logo">
 			<img src="img/logo_header.png"/>
 		</div>
 	</ion-header-bar>
 	<ion-content class="main-header-space">
-		<div class="panel-my-next-walk"  data-ng-repeat="walks in myNextWalk" data-ng-if="!isFirstTime()">
+		<div class="panel-my-next-walk"  data-ng-if="isNextWalk()">
 			<!-- bind the next walk object -->
 
 			<div class="panel-title">
@@ -16,26 +16,24 @@
 			<div>
 				<label>
 					<span class="icon"><img src="img/icon_calendar_48.png"/></span>
-					<h1>{{walks.date}}</h1>
+					<h1>{{myNextWalk.date}}</h1>
 				</label>
 				<label>
 					<span class="icon"><img src="img/icon_clock_48.png"/></span>
-					<h1>{{walks.time}}</h1>
+					<h1>{{myNextWalk.time}}</h1>
 				</label>
 			</div>
 
 
-			<div class="panel-single-row-full marginTop24">
-				<!-- <label data-ng-repeat ="person in walks.participants track by $index">{{person.participantName}}</label> -->
-
+			<div class="panel-single-row-full marginTop24">				
 				<label>walking with me</label>
 			</div>
 
 			<!-- TODO logic -->
 
 			<div class="image-list">				
-				<div data-ng-repeat = "person in walks.participants track by $index">
-		  			<img ng-src="img/{{person.picture}}">
+				<div data-ng-repeat = "person in myNextWalk.participants track by $index">
+		  			<img ng-src="img/{{person.profilePicture}}">
 		  		</div>				
 								
 			</div>
@@ -44,29 +42,28 @@
 		<!--Closing Panel My Next Walk-->
 
 
-		<div class="panel-invitations" data-ng-if="!isFirstTime()">
+		<div class="panel-invitations">
 			<label class="title">Walking Invitations</label>
 		</div>
 
 
 		<ion-scroll zooming="true" direction="x" style="width: 100%; height: 100px; background: #ffd800;">
-			<div class="walking-list" data-ng-if="!isFirstTime()">
-				<div data-ng-repeat="invitation in inviteWalk track by $index">
+			<div class="walking-list" >
+				<div data-ng-repeat="invitation in myInvitations track by $index" ui-sref="join">
 					<table >
-						<tr >
+						<tr>
 							
-							<td class="image"><img ng-src="img/{{invitation.inviterPicture}}"></td>
+							<td class="image"><img ng-src="img/{{invitation.profilePicture}}"></td>
 							<td class="text"  >
-									<h2> with {{invitation.inviter}}<h2>
-									<h3>{{invitation.date}}<br/>{{invitation.time}}</h3>
-									<div data-ng-hide="true" data-ng-repeat="person1 in invitation.participants">{{person1.participantName}}</div>
+									<h2> with {{invitation.inviterName}}<h2>
+									<h3>{{invitation.dateOfWalk | moment:'ddd D, MMM YYYY'}}<br/>{{invitation.dateOfWalk | moment:'hh:mm a'}}</h3>									
 							</td>
 
 						</tr>
-						<tr>
+						<tr >
 							<td class="image"><img src="img/icon_wall_small_white.png"></td>
 							<td class="text">
-								<h3 class="marginTop6">{{invitation.participants.length}} friends walk <br>with you</h3>
+								<h3 class="marginTop6">{{invitation.participantCount-1}} friends walk <br>with you</h3>
 							</td>
 						</tr>
 					</table>

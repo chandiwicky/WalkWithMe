@@ -39,12 +39,12 @@ angular.module('WalkWithMeApp.services',[]).factory('userService', function(URLS
               });
       },
 
-      MenuService : function (mobileNumber, username){              
+      MenuService : function (userId){              
               
               return $http({
-                  method : 'GET',
+                  method : 'POST',
                   url: URLS.sURL_MenuService,
-                  data : {"mobileNumber" : mobileNumber , "username" : username}
+                  data : {"userId" : userId}
         });
       },
 
@@ -56,12 +56,21 @@ angular.module('WalkWithMeApp.services',[]).factory('userService', function(URLS
               });
       },
       
-      InviteService : function (mobileNumber, username){              
+      InviteUserService : function (walkId, userId){              
               
               return $http({
-                  method : 'GET',
+                  method : 'POST',
+                  url: URLS.sURL_InviteUserService,
+                  data : {"walkId": walkId, "userId" : userId }
+        });
+      },
+
+      InviteService : function (walkId, userId){              
+              
+              return $http({
+                  method : 'POST',
                   url: URLS.sURL_InviteService,
-                  data : {"mobileNumber" : mobileNumber , "username" : username}
+                  data : {"walkId": walkId, "userId" : userId }
         });
       },
 
@@ -83,11 +92,11 @@ angular.module('WalkWithMeApp.services',[]).factory('userService', function(URLS
         });
       },
 
-      DisplayInvitationService : function (mobileNumber){              
+      DisplayInvitationService : function (userId){              
               return $http({
-                  method : 'GET',
+                  method : 'POST',
                   url: URLS.sURL_DisplayInvitationService,
-                  data : {"mobileNumber" : mobileNumber }
+                  data : {"userId" : userId }
               });
       },
 

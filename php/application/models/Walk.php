@@ -10,24 +10,25 @@ class Walk extends CI_Model {
     }
 
     //Extracts the walks where the user is a participant
-     function getInvitations ($mobileNumber)
-    {
-        
-        $invitationQuery = $this->db->query("SELECT userwalks.id as `walkId`, userwalks.inviterId as 'inviterId' , userwalks.inviterName as `inviter`, user.profilePicture as 'inviterPicture' , DATE_FORMAT(userwalks.dateOfWalk, '%a %d %b %Y') as `date` , DATE_FORMAT(userwalks.dateOfWalk, '%h.%i %p') as `time`, walkparticipants.participantStatus as 'myStatus'
-                                             FROM userwalks
-                                             INNER JOIN walkparticipants on userwalks.id = walkparticipants.walkId
-                                             INNER JOIN user on user.mobileNumber = userwalks.inviterId
-                                             WHERE walkparticipants.participantStatus = 'Pending' AND userwalks.dateOfWalk >= now() AND walkparticipants.participantNum = $mobileNumber
-                                             ORDER BY userwalks.dateOfWalk");
-
-        
+    function getInvitations($userId)
+    {        
+        $invitationQuery = $this->db->query("SELECT wp.walkId, 
+                                                    userwalks.userId inviterId, 
+                                                    user.nickName inviterName, 
+                                                    user.profilePicture profilePicture, 
+                                                    userwalks.dateOfWalk, (SELECT count(*) FROM walkparticipants WHERE walkId= wp.walkId) participantCount
+                                                    from walkparticipants wp 
+                                                    INNER JOIN userwalks on userwalks.id = wp.walkId
+                                                    INNER Join user on user.id = userwalks.userId
+                                                    WHERE userwalks.dateOfWalk >= now() and 
+                                                    wp.participantId = '".$userId."' and userwalks.userId != '".$userId."' ORDER BY userwalks.dateOfWalk");
 
         return $invitationQuery->result();
     
     }
 
     //Update the participant status of a user in a given walk
-     function updateThisInvitation ($mobileNumber, $walkId, $status)
+    function updateThisInvitation ($mobileNumber, $walkId, $status)
     {
         
         $updateQuery = $this->db->query("UPDATE walkparticipants
@@ -38,25 +39,12 @@ class Walk extends CI_Model {
     }
 
     //Function to extract participants of a given walk excluding myself including the inviter
-    function getParticipants ($walkIdentity, $myMobileNumber)
+    function getParticipants ($walkId, $userId)
     {
-        $participantsQuery = $this->db->query("SELECT participantNumber, participantName, picture
-                                               FROM(
-                                               (SELECT user.mobileNumber as 'participantNumber', user.username as 'participantName', user.profilePicture as 'picture'
-                                               FROM user
-                                               INNER JOIN walkparticipants on user.id = walkparticipants.participantId
-                                               WHERE (walkparticipants.participantStatus <> 'Denied') AND (walkparticipants.walkId = '$walkIdentity') AND (walkparticipants.participantNum != $myMobileNumber))
-
-                                               UNION ALL
-
-                                               (SELECT userwalks.inviterId as 'participantNumber', userwalks.inviterName as 'participantName', user.profilePicture as 'picture'
-                                               FROM userwalks
-                                               INNER JOIN user on user.mobileNumber = userwalks.inviterId
-                                               WHERE userwalks.id = '$walkIdentity' AND userwalks.inviterId != $myMobileNumber))
-
-                                               t
-                                               LIMIT 0,6"); 
-        
+        $participantsQuery = $this->db->query("SELECT walkparticipants.participantId userId , user.nickName, user.profilePicture  from walkparticipants                                             
+                                            INNER Join user on user.id = walkparticipants.participantId
+                                            WHERE walkparticipants.walkId = '".$walkId."' AND
+                                            walkparticipants.participantId != '".$userId."'");         
         return $participantsQuery->result();
         
     }
@@ -75,45 +63,26 @@ class Walk extends CI_Model {
     }
     // Function to extract the next walk details
     // TODO : Replace hardcoded mobile number
-    function getNextWalk ($mobileNumber)
+    function getNextWalk ($userId)
     {
-        $nextWalkQuery = $this->db->query("SELECT walkId, inviter, date ,time
-                                           FROM(
-                                          (SELECT userwalks.id as 'walkId', userwalks.inviterName as 'inviter', DATE_FORMAT(userwalks.dateOfWalk, '%a %d %b %Y') as 'date' , DATE_FORMAT(userwalks.dateOfWalk, '%h.%i %p') as 'time'
-                                           FROM userwalks
-                                           WHERE userwalks.dateOfWalk >=  now() AND userwalks.inviterId = $mobileNumber) 
-                                          
-                                          UNION ALL
 
-                                          (SELECT userwalks.id as 'walkId', userwalks.inviterName as 'inviter', DATE_FORMAT(userwalks.dateOfWalk, '%a %d %b %Y') as 'date' , DATE_FORMAT(userwalks.dateOfWalk, '%h.%i %p') as 'time'
-                                           FROM userwalks
-                                           INNER JOIN walkparticipants on userwalks.id = walkparticipants.walkId
-                                           WHERE  userwalks.dateOfWalk >= now() AND walkparticipants.participantNum =  $mobileNumber)
-                                           )t
-                                          ORDER BY date DESC
-                                          LIMIT 0,1");
+        $nextWalkQuery = $this->db->query("SELECT walkparticipants.walkId, userwalks.dateOfWalk from walkparticipants 
+                                            INNER JOIN userwalks on userwalks.id = walkparticipants.walkId
+                                            INNER Join user on user.id = walkparticipants.participantId
+                                            WHERE userwalks.dateOfWalk >= now() and walkparticipants.status = 1 and
+                                            walkparticipants.participantId = '".$userId."' ORDER BY userwalks.dateOfWalk DESC
+                                            LIMIT 0,1");
       return $nextWalkQuery->result();
     }
     
     // Function to extract walking history
     // TODO : Replace hardcoded mobile number
-    function getHistoryOfWalks ($mobileNumber){
-        $historyQuery = $this->db->query("SELECT  month, SUM(Count) as 'countWalks'
-                                          FROM(
-                                          (SELECT DATE_FORMAT(userwalks.dateOfWalk, '%M') as `month`, COUNT(*) as `Count`
-                                          FROM userwalks
-                                          WHERE userwalks.inviterId = $mobileNumber AND userwalks.dateOfWalk < now() AND (MONTH(now()) - MONTH(userwalks.dateOfWalk) IN (0,1,2)) GROUP BY DATE_FORMAT(userwalks.dateOfWalk, '%M'))
-                                          
-                                          UNION ALL
-
-                                          (SELECT DATE_FORMAT(userwalks.dateOfWalk, '%M') as `month`, COUNT(*) as `Count`
-                                          FROM userwalks
-                                          INNER JOIN walkparticipants
-                                          WHERE userwalks.id = walkparticipants.walkId AND walkparticipants.participantNum = $mobileNumber AND 
-                                                userwalks.dateOfWalk < now() AND (MONTH(now()) - MONTH(userwalks.dateOfWalk) IN (0,1,2))
-                                          GROUP BY DATE_FORMAT(userwalks.dateOfWalk, '%M'))
-                                          ) t
-                                          GROUP BY month");
+    function getHistoryOfWalks ($userId){
+        $historyQuery = $this->db->query( "SELECT DATE_FORMAT(userwalks.dateOfWalk, '%M') as `month`, COUNT(*) as `Count` FROM userwalks
+                                          INNER JOIN walkparticipants on userwalks.id = walkparticipants.walkId 
+                                          WHERE walkparticipants.`participantId` = '".$userId."' AND 
+                                          userwalks.dateOfWalk < now() AND (MONTH(now()) - MONTH(userwalks.dateOfWalk) IN (0,1,2))
+                                          GROUP BY DATE_FORMAT(userwalks.dateOfWalk, '%M')");
         return $historyQuery->result();
     }
 
@@ -135,10 +104,31 @@ class Walk extends CI_Model {
         return $historyQuery->result();
     }
 
-    function saveWalk($walkId,$userId,$dateOfWalk,$endOfWalk){
-        $saveWalkQuery = $this->db->query("INSERT INTO `userwalks`(`id`, `userId`, `dateOfWalk`, `suggestedEndOfWalk`, `milestone`)
-                                         VALUES ('".$walkId."','".$userId."','".$dateOfWalk."','".$endOfWalk."','p')");                                     
+
+/*
+
+  0   : Pending
+  1   : Accepted
+  2   : Maybe
+  3   : Decline
+  10  : Walking
+  11  : Completed
+  12  : Completed-Forced
+
+*/
+    function inviteWalk($inviteId,$walkId,$participantId, $status){
+        $saveWalkQuery = $this->db->query("INSERT INTO `walkparticipants`(`Id`, `walkId`, `participantId`,`status`) 
+                                          VALUES ('".$inviteId."','".$walkId."','".$participantId."',".$status.")");       
+                               
     }
 
+    function saveWalk($walkId,$userId,$dateOfWalk,$endOfWalk, $inviteId){
+        $saveWalkQuery = $this->db->query("INSERT INTO `userwalks`(`id`, `userId`, `dateOfWalk`, `suggestedEndOfWalk`, `milestone`)
+                                         VALUES ('".$walkId."','".$userId."','".$dateOfWalk."','".$endOfWalk."','p')");                                     
+        // invite myself
+        $this->inviteWalk($inviteId, $walkId, $userId, 1);        
+    }
+
+    
 
 }

@@ -60,7 +60,8 @@ angular.module('WalkWithMeApp', ['ionic', 'WalkWithMeApp.controllers', 'WalkWith
     sURL_ServerStats: 'http://dev.juztmove.com/dev/walkwithme/index.php/WalkController/serverStat',
     sURL_LoginService: 'http://dev.juztmove.com/dev/walkwithme/index.php/WalkController/loginUser',    
     sURL_MenuService: 'http://dev.juztmove.com/dev/walkwithme/index.php/WalkController/loadMenu',
-    sURL_InviteService: 'http://dev.juztmove.com/dev/walkwithme/index.php/WalkController/loadUser',  
+    sURL_InviteUserService: 'http://dev.juztmove.com/dev/walkwithme/index.php/WalkController/loadUser',  
+    sURL_InviteService: 'http://dev.juztmove.com/dev/walkwithme/index.php/WalkController/invite',  
     sURL_CreateWalkService: 'http://dev.juztmove.com/dev/walkwithme/index.php/WalkController/createWalk', //added Service latest 
     sURL_HistoryService: 'http://dev.juztmove.com/dev/walkwithme/index.php/WalkController/getHistory',
     sURL_WalkNowStartTimeService:'http://localhost/WalkWithMe/php/index.php/WalkController/setStartWalk',
@@ -195,8 +196,14 @@ angular.module('WalkWithMeApp', ['ionic', 'WalkWithMeApp.controllers', 'WalkWith
         })
 
         .state('invite', {
-            url: "/invite",
+            url: "/invite/:walkDate/:walkId",
             templateUrl: "templates/invite.html",
             controller: 'InviteCtrl'
         })
+})
+
+.filter('moment', function() {
+    return function(dateString, format) {
+        return moment(dateString).format(format);
+    };
 });

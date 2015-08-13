@@ -206,45 +206,55 @@ angular.module('WalkWithMeApp.controllers', ['angularMoment'])
     }
 })
 
-.controller('MenuCtrl', function($window, $rootScope, $scope,$ionicLoading, $state, $interval, userService, errorService) {
+.controller('MenuCtrl', function($window, $rootScope, $scope,$ionicLoading, $state, $interval, userService, errorService, loadService) {
     console.log("MenuCtrl:Init");
-    //$ionicLoading.show({ template: 'Loading...' });
-    // TODO : Remove Hard coding in live
-    var mobileNumber = 713456781;
-    var username = "Mandy Moore";
     
+    $scope.myNextWalk = {};
+    $scope.myNextWalk.date ='';
+    $scope.myNextWalk.time ='';
+    
+    $scope.myInvitations = [];
+
     // Call the menu update every 1 minute and update it
-    $scope.reloadMenu = function(mobileNumber, username) {
-        console.log("Reloading menu");
-        userService.MenuService(mobileNumber, username)
+    var userId = $rootScope.userId;    
+    $scope.reloadMenu = function(userId) {
+        
+        console.log("Refresh menu");   
+        loadService.Show();     
+        userService.MenuService(userId)
             .success(function(data) {
 
-                if (data.statusCode > 0) {
+                if (!angular.isDefined(data.statusCode) || data.statusCode > 0) {
                     errorService.ShowError('Server appeared to be offline or in maintainance, Please try again later');
                     $state.go('start');
                     return;
-                } else {
-
-                    // Setting my next walk data
-                    $scope.myNextWalk = data.nextWalk;
-                    // Setting the walking invitiations
-                    $scope.inviteWalk = data.invitations;
-                    // Setting the walking history
-                    $scope.historyWalk = data.walkHistory;
-
-                    $scope.isStartWalking = true;   //TODO : Check date and time difference
-
-                    $ionicLoading.hide();
-
-                    $scope.range = function(n) {
-                        return new Array(n);
-                    };
-
-                    $scope.isFirstTime = function() {
-                        return data.statusCode;
-                    };
-
                 }
+
+                // Setting my next walk data
+                $scope.myNextWalk = {};
+                if ( angular.isDefined(data.nextWalk.dateOfWalk) ){
+                    $scope.myNextWalk.date = moment(data.nextWalk.dateOfWalk).format("ddd D, MMM YYYY");
+                    $scope.myNextWalk.time = moment(data.nextWalk.dateOfWalk).format("hh:mm a");
+                    $scope.myNextWalk.participants = data.nextWalk.participants;
+                }
+                // Setting the walking invitiations
+                $scope.myInvitations = data.invitations;
+                // Setting the walking history
+                $scope.historyWalk = data.walkHistory;
+
+                $scope.isStartWalking = true;   //TODO : Check date and time difference
+
+                loadService.Hide();
+
+                $scope.range = function(n) {
+                    return new Array(n);
+                };
+
+                $scope.isNextWalk = function() {
+                    return !angular.equals($scope.myNextWalk, {});
+                };
+                
+                loadService.Hide();
 
             })
             .error(function(data) {
@@ -260,7 +270,7 @@ angular.module('WalkWithMeApp.controllers', ['angularMoment'])
         // Go to walk now state
     }
     
-    
+    $scope.reloadMenu(userId);
     /*
     menuReloadTicker = $interval( function(){        
         // hacked because dont know how to clear a interval when moving away from the current state.
@@ -392,7 +402,7 @@ angular.module('WalkWithMeApp.controllers', ['angularMoment'])
                     $rootScope.walkId = data.walkId;
                     console.log("Create new walk-Ok,walkId="+data.walkId);
                     loadService.Hide();
-                    $state.go('invite');                    
+                    $state.go('invite', { "walkId":data.walkId, "walkDate": $scope.walkDate } );                    
                 })
                 .error(function(data) {
                     errorService.ShowError('Server appeared to be offline or in maintainance(HTTP), Please try again later');
@@ -550,36 +560,60 @@ angular.module('WalkWithMeApp.controllers', ['angularMoment'])
     });
 })
 
-.controller('InviteCtrl', function($window, $rootScope, $scope,$ionicLoading, $state, userService, errorService) {
+.controller('InviteCtrl', function($window, $rootScope, $scope,$ionicLoading, $state, $stateParams, userService, errorService, loadService) {
+    
+    
+    console.log("InviteCtrl:Init");
 
-    // TODO : Remove Hard coding in live
-    var mobileNumber = 713456781;
-    var username = "Mandy Moore";
-        
-    userService.InviteService(mobileNumber, username)
-        .success(function(data) {
+    var userId      = $rootScope.userId;
+    $scope.walkDate = moment($stateParams.walkDate).format("ddd D, MMM YYYY");
+    $scope.walkTime = moment($stateParams.walkDate).format("hh:mm a");
+    $scope.walkId   = $stateParams.walkId;
 
-            if ( data.statusCode > 0 ){
-                errorService.ShowError('Server appeared to be offline or in maintainance, Please try again later');
-                $state.go('newWalk');
+    //For testing
+    //$scope.walkId   = '7079BFAC-9C56-2808-E346-0B11060701F8';
+    //userId  = 'CAB410D4-4A7F-B68B-ACA7-9123BD537E77';
+
+    $scope.listUsers = function(){
+        loadService.Show();
+        userService.InviteUserService($scope.walkId, userId)
+            .success(function(data) {
+
+                if ( !angular.isDefined(data.statusCode) || data.statusCode > 0 ){
+                    errorService.ShowError('Server appeared to be offline or in maintainance, Please try again later');
+                    $state.go('menu');
+                    return;
+                }
+                
+                loadService.Hide();
+                $scope.myInvities = data.users;                    
+            })
+            .error(function(data) {
+                // htpp error
+                //show error message and exit the application
+                errorService.ShowError('Server appeared to be offline or in maintainance(HTTP), Please try again later');
                 return;
-            }
-            
-            else{
+            });
+    }
 
-                $scope.myInvities = data.users;
-            }
-                     
-        })
+    $scope.invite = function(participantId){
+        loadService.Show();
+        
+        userService.InviteService($scope.walkId, participantId)
+            .success(function(data) {
 
-        .error(function(data) {
-            // htpp error
-            //show error message and exit the application
-            errorService.ShowError('Server appeared to be offline or in maintainance(HTTP), Please try again later');
-            return;
-        }); 
-  
-
+                if ( !angular.isDefined(data.statusCode) || data.statusCode > 0 ){
+                    errorService.ShowError('Server appeared to be offline or in maintainance, Please try again later');
+                    return;
+                }                
+                $scope.listUsers();
+            })
+            .error(function(data) {
+                errorService.ShowError('Server appeared to be offline or in maintainance(HTTP), Please try again later');
+                return;
+            });
+    }
+    $scope.listUsers();
 })
 
 
@@ -635,31 +669,33 @@ angular.module('WalkWithMeApp.controllers', ['angularMoment'])
 
 })
 
-.controller('JoinCtrl', function($window, $rootScope, $scope,$ionicLoading, $state, userService, errorService) {
+.controller('JoinCtrl', function($window, $rootScope, $scope,$ionicLoading, $state, userService, errorService, loadService) {
 
-    var mobileNumber = 713456781;
     
-    userService.DisplayInvitationService(mobileNumber)
+    var userId      = $rootScope.userId;
+    loadService.Show();
+    userService.DisplayInvitationService(userId)
         .success(function(data) {
 
-            if ( data.statusCode > 0 ){
+            if ( !angular.isDefined(data.statusCode) || data.statusCode > 0 ){
                 errorService.ShowError('Server appeared to be offline or in maintainance, Please try again later');
                 $state.go('menu');
                 return;
             }
             
-            else{
-                $scope.invites = data.invitations;
-    
-                $scope.isFirstTime = function() {
-                    return data.statusCode;
-                };
+            
+            $scope.invites = data.invitations;
+            loadService.Hide();
+            
+            $scope.isFirstTime = function() {
+                return data.statusCode;
+            };
         
-                $scope.onSwipeLeft = function(){
-                    $state.go('menu');
-                };
+            $scope.onSwipeLeft = function(){
+                $state.go('menu');
+            };
 
-                $scope.changeStatus = function(_walkId, _status){
+            $scope.changeStatus = function(_walkId, _status){
                     
                     userService.JoinService(mobileNumber,_walkId,_status)
                         .success(function(data){
@@ -669,15 +705,20 @@ angular.module('WalkWithMeApp.controllers', ['angularMoment'])
                                 $state.go('join');
                                 return;
                             }
-
                             else{
                                 errorService.ShowError('Successfully Updated'); 
                             }
+                            loadService.Hide();
                         })
-                };
-            }    
-    }) 
-       
+                        .error(function(data) {
+                            // htpp error
+                            //show error message and exit the application
+                            errorService.ShowError('Server appeared to be offline or in maintainance(HTTP), Please try again later');
+                            return;
+                        });
+            };
+                
+        })       
         .error(function(data) {
             // htpp error
             //show error message and exit the application

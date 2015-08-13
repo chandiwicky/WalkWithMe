@@ -10,9 +10,20 @@ class User extends CI_Model {
     }
 
     //Extracts the walks where the user is a participant
-     function getUsers ($mobileNumber)
+    function getUsers ($walkId, $userId)
     {
-        $getUsersQuery = $this->db->query("SELECT * FROM user where mobileNumber != '".$mobileNumber."'");
+        $getUsersQuery = $this->db->query("SELECT id,nickName,profilePicture, 
+                        (select id from walkparticipants w 
+                            WHERE w.walkId = '".$walkId."' and 
+                            w.participantId = u.id ) isInvited 
+                            FROM user u where id != '".$userId."'");
+
+        log_message('error', "SELECT id,nickName,profilePicture, 
+                        (select id from walkparticipants w 
+                            WHERE w.walkId = '".$walkId."' and 
+                            w.participantId = u.id ) isInvited 
+                            FROM user u where id != '".$userId."'");
+
         return $getUsersQuery->result();
     }
 
