@@ -548,6 +548,8 @@ angular.module('WalkWithMeApp.controllers', ['angularMoment'])
         console.log("WalkNowCtrl:destroy");
         $scope.modal.remove();
     });
+
+    
 })
 
 .controller('InviteCtrl', function($window, $rootScope, $scope,$ionicLoading, $state, userService, errorService) {

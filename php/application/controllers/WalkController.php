@@ -340,4 +340,18 @@ class WalkController extends CI_Controller {
 	    }
 	}
 
+	//Function to get the details of the current walk
+	public function walkingNow()
+	{
+		$data = json_decode(file_get_contents("php://input"),TRUE);
+		$walkId = "290c8997-34c5-11e5-9493-ec0ec40a1250"; //$data['walkId'];
+		$myMobileNumber = 713456781;
+
+		$walkEnd = $this->Walk->getWalkEndTime($walkId);
+		$participants = $this->Walk->getParticipants ($walkId, $myMobileNumber);
+		$lastMessage = $this->Walk->getLastMessage($walkId);
+		print_r(json_encode(array('statusCode' => 0000 , 'statusDesc' => "OK" , 'walkId' => $walkId, 'endTime' => $walkEnd, 'participants' => $participants, "lastMessage" => $lastMessage)));
+        
+	}
+
 }

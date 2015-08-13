@@ -40,16 +40,16 @@ class Walk extends CI_Model {
     //Function to extract participants of a given walk excluding myself including the inviter
     function getParticipants ($walkIdentity, $myMobileNumber)
     {
-        $participantsQuery = $this->db->query("SELECT participantNumber, participantName, picture
+        $participantsQuery = $this->db->query("SELECT id, participantNumber, participantName as 'nickName', picture as 'profilePic', status
                                                FROM(
-                                               (SELECT user.mobileNumber as 'participantNumber', user.username as 'participantName', user.profilePicture as 'picture'
+                                               (SELECT user.id as 'id', user.mobileNumber as 'participantNumber', user.username as 'participantName', user.profilePicture as 'picture', walkparticipants.walkingStatus as 'status'
                                                FROM user
                                                INNER JOIN walkparticipants on user.id = walkparticipants.participantId
                                                WHERE (walkparticipants.participantStatus <> 'Denied') AND (walkparticipants.walkId = '$walkIdentity') AND (walkparticipants.participantNum != $myMobileNumber))
 
                                                UNION ALL
 
-                                               (SELECT userwalks.inviterId as 'participantNumber', userwalks.inviterName as 'participantName', user.profilePicture as 'picture'
+                                               (SELECT user.id as 'id', userwalks.inviterId as 'participantNumber', userwalks.inviterName as 'participantName', user.profilePicture as 'picture', userwalks.walkingStatus as 'status'
                                                FROM userwalks
                                                INNER JOIN user on user.mobileNumber = userwalks.inviterId
                                                WHERE userwalks.id = '$walkIdentity' AND userwalks.inviterId != $myMobileNumber))
@@ -140,5 +140,25 @@ class Walk extends CI_Model {
                                          VALUES ('".$walkId."','".$userId."','".$dateOfWalk."','".$endOfWalk."','p')");                                     
     }
 
+    //Function to get the latest message of a given walk
+    function getLastMessage($walkId){
+        $lastMessage = $this->db->query("SELECT `messageId`, `messageType`, `messageContent`, `messageFrom`, `messageTo`, `messageTime`
+                                         FROM `walkmessage` 
+                                         WHERE walkId = '$walkId'
+                                         ORDER BY `messageTime` DESC
+                                         LIMIT 0,1");
+
+        return $lastMessage->row();
+    }
+
+    //Function to get the end time of a given walk
+    function getWalkEndTime($walkId){
+        $walkEnd = $this->db->query("SELECT `suggestedEndOfWalk` as 'endTime'
+                                     FROM userwalks
+                                     WHERE id = '$walkId'
+                                   ");
+
+        return $walkEnd->row()->endTime;
+    }
 
 }
