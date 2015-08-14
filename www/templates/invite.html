@@ -1,4 +1,4 @@
-<ion-pane on-swipe-right="onSwipeRight()" data-ng-controller = "InviteCtrl">
+<ion-pane on-swipe-right="onSwipeRight()">
 
     <ion-header-bar class="panel-header-1 marginTop40">
         <div class="logo">
@@ -30,9 +30,10 @@
         </div>
 
         <div class="panel-invite-list" data-ng-repeat="invities in myInvities" data-ng-if="!isFirstTime()">
-            <img src="img/img_people1.png">
-            <h2>{{invities.username}}</h2>
-            <button>Invite</button>
+            <img ng-src="img/{{invities.profilePicture}}">
+            <h2>{{invities.nickName}}</h2>
+            <button ng-if="invities.isInvited == null" ng-click="invite('{{invities.id}}')">Invite</button>
+            <button ng-if="invities.isInvited != null" class="active">Invited</button>
         </div>
 
        
@@ -41,7 +42,7 @@
     <ion-footer-bar>
         <div class="panel-create-new-footer no-color">
             <div class="form-content">
-                <button class="button-big-yellow" ui-sref="menu">Create Walk</button>
+                <button class="button-big-yellow" ui-sref="menu">Done</button>
             </div>
         </div>
     </ion-footer-bar>

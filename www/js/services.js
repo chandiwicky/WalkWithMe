@@ -1,4 +1,4 @@
-//TODO: Change the GET to a POST
+//TODO: Change the GET to a GET
 // User services - authentication / server stat / registration
 
 angular.module('WalkWithMeApp.services',[]).factory('userService', function(URLS,$http){
@@ -10,82 +10,117 @@ angular.module('WalkWithMeApp.services',[]).factory('userService', function(URLS
       ServerStats : function (){        
        
               return $http({
-                  method : 'POST',
+                  method : 'GET',
                   url: URLS.sURL_ServerStats
               });
       }, // end function    
       
-      LoginService : function (mobileNumber, username, password){              
+      LoginService : function (mobileNumber, nickName){              
               return $http({
                   method : 'POST',
                   url: URLS.sURL_LoginService,
-                  data : {"mobileNumber" : mobileNumber , "username" : username, "password" : password}
+                  data : {"mobileNumber" : mobileNumber , "nickName" : nickName}
               });
       },
 
-      Register : function (){              
+      Register : function (mobileNumber, nickName){      
               return $http({
                   method : 'POST',
-                  url: URLS.sURL_Register
+                  url: URLS.sURL_Register,
+                  data : {"mobileNumber" : mobileNumber , "nickName" : nickName}
               });
       },
-      MenuService : function (mobileNumber, username){              
+
+      Validate : function (userId){      
+              return $http({
+                  method : 'POST',
+                  url: URLS.sURL_Validate,
+                  data : {"userId" : userId}
+              });
+      },
+
+      MenuService : function (userId){              
               
               return $http({
                   method : 'POST',
                   url: URLS.sURL_MenuService,
-                  data : {"mobileNumber" : mobileNumber , "username" : username}
+                  data : {"userId" : userId}
         });
       },
 
-      InviteService : function (mobileNumber, username){              
+      CreateWalkService : function (userId, dateOfWalk){              
+              return $http({
+                  method : 'POST',
+                  url: URLS.sURL_CreateWalkService,
+                  data : {"userId" : userId , "dateOfWalk" : dateOfWalk}
+              });
+      },
+      
+      InviteUserService : function (walkId, userId){              
+              
+              return $http({
+                  method : 'POST',
+                  url: URLS.sURL_InviteUserService,
+                  data : {"walkId": walkId, "userId" : userId }
+        });
+      },
+
+      InviteService : function (walkId, userId){              
               
               return $http({
                   method : 'POST',
                   url: URLS.sURL_InviteService,
-                  data : {"mobileNumber" : mobileNumber , "username" : username}
+                  data : {"walkId": walkId, "userId" : userId }
         });
       },
 
-      HistoryService : function (mobileNumber, username){              
+      HistoryService : function (userId){              
               
               return $http({
                   method : 'POST',
                   url: URLS.sURL_HistoryService,
-                  data : {"mobileNumber" : mobileNumber , "username" : username}
+                  data : {"userId" : userId }
         });
       },
 
-      JoinService : function (mobileNumber, walkId, status){              
+      JoinService : function ( walkId, userId, status){              
               
               return $http({
                   method : 'POST',
                   url: URLS.sURL_JoinService,
-                  data : {"mobileNumber" : mobileNumber , "walkId" : walkId , "status" : status}
+                  data : { "walkId" : walkId, "userId":userId, "status" : status}
         });
       },
 
-      DisplayInvitationService : function (mobileNumber){              
+      DisplayInvitationService : function (userId){              
               return $http({
                   method : 'POST',
                   url: URLS.sURL_DisplayInvitationService,
-                  data : {"mobileNumber" : mobileNumber }
+                  data : {"userId" : userId }
               });
       },
 
-      WalkNowService : function (walkId){              
+      WalkNowService : function (walkId, userId){              
               return $http({
                   method : 'POST',
                   url: URLS.sURL_WalkNowService,
-                  data : {"walkId" : walkId}
+                  data : {"walkId" : walkId, "userId": userId}
               });
       },
 
-      SendWalkieService : function (toId, walkieId){              
+      WalkNowUpdateStatus : function (walkId, userId, statTime, status){              
+              return $http({
+                  method : 'POST',
+                  url: URLS.sURL_WalkNowUpdateStatus,
+                  data : {"walkId" : walkId , "userId" : userId, "time" : statTime, "status": status}
+              });
+      },
+
+      SendWalkieService : function (walkId, fromId, toId, walkieId){              
               return $http({
                   method : 'POST',
                   url: URLS.sURL_SendWalkieService,
-                  data : {"to":toId, "walkieId" : walkieId}
+                  data : { "walkId": walkId, "fromId": fromId, "toId": toId, "walkieId" : walkieId}
               });
       }
       // end function
@@ -97,9 +132,20 @@ angular.module('WalkWithMeApp.services',[]).factory('userService', function(URLS
 .factory('errorService', function($ionicLoading){
     return {      
       ShowError : function (msgHtml){              
-      	$ionicLoading.show({ template: msgHtml, noBackdrop: true, duration: 2000 });
+      	$ionicLoading.show({ template: "<div class='error'><div><span>"+msgHtml+"</span></div></div>", noBackdrop: true, duration: 2000 });
       } // end function
     }; // end return     
 })
 
+
+.factory('loadService', function($ionicLoading){
+    return {      
+      Show : function (){              
+        $ionicLoading.show({ template: "<div class='animation'><div><span>Loading</span></div></div>" });
+      }, // end function
+      Hide : function (){        
+        $ionicLoading.hide();
+      } // end function
+    }; // end return         
+})
 

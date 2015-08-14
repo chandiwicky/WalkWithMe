@@ -1,13 +1,9 @@
-{"statusCode":0,"statusDes":"ok", 
-	"walkId":"905c5312-344d-11e5-9493-ec0ec40a1250",
-	"endTime" : 201511211310,
-	"participants" : [ {"id":"dc44f6db-83f3-4490-aa09-d754b13b4a4a", "nickName":"Grant Mueller", "profilePic":"img_people1.png", "status": 1},
-					   {"id":"dc44f6db-83f3-4490-aa09-d754b13b4a4b", "nickName":"Don casey", "profilePic":"img_people3.png", "status": 0},
-					   {"id":"dc44f6db-83f3-4490-aa09-d754b13b4a4c", "nickName":"Anna Johnson", "profilePic":"img_people2.png", "status": 1},
-					   {"id":"dc44f6db-83f3-4490-aa09-d754b13b4a4d", "nickName":"Amy Patrick", "profilePic":"img_no_image_yellow.png", "status": 1},
-					   {"id":"dc44f6db-83f3-4490-aa09-d754b13b4a4d", "nickName":"Jaime Robertson", "profilePic":"img_people6.png", "status": 0},
-					   {"id":"dc44f6db-83f3-4490-aa09-d754b13b4a4d", "nickName":"Julia Makinson", "profilePic":"img_people5.png", "status": 1},
-					   {"id":"dc44f6db-83f3-4490-aa09-d754b13b4a4d", "nickName":"Grace Walter", "profilePic":"img_people4.png", "status": 1}
-					 ],
-	"lastMessage" : { "messageId":33445, "messageType":0, "messageContent":"WALKIE_001", "from":"Amy", "to":"Dana"  }	
+{
+	"statusCode":0,"statusDesc":"OK",
+	"walkId":"290c8997-34c5-11e5-9493-ec0ec40a1250",
+	"endTime":"2015-07-05 22:00:00",
+	"participants":[
+		{"id":"1a32f355-aed7-4567-8754-7184d631125a","participantNumber":"714567894","nickName":"Senuri Wijenayake","profilePic":"img_people3.png","status":"1"},
+		{"id":"dc44f6db-83f3-4490-aa09-d754b13b4a4a","participantNumber":"774523896","nickName":"Amanda Millers","profilePic":"img_people2.png","status":"0"}],
+	"lastMessage":{"messageId":"2","messageType":"0","messageContent":"WALKIE_002","messageFrom":"Mandy Moore","messageTo":"Senuri Wijenayake","messageTime":"2015-08-13 09:56:40"}
 }

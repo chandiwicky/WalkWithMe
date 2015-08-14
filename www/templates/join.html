@@ -1,4 +1,4 @@
-<ion-pane  on-swipe-right="onSwipeRight()" data-ng-controller = "JoinCtrl" >
+<ion-pane  on-swipe-right="onSwipeRight()" >
 
 
 	<ion-header-bar class="panel-header-1 marginTop40">
@@ -14,16 +14,16 @@
 
 	<ion-content>
 		
-		<div class="panel-join-a-walk-list"  data-ng-repeat="joinWalks in invites track by $index" data-ng-if="!isFirstTime()">
-			<label class="title">{{joinWalks.inviter}}</label>
+		<div class="panel-join-a-walk-list"  data-ng-repeat="intivation in invites track by $index" data-ng-if="!isFirstTime()">
+			<label class="title">{{intivation.inviterName}}</label>
 			<div>
 				<label>
 					<span class="icon"><img src="img/icon_calendar_48_blue.png"/></span>
-					<h1>{{joinWalks.date}}</h1>
+					<h1>{{invitation.dateOfWalk | moment:'ddd D, MMM YYYY'}}</h1>
 				</label>
 				<label>
 					<span class="icon"><img src="img/icon_clock_48_blue.png"/></span>
-					<h1>{{joinWalks.time}}</h1>
+					<h1>{{invitation.dateOfWalk | moment:'hh:mm a'}}</h1>
 				</label>
 			</div>
 
@@ -32,15 +32,15 @@
 			</div>
 
 			<div class="image-list">
-				<div data-ng-repeat="person in joinWalks.participants track by $index">
-				 <img ng-src="img/{{person.picture}}">
+				<div data-ng-repeat="participant in intivation.participants track by $index">
+				 <img ng-src="img/{{participant.profilePicture}}">
 				</div>
 			</div>
 
 			<div class="status">
-				<button data-ng-click="changeStatus(joinWalks.walkId,'Joined')">Accept</button>
-				<button data-ng-click="changeStatus(joinWalks.walkId,'Maybe')">May be</button>
-				<button data-ng-click="changeStatus(joinWalks.walkId,'Declined')">Decline</button>
+				<button ng-if="intivation.status != 1" data-ng-click="changeStatus(intivation.walkId,1)">Accept</button>
+				<button ng-if="intivation.status != 2" data-ng-click="changeStatus(intivation.walkId,2)">May be</button>
+				<button ng-if="intivation.status != 3" data-ng-click="changeStatus(intivation.walkId,3)">Decline</button>
 			</div>
 
 		</div>

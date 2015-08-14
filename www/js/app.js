@@ -40,7 +40,7 @@ angular.module('WalkWithMeApp', ['ionic', 'WalkWithMeApp.controllers', 'WalkWith
     // Start application here
     $state.go('start');
 })
-
+/*
 .constant('URLS', {      
     sURL_ServerStats: 'http://www.embla.no/jm_json/serverStat.json',
     sURL_LoginService: 'http://www.embla.no/jm_json/login.json',
@@ -51,6 +51,26 @@ angular.module('WalkWithMeApp', ['ionic', 'WalkWithMeApp.controllers', 'WalkWith
     sURL_WalkNowService: 'http://www.embla.no/jm_json/walkNow.json',
     sURL_SendWalkieService : 'http://www.embla.no/jm_json/sendWalkie.json'
 })
+*/
+// juztMov server
+
+.constant('URLS', {      
+    sURL_Register: 'http://dev.juztmove.com/dev/walkwithme/index.php/WalkController/register',
+    sURL_Validate: 'http://dev.juztmove.com/dev/walkwithme/index.php/WalkController/validate',
+    sURL_ServerStats: 'http://dev.juztmove.com/dev/walkwithme/index.php/WalkController/serverStat',
+    sURL_LoginService: 'http://dev.juztmove.com/dev/walkwithme/index.php/WalkController/loginUser',    
+    sURL_MenuService: 'http://dev.juztmove.com/dev/walkwithme/index.php/WalkController/loadMenu',
+    sURL_InviteUserService: 'http://dev.juztmove.com/dev/walkwithme/index.php/WalkController/loadUser',  
+    sURL_InviteService: 'http://dev.juztmove.com/dev/walkwithme/index.php/WalkController/invite',  
+    sURL_CreateWalkService: 'http://dev.juztmove.com/dev/walkwithme/index.php/WalkController/createWalk', //added Service latest 
+    sURL_HistoryService: 'http://dev.juztmove.com/dev/walkwithme/index.php/WalkController/getHistory',
+    sURL_WalkNowUpdateStatus:'http://dev.juztmove.com/dev/walkwithme/index.php/WalkController/updateWalkStatus',
+    sURL_WalkNowService: 'http://dev.juztmove.com/dev/walkwithme/index.php/WalkController/walkStats',
+    sURL_SendWalkieService: 'http://dev.juztmove.com/dev/walkwithme/index.php/WalkController/sendWalkie',
+    sURL_DisplayInvitationService: 'http://dev.juztmove.com/dev/walkwithme/index.php/WalkController/getInvitations',
+    sURL_JoinService: 'http://dev.juztmove.com/dev/walkwithme/index.php/WalkController/updateInvitation'
+})
+
 
 /*
 .constant('URLS', {      
@@ -63,26 +83,52 @@ angular.module('WalkWithMeApp', ['ionic', 'WalkWithMeApp.controllers', 'WalkWith
     sURL_WalkNowService: '/json/walkNow.json',
     sURL_SendWalkieService : 'http://www.embla.no/jm_json/walkNow.json'
 })
-
+*/
+/*
 .constant('URLS', {      
     sURL_ServerStats: 'http://localhost/WalkWithMe/php/index.php/WalkController/serverStat',
     sURL_LoginService: 'http://localhost/WalkWithMe/php/index.php/WalkController/loginUser',
     sURL_Register: '/json/register.json',
     sURL_MenuService: 'http://localhost/WalkWithMe/php/index.php/WalkController/loadMenu',
-    sURL_InviteService: 'http://localhost/WalkWithMe/php/index.php/WalkController/loadUser',    
+    sURL_InviteService: 'http://localhost/WalkWithMe/php/index.php/WalkController/loadUser',  
+    sURL_CreateWalkService: 'http://localhost/WalkWithMe/php/index.php/WalkController/createWalk', //added Service latest 
     sURL_HistoryService: 'http://localhost/WalkWithMe/php/index.php/WalkController/getHistory',
-    sURL_WalkNowService: '/json/walkNow.json',
+    sURL_WalkNowService: 'http://localhost/WalkWithMe/php/index.php/WalkController/walkingNow',
     sURL_SendWalkieService: 'http://www.embla.no/jm_json/walkNow.json',
     sURL_DisplayInvitationService: 'http://localhost/WalkWithMe/php/index.php/WalkController/getInvitations',
     sURL_JoinService: 'http://localhost/WalkWithMe/php/index.php/WalkController/updateInvitation'
 
-})*/
+})
+*/
 
 // Create configuration parameter for
 .constant('angularMomentConfig', {
     
     timezone: 'Asia/Colombo' // optional
 })
+//FIX to avoid browser request method goes to "OPTIONS"
+
+.config(['$httpProvider', function ($httpProvider) {
+  // Intercept POST requests, convert to standard form encoding
+  $httpProvider.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+  //$httpProvider.defaults.headers.post["Content-Type"] = "application/json";
+  
+  $httpProvider.defaults.transformRequest.unshift(function (data, headersGetter) {
+    var key, result = [];
+
+    if (typeof data === "string")
+      return data;
+
+    for (key in data) {
+        if (data.hasOwnProperty(key)){
+            console.log(key+":"+data[key]);
+            result.push(encodeURIComponent(key) + "=" + encodeURIComponent(data[key]));
+        }
+    }
+    return result.join("&");
+  });
+
+}])
 
 .config(function($stateProvider, $urlRouterProvider) {
 
@@ -108,7 +154,7 @@ angular.module('WalkWithMeApp', ['ionic', 'WalkWithMeApp.controllers', 'WalkWith
         })
 
         .state('register-step2', {
-            url: "/register-step2",
+            url: "/register-step2/:code/:userId/:nickName",
             templateUrl: "templates/registerStep2.html",
             controller: 'RegisterCtrl'
         })
@@ -126,7 +172,7 @@ angular.module('WalkWithMeApp', ['ionic', 'WalkWithMeApp.controllers', 'WalkWith
         })
 
         .state('walkNow', {
-            url: "/walkNow",
+            url: "/walkNow/:walkId",
             templateUrl: "templates/walkNow.html",
             controller: 'WalkNowCtrl'
         })
@@ -150,8 +196,14 @@ angular.module('WalkWithMeApp', ['ionic', 'WalkWithMeApp.controllers', 'WalkWith
         })
 
         .state('invite', {
-            url: "/invite",
+            url: "/invite/:walkDate/:walkId",
             templateUrl: "templates/invite.html",
             controller: 'InviteCtrl'
         })
+})
+
+.filter('moment', function() {
+    return function(dateString, format) {
+        return moment(dateString).format(format);
+    };
 });

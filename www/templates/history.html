@@ -1,4 +1,4 @@
-<ion-pane  on-swipe-right="onSwipeRight()" data-ng-controller = "HistoryCtrl" >
+<ion-pane  on-swipe-right="onSwipeRight()">
 
 	<ion-header-bar class="panel-header-1 marginTop40">
 		<div class="logo">
@@ -21,11 +21,10 @@
 
 		<div class="panel-history-list" data-ng-repeat="historyWalks in historyMonthOne" data-ng-if="!isFirstTime()">
 			<div>
-				<label>Walk on <span>{{historyWalks.walkDate}}</span></label>
-				<h1>{{historyWalks.walkTime}}</h1>
-				 
-				<button class="created" data-ng-if="isInvited(historyWalks.Type)">{{historyWalks.Type}}</button>
-				<button class="joined" data-ng-if="isJoined(historyWalks.Type)">{{historyWalks.Type}}</button>
+				<label>Walk on <span>{{historyWalks.dateOfWalk | moment:'ddd D, MMM YYYY'}}</span></label>
+				<h1>{{historyWalks.dateOfWalk | moment:'hh:mm a'}}</h1>				 
+				<button class="created" data-ng-if="historyWalks.Type == 0">Created</button>
+				<button class="joined" data-ng-if="historyWalks.Type == 1">Joined</button>
 			</div>
 		</div>
 	</div>
@@ -38,10 +37,10 @@
 
 		<div class="panel-history-list" data-ng-repeat="historyWalks in historyMonthTwo" data-ng-if="!isFirstTime()">
 			<div>
-				<label>Walk on <span>{{historyWalks.walkDate}}</span></label>
-				<h1>{{historyWalks.walkTime}}</h1>
-				<button class="created" data-ng-if="isInvited(historyWalks.Type)">{{historyWalks.Type}}</button>
-				<button class="joined" data-ng-if="isJoined(historyWalks.Type)">{{historyWalks.Type}}</button>
+				<label>Walk on <span>{{historyWalks.dateOfWalk | moment:'ddd D, MMM YYYY'}}</span></label>
+				<h1>{{historyWalks.dateOfWalk | moment:'hh:mm a'}}</h1>
+				<button class="created" data-ng-if="historyWalks.Type == 0">Created</button>
+				<button class="joined" data-ng-if="historyWalks.Type == 1">Joined</button>
 			</div>
 		</div>
 	</div>
@@ -54,10 +53,10 @@
 
 		<div class="panel-history-list" data-ng-repeat="historyWalks in historyMonthThree" data-ng-if="!isFirstTime()">
 			<div>
-				<label>Walk on <span>{{historyWalks.walkDate}}</span></label>
-				<h1>{{historyWalks.walkTime}}</h1>
-				<button class="created" data-ng-if="isInvited(historyWalks.Type)">{{historyWalks.Type}}</button>
-				<button class="joined" data-ng-if="isJoined(historyWalks.Type)">{{historyWalks.Type}}</button>
+				<label>Walk on <span>{{historyWalks.dateOfWalk | moment:'ddd D, MMM YYYY'}}</span></label>
+				<h1>{{historyWalks.dateOfWalk | moment:'hh:mm a'}}</h1>
+				<button class="created" data-ng-if="historyWalks.Type == 0">Created</button>
+				<button class="joined" data-ng-if="historyWalks.Type == 1">Joined</button>
 			</div>
 		</div>
 	</div>

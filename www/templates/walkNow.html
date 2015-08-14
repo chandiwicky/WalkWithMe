@@ -1,4 +1,4 @@
-<ion-pane on-swipe-right="onSwipeRight()">
+<ion-pane on-swipe-right="onSwipeRight()" ng-init="reloadWalkNow()">
 
 	<ion-header-bar class="panel-header-1 marginTop40">
 		<div class="logo">
@@ -16,12 +16,12 @@
 			<img ng-src="img/{{participant.profilePic}}">
 			<h2>{{participant.nickName}}</h2>
 
-			<div ng-if="participant.status == 1" class="status">
+			<div ng-if="participant.status == 10" class="status">
 				<span><img src="img/icon_walkie_16.png"/></span>
 				<button>Walking</button>
 			</div>
 
-			<div ng-if="participant.status == 0" class="status">
+			<div ng-if="participant.status != 10" class="status">
 				<button class="black">Not Walking</button>
 			</div>
 		</div>
@@ -29,19 +29,21 @@
 
 	<ion-footer-bar>
 		<div class="panel-footer-walk-now">
-			<div class="notify-bar" ng-if="lastMessage.messageType == 0">
-				<!--<h2>{{lastMessage.from}} send a walkie <img src="img/icon_walkie_30.png"/> to {{lastMessage.to}}</h2>-->
-				<h2>{{lastMessage.from}} shared a photo <img src="img/icon_photo.png"> </h2>
+			<div class="notify-bar" ng-if="lastMessage.type*1 == 1">				
+				<h2 ng-click="showPicture(0)">{{lastMessage.fromNickName}} shared a photo <img src="img/icon_photo.png"> </h2>
+			</div>
+			<div class="notify-bar" ng-if="lastMessage.type*1 == 0">
+				<h2>{{lastMessage.fromNickName}} send a walkie <img src="img/icon_walkie_30.png"/> to {{lastMessage.toNickName != null ? lastMessage.toNickName: lastMessage.to }}</h2>				
 			</div>
 			<div class="button-bar">
-				<a ng-click="showWalkies(0,'All')">Send Walkies</a>
+				<a ng-click="showWalkies('All','All')">Send Walkies</a>
 				<a ng-click="showCamera()">Send Picture</a>
 			</div>
 		</div>
 
 		<div class="panel-footer-3" >
 			<div class="form-content">
-				<button class="button-medium-blue">Complete My Walk</button>
+				<button class="button-medium-blue" ng-click="endWalk()">Complete My Walk</button>
 			</div>
 		</div>
 	</ion-footer-bar>
