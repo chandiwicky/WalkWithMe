@@ -38,9 +38,9 @@
 			</div>
 
 			<div class="status">
-				<button data-ng-click="changeStatus(intivation.walkId,1)">Accept</button>
-				<button data-ng-click="changeStatus(intivation.walkId,2)">May be</button>
-				<button data-ng-click="changeStatus(intivation.walkId,3)">Decline</button>
+				<button ng-if="intivation.status != 1" data-ng-click="changeStatus(intivation.walkId,1)">Accept</button>
+				<button ng-if="intivation.status != 2" data-ng-click="changeStatus(intivation.walkId,2)">May be</button>
+				<button ng-if="intivation.status != 3" data-ng-click="changeStatus(intivation.walkId,3)">Decline</button>
 			</div>
 
 		</div>

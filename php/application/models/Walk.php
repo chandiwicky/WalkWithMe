@@ -15,7 +15,8 @@ class Walk extends CI_Model {
         $invitationQuery = $this->db->query("SELECT wp.walkId, 
                                                     userwalks.userId inviterId, 
                                                     user.nickName inviterName, 
-                                                    user.profilePicture profilePicture, 
+                                                    user.profilePicture profilePicture,
+                                                    wp.status, 
                                                     userwalks.dateOfWalk, (SELECT count(*) FROM walkparticipants WHERE walkId= wp.walkId) participantCount
                                                     from walkparticipants wp 
                                                     INNER JOIN userwalks on userwalks.id = wp.walkId
@@ -28,14 +29,11 @@ class Walk extends CI_Model {
     }
 
     //Update the participant status of a user in a given walk
-    function updateThisInvitation ($mobileNumber, $walkId, $status)
-    {
-        
-        $updateQuery = $this->db->query("UPDATE walkparticipants
-                                         SET walkparticipants.participantStatus = '$status'
-                                         WHERE walkparticipants.walkId = '$walkId' AND walkparticipants.participantNum = $mobileNumber
-                                       ");
-        return "Success";    
+    function updateThisInvitation ($userId, $walkId, $status)
+    {        
+        $updateQuery = $this->db->query("UPDATE walkparticipants SET walkparticipants.status = ".$status."
+                                         WHERE walkparticipants.walkId = '".$walkId."' AND walkparticipants.participantId = '".$userId."'");
+        return 0;    
     }
 
     //Function to extract participants of a given walk excluding myself including the inviter
@@ -87,21 +85,16 @@ class Walk extends CI_Model {
         return $historyQuery->result();
     }
 
-    function getWalksOfMonth ($mobileNumber, $month){
-        $historyQuery = $this->db->query("SELECT * 
-                                          FROM (
-                                          (SELECT id as 'walkId', DATE_FORMAT(userwalks.dateOfWalk, '%d, %a') as `walkDate`, DATE_FORMAT (userwalks.dateOfWalk, '%h.%i %p') as 'walkTime', 'Created' AS Type
+    function getWalksOfMonth ($userId, $month){
+        $historyQuery = $this->db->query("SELECT walkId , userwalks.dateOfWalk, walkparticipants.participantId,walkparticipants.status, userwalks.userId, If( userwalks.userId = 'CAB410D4-4A7F-B68B-ACA7-9123BD537E77', 0, 1) AS Type
                                           FROM userwalks
-                                          WHERE userwalks.inviterId = $mobileNumber AND (MONTH(now()) - MONTH(userwalks.dateOfWalk) IN ($month)) AND userwalks.dateOfWalk < now())
-
-                                          UNION ALL
-
-                                          (SELECT walkId , DATE_FORMAT(userwalks.dateOfWalk, '%d, %a') as `walkDate`, DATE_FORMAT (userwalks.dateOfWalk, '%h.%i %p') as 'walkTime', 'Joined' AS Type
-                                          FROM userwalks
-                                          INNER JOIN walkparticipants
-                                          WHERE userwalks.id = walkparticipants.walkId AND walkparticipants.participantNum = $mobileNumber AND walkparticipants.participantStatus = 'Joined' AND userwalks.dateOfWalk < now() AND 
-                                          (MONTH(now()) -  MONTH(userwalks.dateOfWalk) IN ($month)))) as t
-                                          ORDER BY walkDate");
+                                          INNER JOIN walkparticipants on userwalks.id = walkparticipants.walkId
+                                          where walkparticipants.participantId = 'CAB410D4-4A7F-B68B-ACA7-9123BD537E77' AND
+                                          walkparticipants.status = 1 AND 
+                                          userwalks.dateOfWalk < now() AND
+                                          (MONTH(now()) -  MONTH(userwalks.dateOfWalk))=2
+                                          ORDER BY userwalks.dateOfWalk");
+        
         return $historyQuery->result();
     }
 

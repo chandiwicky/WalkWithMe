@@ -619,46 +619,40 @@ angular.module('WalkWithMeApp.controllers', ['angularMoment'])
 })
 
 
-.controller('HistoryCtrl', function($window, $rootScope, $scope,$ionicLoading, $state, userService, errorService) {
+.controller('HistoryCtrl', function($window, $rootScope, $scope,$ionicLoading, $state, userService, errorService, loadService) {
 
+    console.log("HistoryCtrl:Init");
+    var userId      = $rootScope.userId;
     
-    // TODO : Remove Hard coding in live
-    var mobileNumber = 713456781;
-    var username = "Mandy Moore";
-        
-    userService.HistoryService(mobileNumber, username)
+    loadService.Show();
+    userService.HistoryService(userId)
         .success(function(data) {
 
-            if ( data.statusCode > 0 ){
+            if ( !angular.isDefined(data.statusCode) || data.statusCode > 0 ){
                 errorService.ShowError('Server appeared to be offline or in maintainance, Please try again later');
                 $state.go('menu');
                 return;
             }
             
-            else{
-                $scope.secondMonth = moment().subtract(1, 'months').format("MMM");
-                $scope.thirdMonth = moment().subtract(2, 'months').format("MMM");
-                $scope.historyMonthOne = data.firstMonth;
-                $scope.historyMonthTwo = data.secondMonth;
-                $scope.historyMonthThree = data.thirdMonth;
+            $scope.secondMonth = moment().subtract(1, 'months').format("MMM");
+            $scope.thirdMonth = moment().subtract(2, 'months').format("MMM");
+            $scope.historyMonthOne = data.firstMonth;
+            $scope.historyMonthTwo = data.secondMonth;
+            $scope.historyMonthThree = data.thirdMonth;
     
-                $scope.isFirstTime = function() {
-                    return data.statusCode;
-                };
+            $scope.isFirstTime = function() {
+                return data.statusCode;
+            };
 
-                $scope.isInvited=function(n){
-                    if(n=="Created"){return 1;}
-                    else return 0;
-     
-                };
+            $scope.isInvited=function(n){
+                if(n=="Created"){return 1;}
+                else return 0;
+            };
 
-                $scope.isJoined=function(n){
-                    if(n=="Joined"){return 1;}
-                    else return 0;
-     
-                };
-
-            }
+            $scope.isJoined=function(n){
+                if(n=="Joined"){return 1;}
+                else return 0;     
+            };           
                      
         })
 
@@ -697,19 +691,18 @@ angular.module('WalkWithMeApp.controllers', ['angularMoment'])
                 $state.go('menu');
             };
 
-            $scope.changeStatus = function(_walkId, _status){
-                    
-                    userService.JoinService(mobileNumber,_walkId,_status)
+            $scope.changeStatus = function(walkId, status){
+
+                    var userId      = $rootScope.userId;
+                    userService.JoinService(walkId, userId, status)
                         .success(function(data){
 
-                            if ( data.statusCode > 0 ){
+                            if ( !angular.isDefined(data.statusCode) || data.statusCode > 0 ){
                                 errorService.ShowError('Server appeared to be offline or in maintainance, Please try again later');
                                 $state.go('join');
                                 return;
                             }
-                            else{
-                                errorService.ShowError('Successfully Updated'); 
-                            }
+                            errorService.ShowError('Updated!');
                             loadService.Hide();
                         })
                         .error(function(data) {

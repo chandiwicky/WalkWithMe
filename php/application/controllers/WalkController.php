@@ -158,23 +158,29 @@ class WalkController extends CI_Controller {
 	// Error code : 140+
 	public function getHistory()
 	{
-		$data = json_decode(file_get_contents("php://input"),TRUE);
-		$mobileNumber = (int) $data['mobileNumber'];
-		$username = $data['username'];
+		try{
+			$data = json_decode(file_get_contents("php://input"),TRUE);
+			$data 		= $_POST;
+			$userId 	= (int) $data['userId'];
+			
+			//Extracting the walking history
+			$monthZero 	= $this->Walk->getWalksOfMonth($userId, 0);
+			$monthOne 	= $this->Walk->getWalksOfMonth($userId, 1);
+			$monthTwo 	= $this->Walk->getWalksOfMonth($userId, 2);
 
-		//Extracting the walking history
-		$monthZero = $this->Walk->getWalksOfMonth($mobileNumber, 0);
-		$monthOne = $this->Walk->getWalksOfMonth($mobileNumber, 1);
-		$monthTwo = $this->Walk->getWalksOfMonth($mobileNumber, 2);
-
-		$walkHistory = array_merge(array("firstMonth" => $monthZero),array("secondMonth" => $monthOne),array("thirdMonth" => $monthTwo));
-		
-		if($walkHistory)
-			$resultSet = array_merge(array("statusCode" => (int)0000), $walkHistory);
-		else
-			$resultSet = array("statusCode" => (int)1000);
-		
-    	print_r(json_encode($resultSet));
+			$walkHistory = array_merge(array("firstMonth" => $monthZero),array("secondMonth" => $monthOne),array("thirdMonth" => $monthTwo));
+			
+			if($walkHistory)
+				$resultSet = array_merge(array("statusCode" => (int)0000), $walkHistory);
+			else
+				$resultSet = array("statusCode" => (int)140);
+			
+	    	print_r(json_encode($resultSet));
+	    }catch(Exception $e){
+			log_message('error', "History-err:".$e->getMessage());
+			$errorRes = array('statusCode' => 141 , 'statusDesc' => "History-Menu:".$e->getMessage() );
+			print_r(json_encode($errorRes));	
+		}
 	}
 
 	/*
@@ -264,17 +270,23 @@ class WalkController extends CI_Controller {
 	// Error code : 170+
 	public function updateInvitation()
 	{
-		$data = json_decode(file_get_contents("php://input"),TRUE);
-		
-		$mobileNumber = (int) $data['mobileNumber'];//713456781;
-		$walkId = $data['walkId'];
-		$status = $data['status'];
-		
-    	//Updating the walk status
-    	$result = $this->Walk->updateThisInvitation($mobileNumber, $walkId, $status);
-    	if($result == "Success")
-    		print_r(json_encode(array("statusCode" => (int)0000)));
-        
+		try {
+			$data = json_decode(file_get_contents("php://input"),TRUE);
+			//By pass
+			$data 		= $_POST;
+			$userId 	= $data['userId'];
+			$walkId 	= $data['walkId'];
+			$status 	= $data['status'];
+			
+	    	//Updating the walk status
+	    	$result = $this->Walk->updateThisInvitation($userId, $walkId, $status);
+	    	if($result == 0)
+	    		print_r(json_encode(array("statusCode" => 0)));
+        }catch(Exception $e){
+			log_message('error', "updateInvitation-err:".$e->getMessage());
+			$errorRes = array('statusCode' => 160 , 'statusDesc' => "Err-updateInvitation:".$e->getMessage() );
+			print_r(json_encode($errorRes));	
+		}	
 	}
 
 	/*

@@ -83,12 +83,12 @@ angular.module('WalkWithMeApp.services',[]).factory('userService', function(URLS
         });
       },
 
-      JoinService : function (mobileNumber, walkId, status){              
+      JoinService : function ( walkId, userId, status){              
               
               return $http({
-                  method : 'GET',
+                  method : 'POST',
                   url: URLS.sURL_JoinService,
-                  data : {"mobileNumber" : mobileNumber , "walkId" : walkId , "status" : status}
+                  data : { "walkId" : walkId, "userId":userId, "status" : status}
         });
       },
 
