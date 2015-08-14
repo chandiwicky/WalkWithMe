@@ -89,12 +89,19 @@ class Walk extends CI_Model {
         $historyQuery = $this->db->query("SELECT walkId , userwalks.dateOfWalk, walkparticipants.participantId,walkparticipants.status, userwalks.userId, If( userwalks.userId = 'CAB410D4-4A7F-B68B-ACA7-9123BD537E77', 0, 1) AS Type
                                           FROM userwalks
                                           INNER JOIN walkparticipants on userwalks.id = walkparticipants.walkId
-                                          where walkparticipants.participantId = 'CAB410D4-4A7F-B68B-ACA7-9123BD537E77' AND
-                                          walkparticipants.status = 1 AND 
+                                          where walkparticipants.participantId = '".$userId."' AND
+                                          walkparticipants.status = 1 AND         
                                           userwalks.dateOfWalk < now() AND
-                                          (MONTH(now()) -  MONTH(userwalks.dateOfWalk))=2
+                                          (MONTH(now()) -  MONTH(userwalks.dateOfWalk))=".$month."
                                           ORDER BY userwalks.dateOfWalk");
-        
+        log_message('error', "SELECT walkId , userwalks.dateOfWalk, walkparticipants.participantId,walkparticipants.status, userwalks.userId, If( userwalks.userId = 'CAB410D4-4A7F-B68B-ACA7-9123BD537E77', 0, 1) AS Type
+                                          FROM userwalks
+                                          INNER JOIN walkparticipants on userwalks.id = walkparticipants.walkId
+                                          where walkparticipants.participantId = '".$userId."' AND
+                                          walkparticipants.status = 1 AND         
+                                          userwalks.dateOfWalk < now() AND
+                                          (MONTH(now()) -  MONTH(userwalks.dateOfWalk))=".$month."
+                                          ORDER BY userwalks.dateOfWalk");
         return $historyQuery->result();
     }
 

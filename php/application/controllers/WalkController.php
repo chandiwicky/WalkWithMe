@@ -161,7 +161,7 @@ class WalkController extends CI_Controller {
 		try{
 			$data = json_decode(file_get_contents("php://input"),TRUE);
 			$data 		= $_POST;
-			$userId 	= (int) $data['userId'];
+			$userId 	= $data['userId'];
 			
 			//Extracting the walking history
 			$monthZero 	= $this->Walk->getWalksOfMonth($userId, 0);

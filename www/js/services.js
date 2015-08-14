@@ -74,12 +74,12 @@ angular.module('WalkWithMeApp.services',[]).factory('userService', function(URLS
         });
       },
 
-      HistoryService : function (mobileNumber, username){              
+      HistoryService : function (userId){              
               
               return $http({
-                  method : 'GET',
+                  method : 'POST',
                   url: URLS.sURL_HistoryService,
-                  data : {"mobileNumber" : mobileNumber , "username" : username}
+                  data : {"userId" : userId }
         });
       },
 

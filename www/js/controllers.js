@@ -634,12 +634,13 @@ angular.module('WalkWithMeApp.controllers', ['angularMoment'])
                 return;
             }
             
-            $scope.secondMonth = moment().subtract(1, 'months').format("MMM");
-            $scope.thirdMonth = moment().subtract(2, 'months').format("MMM");
-            $scope.historyMonthOne = data.firstMonth;
-            $scope.historyMonthTwo = data.secondMonth;
+            $scope.secondMonth      = moment().subtract(1, 'months').format("MMM");
+            $scope.thirdMonth       = moment().subtract(2, 'months').format("MMM");
+            $scope.historyMonthOne  = data.firstMonth;
+            $scope.historyMonthTwo  = data.secondMonth;
             $scope.historyMonthThree = data.thirdMonth;
     
+            loadService.Hide();
             $scope.isFirstTime = function() {
                 return data.statusCode;
             };
