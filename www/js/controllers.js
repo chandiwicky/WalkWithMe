@@ -560,7 +560,9 @@ angular.module('WalkWithMeApp.controllers', ['angularMoment'])
                 var ft = new FileTransfer();
                 ft.upload(imageURI, encodeURI(URLS.sURL_UploadService), uploadSuccess, uploadError, options);
                 function uploadSuccess(r) {
-                    alert("Done");
+                        console.log("Code = " + r.responseCode);
+                        console.log("Response = " + r.response);
+                        console.log("Sent = " + r.bytesSent);
                 }
                 
                 function uploadError(error) {

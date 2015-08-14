@@ -4,7 +4,6 @@ header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: GET, POST");
 header("Access-Control-Allow-Headers: *");
 
-
 /*
 
 	0 	: Pending
@@ -400,13 +399,21 @@ class WalkController extends CI_Controller {
 			// Bypass get the post data
 			$data 		= $_POST;
 			$id 		= trim($this->getGUID(),'{}');
+
+
+			$target_dir = getcwd() . "/uploads/";
+			$target_file = $target_dir . basename($_FILES["file"]["name"]);
+			$check = getimagesize($_FILES["file"]["tmp_name"]);
+			move_uploaded_file($_FILES["file"]["tmp_name"], $target_file);
+			
+
 			//$walkId 	= $data['walkId'];
 			//$fromId		= $data['fromId'];
 			//$toId		= $data['toId'];
 			//$walkieId	= $data['walkieId'];
 			//$result  	= $this->Message->sendWalkie($id,$walkId, $fromId, $toId, $walkieId);
 
-			$registerRes =array("statusCode" => (int)0, "statusDesc" => "ok" ) ; 
+			$registerRes =array("statusCode" => (int)0, "statusDesc" => "ok" . $_FILES["file"]["tmp_name"] . $_FILES['file']['type'] . $check[0] . $check[1] ) ; 
 			print_r(json_encode($registerRes));	
 		}catch(Exception $e){
 			log_message('error', "sendWalkie-err:".$e->getMessage());
