@@ -10,7 +10,7 @@
 
 			<div class="panel-title">
 				<label class="title" >My Next Walk</label>
-				<button ng-if="isStartWalking" ui-sref="walkNow">Start Walking</button>
+				<button ng-if="isStartWalking" ng-click="startWalk(myNextWalk.walkId)">{{ myNextWalk.status != 10 ? 'Start':'' }} Walking</button>
 			</div>
 
 			<div>
@@ -86,7 +86,7 @@
 
 			<div class="panel-history" data-ng-if="!isFirstTime()"  >
 					<div data-ng-repeat="histry in historyWalk track by $index" data-month="{{histry.month}}">
-						<div data-ng-repeat="_range in range((histry.countWalks)*1) track by $index"></div>
+						<!-- <div data-ng-repeat="_range in range((histry.countWalks)*1) track by $index"></div>-->
 					</div>
 					<a ui-sref="history">More..</a>
 			</div> 

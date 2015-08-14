@@ -236,6 +236,8 @@ angular.module('WalkWithMeApp.controllers', ['angularMoment'])
                     $scope.myNextWalk.date = moment(data.nextWalk.dateOfWalk).format("ddd D, MMM YYYY");
                     $scope.myNextWalk.time = moment(data.nextWalk.dateOfWalk).format("hh:mm a");
                     $scope.myNextWalk.participants = data.nextWalk.participants;
+                    $scope.myNextWalk.walkId = data.nextWalk.walkId;
+                    $scope.myNextWalk.status = parseInt(data.nextWalk.status);
                 }
                 // Setting the walking invitiations
                 $scope.myInvitations = data.invitations;
@@ -265,10 +267,30 @@ angular.module('WalkWithMeApp.controllers', ['angularMoment'])
             });
     }
         
-    $scope.walkNow = function(){
-        // Send the start command - if not started..start it now
-        // Go to walk now state
+    // 
+    $scope.startWalk = function(walkId){
+
+        var userId      = $rootScope.userId;      
+        
+        console.log("Start walk:"+walkId);
+        //$ionicLoading.show({ template: '<div class="animation"><div><span>Loading</span></div></div>' });  
+        loadService.Show();
+        userService.WalkNowUpdateStatus(walkId, userId, moment().format("YYYY-MM-DD hh:mm a"), 10 )
+                .success(function(data) {
+                    if ( !angular.isDefined(data.statusCode) || data.statusCode > 0 ){
+                        errorService.ShowError('Server appeared to be offline or in maintainance, Please try again later');                        
+                        return;
+                    }                               
+                    
+                    loadService.Hide();
+                    $state.go('walkNow', { "walkId":data.walkId } );                    
+                })
+                .error(function(data) {
+                    errorService.ShowError('Server appeared to be offline or in maintainance(HTTP), Please try again later');
+                    return;
+                }); 
     }
+
     
     $scope.reloadMenu(userId);
     /*
@@ -410,6 +432,8 @@ angular.module('WalkWithMeApp.controllers', ['angularMoment'])
                 }); 
     }
 
+    
+
     $scope.onSwipeRight = function(){
          $state.go('menu');
     }      
@@ -417,13 +441,15 @@ angular.module('WalkWithMeApp.controllers', ['angularMoment'])
 })
 
 
-.controller('WalkNowCtrl', function($window, $rootScope, $scope,$ionicLoading, $state, $ionicModal, $interval, userService, errorService) {
+.controller('WalkNowCtrl', function($window, $rootScope, $scope,$ionicLoading, $state, $stateParams, $ionicModal, $interval, userService, errorService) {
     // WalkCtrl initialization
     console.log("WalkCtrl:Init");
     // Initialize the last played message Id / Dont play the same message again and again
     $scope.lastPlayedMessageId = 0;
-    //Initialize the modal for walkies
-    $ionicModal.fromTemplateUrl('templates/walkies.html', function($ionicModal) {
+    $scope.walkId = $stateParams.walkId;
+        
+        //Initialize the modal for walkies
+        $ionicModal.fromTemplateUrl('templates/walkies.html', function($ionicModal) {
             $scope.modal = $ionicModal;
             }, {
             // Use our scope for the scope of the modal to keep it simple
@@ -431,14 +457,14 @@ angular.module('WalkWithMeApp.controllers', ['angularMoment'])
             // The animation we want to use for the modal entrance
             animation: 'slide-in-up',
             focusFirstInput: true
-            });
+        });
 
     // Set interval and get information from server
     // If exceeding the planned time "doneWalking"
     // Update the list of users and their walking states
     $scope.reloadWalkNow = function(){
         console.log("reload walk now" );
-        userService.WalkNowService("905c5312-344d-11e5-9493-ec0ec40a1250")
+        userService.WalkNowService($scope.walkId)
             .success(function(data) {
 
                 if ( data.statusCode > 0 ){
@@ -553,6 +579,31 @@ angular.module('WalkWithMeApp.controllers', ['angularMoment'])
         }
     }, 10000)
     */
+
+    $scope.endWalk = function(walkId){
+
+        var userId      = $rootScope.userId;      
+        
+        console.log("End walk:"+walkId);
+        //$ionicLoading.show({ template: '<div class="animation"><div><span>Loading</span></div></div>' });  
+        loadService.Show();
+        userService.WalkNowUpdateStatus(walkId, userId, moment().format("YYYY-MM-DD hh:mm a"), 11 )
+                .success(function(data) {
+                    if ( !angular.isDefined(data.statusCode) || data.statusCode > 0 ){
+                        errorService.ShowError('Server appeared to be offline or in maintainance, Please try again later');                        
+                        return;
+                    }                               
+                    
+                    loadService.Hide();
+                    $state.go('menu');                    
+                })
+                .error(function(data) {
+                    errorService.ShowError('Server appeared to be offline or in maintainance(HTTP), Please try again later');
+                    return;
+                }); 
+    }
+
+
     // Clear the modal window
     $scope.$on('$destroy', function() {
         console.log("WalkNowCtrl:destroy");

@@ -64,10 +64,8 @@ angular.module('WalkWithMeApp', ['ionic', 'WalkWithMeApp.controllers', 'WalkWith
     sURL_InviteService: 'http://dev.juztmove.com/dev/walkwithme/index.php/WalkController/invite',  
     sURL_CreateWalkService: 'http://dev.juztmove.com/dev/walkwithme/index.php/WalkController/createWalk', //added Service latest 
     sURL_HistoryService: 'http://dev.juztmove.com/dev/walkwithme/index.php/WalkController/getHistory',
-    sURL_WalkNowStartTimeService:'http://localhost/WalkWithMe/php/index.php/WalkController/setStartWalk',
-    sURL_WalkNowEndTimeService:'http://localhost/WalkWithMe/php/index.php/WalkController/setEndWalk',
-    sURL_JoinedUsersService:'http://localhost/WalkWithMe/php/index.php/WalkController/getJoinnedUsers', 
-    sURL_WalkNowService: '/json/walkNow.json',
+    sURL_WalkNowUpdateStatus:'http://dev.juztmove.com/dev/walkwithme/index.php/WalkController/updateWalkStatus',
+    sURL_WalkNowService: 'http://dev.juztmove.com/dev/walkwithme/index.php/WalkController/walkStats',
     sURL_SendWalkieService: 'http://www.embla.no/jm_json/walkNow.json',
     sURL_DisplayInvitationService: 'http://dev.juztmove.com/dev/walkwithme/index.php/WalkController/getInvitations',
     sURL_JoinService: 'http://dev.juztmove.com/dev/walkwithme/index.php/WalkController/updateInvitation'
@@ -174,7 +172,7 @@ angular.module('WalkWithMeApp', ['ionic', 'WalkWithMeApp.controllers', 'WalkWith
         })
 
         .state('walkNow', {
-            url: "/walkNow",
+            url: "/walkNow/:walkId",
             templateUrl: "templates/walkNow.html",
             controller: 'WalkNowCtrl'
         })

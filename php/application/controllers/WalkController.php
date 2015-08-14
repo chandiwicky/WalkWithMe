@@ -323,65 +323,47 @@ class WalkController extends CI_Controller {
 	}
 
 	
-	public function setStartWalk()
+	public function updateWalkStatus()
 	{
 		try{
 
-		$data          = json_decode(file_get_contents("php://input"),TRUE);
-		$walkId        = $data['walkId'];
-		$participantId = $data['participantId'];
-		$startTime     = $data['startTime'];
+			$data          = json_decode(file_get_contents("php://input"),TRUE);
+			//By pass
+			$data 			= $_POST;
+			$walkId        	= $data['walkId'];
+			$participantId 	= $data['userId'];
+			$time     		= $data['time'];
+			$status     	= (int)$data['status'];
 
-		$this->walkNow->updateStartUser($startTime,$walkId,$participantId);
-		}
-
-		catch(Exception $e){
-		log_message('error', "validate-err:".$e->getMessage());
-		$errorRes = array('statusCode' => 200 , 'statusDesc' => "Err-Validate:".$e->getMessage() );
-		print_r(json_encode($errorRes));
-		}
-	}
-
-
-	public function setEndWalk()
-	{
-		try{
-
-		$data          = json_decode(file_get_contents("php://input"),TRUE);
-		$walkId        = $data['walkId'];
-		$participantId = $data['participantId'];
-		$endTime       = $data['endTime'];
-
-		$this->walkNow->updateEndUser($endTime,$walkId,$participantId);
-			}
-
-		catch(Exception $e){
-		log_message('error', "validate-err:".$e->getMessage());
-		$errorRes = array('statusCode' => 200 , 'statusDesc' => "Err-Validate:".$e->getMessage() );
-		print_r(json_encode($errorRes));
+			$this->Walknow->updateWalkStatus($walkId,$participantId,$time, $status);			
+			
+			$resultSet = array("statusCode" => 0 , "walkId" =>$walkId );
+	    	print_r(json_encode($resultSet));
+		}catch(Exception $e){
+			log_message('error', "validate-err:".$e->getMessage());
+			$errorRes = array('statusCode' => 200 , 'statusDesc' => "Err-Validate:".$e->getMessage() );
+			print_r(json_encode($errorRes));
 		}
 	}
 
-
-	public function getJoinedUsers()
+	public function walkStats()
 	{
 		try {
 			// JSON object data
 			$data 			= json_decode(file_get_contents("php://input"),TRUE);
 			// Bypass get the post data
-			$walkId 		= $data['walkId'];
-			
-			$WalkingUsers=$this->WalkNow->getWalkingUsers($WalkId);
+			$data 			= $_POST;
+			$walkId 		= $data['walkId'];			
+			$walkingUsers=$this->Walknow->getWalkingStats($walkId);
 
-			$registerRes = array_merge(array("statusCode" => (int)0000),array("participants" =>$WalkingUsers )); 
+			$registerRes = array_merge(array("statusCode" => (int)0000),array("participants" =>$walkingUsers )); 
 			print_r(json_encode($registerRes));	
 		}catch(Exception $e){
-			log_message('error', "validate-err:".$e->getMessage());
-			$errorRes = array('statusCode' => 101 , 'statusDesc' => "Err-Validate:".$e->getMessage() );
+			log_message('error', "walkStats-err:".$e->getMessage());
+			$errorRes = array('statusCode' => 101 , 'statusDesc' => "Err-walkStats:".$e->getMessage() );
 			print_r(json_encode($errorRes));	
 		}	
 	}
-
 
 	/** 
 	* Utility functions area

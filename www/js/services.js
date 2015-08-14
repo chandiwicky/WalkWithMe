@@ -102,36 +102,19 @@ angular.module('WalkWithMeApp.services',[]).factory('userService', function(URLS
 
       WalkNowService : function (walkId){              
               return $http({
-                  method : 'GET',
+                  method : 'POST',
                   url: URLS.sURL_WalkNowService,
                   data : {"walkId" : walkId}
               });
       },
 
-      SendStartTimeService : function (walkId){              
+      WalkNowUpdateStatus : function (walkId, userId, statTime, status){              
               return $http({
-                  method : 'GET',
-                  url: URLS.sURL_WalkNowStartTimeService,
-                  data : {"walkId" : walkId , "participantId" : participantId, "startTime" : startTime}
+                  method : 'POST',
+                  url: URLS.sURL_WalkNowUpdateStatus,
+                  data : {"walkId" : walkId , "userId" : userId, "time" : statTime, "status": status}
               });
       },
-
-      SendEndTimeService : function (walkId){              
-              return $http({
-                  method : 'GET',
-                  url: URLS.sURL_WalkNowEndTimeService,
-                  data : {"walkId" : walkId, "participantId" : participantId, "endTime" : endTime}
-              });
-      },
-
-      getJoinedUsersService : function (walkId){              
-              return $http({
-                  method : 'GET',
-                  url: URLS.sURL_JoinedUsersService,
-                  data : {"walkId" : walkId}
-              });
-      },
-
 
       SendWalkieService : function (toId, walkieId){              
               return $http({
