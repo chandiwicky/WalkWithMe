@@ -391,6 +391,29 @@ class WalkController extends CI_Controller {
 		}	
 	}
 
+
+	public function sendPicture()
+	{
+		try {
+			// JSON object data
+			$data 		= json_decode(file_get_contents("php://input"),TRUE);
+			// Bypass get the post data
+			$data 		= $_POST;
+			$id 		= trim($this->getGUID(),'{}');
+			//$walkId 	= $data['walkId'];
+			//$fromId		= $data['fromId'];
+			//$toId		= $data['toId'];
+			//$walkieId	= $data['walkieId'];
+			//$result  	= $this->Message->sendWalkie($id,$walkId, $fromId, $toId, $walkieId);
+
+			$registerRes =array("statusCode" => (int)0, "statusDesc" => "ok" ) ; 
+			print_r(json_encode($registerRes));	
+		}catch(Exception $e){
+			log_message('error', "sendWalkie-err:".$e->getMessage());
+			$errorRes = array('statusCode' => 101 , 'statusDesc' => "Err-sendWalkie:".$e->getMessage() );
+			print_r(json_encode($errorRes));	
+		}	
+	}
 	/** 
 	* Utility functions area
 	*/

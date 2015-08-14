@@ -441,7 +441,7 @@ angular.module('WalkWithMeApp.controllers', ['angularMoment'])
 })
 
 
-.controller('WalkNowCtrl', function($window, $rootScope, $scope,$ionicLoading, $state, $stateParams, $ionicModal, $interval, userService, errorService) {
+.controller('WalkNowCtrl', function($window, $rootScope, $scope,$ionicLoading, $state, $stateParams, $ionicModal, $interval, URLS, userService, errorService, loadService) {
     // WalkCtrl initialization
     console.log("WalkCtrl:Init");
     // Initialize the last played message Id / Dont play the same message again and again
@@ -543,9 +543,30 @@ angular.module('WalkWithMeApp.controllers', ['angularMoment'])
         
          navigator.camera.getPicture(function(imageURI) {
             
-            //$scope.lastPhoto = imageURI;
-            //$scope.modal.show();    
-        
+            console.log( ">>>>> Image url >>>> "+imageURI );
+
+
+            var options = new FileUploadOptions();
+                options.fileKey     = "file";
+                options.fileName    = imageURI.substr(imageURI.lastIndexOf('/')+1);
+                options.mimeType    = "image/jpeg";
+                    var params = {};
+                    params.walkId = 'xxxxx'; // some other POST fields
+                    params.userId = $rootScope.userId;
+                    params.toId   = 'ddddd';                    
+                options.params = params;
+
+
+                var ft = new FileTransfer();
+                ft.upload(imageURI, encodeURI(URLS.sURL_UploadService), uploadSuccess, uploadError, options);
+                function uploadSuccess(r) {
+                    alert("Done");
+                }
+                
+                function uploadError(error) {
+                    console.log("upload error source " + error.source);
+                    console.log("upload error target " + error.target);
+                }
         // imageURI is the URL of the image that we can use for
         // an <img> element or backgroundImage.
             //alert("Done");
@@ -586,10 +607,11 @@ angular.module('WalkWithMeApp.controllers', ['angularMoment'])
     }, 10000)
     */
 
-    $scope.endWalk = function(walkId){
+    $scope.endWalk = function(){
 
         var userId      = $rootScope.userId;      
-        
+        var walkId      = $stateParams.walkId;
+
         console.log("End walk:"+walkId);
         //$ionicLoading.show({ template: '<div class="animation"><div><span>Loading</span></div></div>' });  
         loadService.Show();
