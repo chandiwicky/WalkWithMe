@@ -123,26 +123,4 @@ class Walk extends CI_Model {
         $this->inviteWalk($inviteId, $walkId, $userId, 1);        
     }
 
-
-    //Function to get the latest message of a given walk
-    function getLastMessage($walkId){
-        $lastMessage = $this->db->query("SELECT `messageId`, `messageType`, `messageContent`, `messageFrom`, `messageTo`, `messageTime`
-                                         FROM `walkmessage` 
-                                         WHERE walkId = '$walkId'
-                                         ORDER BY `messageTime` DESC
-                                         LIMIT 0,1");
-
-        return $lastMessage->row();
-    }
-
-    //Function to get the end time of a given walk
-    function getWalkEndTime($walkId){
-        $walkEnd = $this->db->query("SELECT `suggestedEndOfWalk` as 'endTime'
-                                     FROM userwalks
-                                     WHERE id = '$walkId'
-                                   ");
-
-        return $walkEnd->row()->endTime;
-    }
-
 }

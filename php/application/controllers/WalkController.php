@@ -403,7 +403,7 @@ class WalkController extends CI_Controller {
 	        return $uuid;
 	    }
 	}
-
+	/*
 	//Function to get the details of the current walk
 	public function walkingNow()
 	{
@@ -416,6 +416,21 @@ class WalkController extends CI_Controller {
 		$lastMessage = $this->Walk->getLastMessage($walkId);
 		print_r(json_encode(array('statusCode' => 0000 , 'statusDesc' => "OK" , 'walkId' => $walkId, 'endTime' => $walkEnd, 'participants' => $participants, "lastMessage" => $lastMessage)));
         
+	}*/
+
+	public function testWalkies()
+	{
+
+        $walkId = "0244469F-7CD6-8E32-31FB-ADA274EF4242";
+        $sender = "Chandi";
+        $receiver = "Hiran Herath";
+        $walkie = "WALKIE_001";
+
+        //$lastMessage = $this->Message->getLastMessage($walkId);
+        $walkie = $this->Message->sendWalkie($walkId, $sender, $receiver, $walkie);
+        //print_r(json_encode($lastMessage));
+        print_r(json_encode($walkie));
+
 	}
 
 }
