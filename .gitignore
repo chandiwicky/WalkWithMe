@@ -44,3 +44,9 @@ Temporary Items
 
 #app related
 platforms
+.idea/.name
+.idea/modules.xml
+*.iml
+.idea/workspace.xml
+.idea/misc.xml
+.idea/vcs.xml
