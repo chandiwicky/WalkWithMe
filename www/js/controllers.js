@@ -447,7 +447,8 @@ angular.module('WalkWithMeApp.controllers', ['angularMoment'])
     // Initialize the last played message Id / Dont play the same message again and again
     $scope.lastPlayedMessageId = 0;
     $scope.walkId = $stateParams.walkId;
-        
+    
+
         //Initialize the modal for walkies
         $ionicModal.fromTemplateUrl('templates/walkies.html', function($ionicModal) {
             $scope.modal = $ionicModal;
@@ -464,7 +465,8 @@ angular.module('WalkWithMeApp.controllers', ['angularMoment'])
     // Update the list of users and their walking states
     $scope.reloadWalkNow = function(){
         console.log("reload walk now" );
-        userService.WalkNowService($scope.walkId)
+        var userId = $rootScope.userId;
+        userService.WalkNowService($scope.walkId, userId)
             .success(function(data) {
 
                 if ( data.statusCode > 0 ){
@@ -510,16 +512,20 @@ angular.module('WalkWithMeApp.controllers', ['angularMoment'])
     $scope.sendWalkie = function(walkieId){
         $ionicLoading.show({ template: 'Loading...' });
         console.log("Sending walkie to "+$scope.sendWalkiesTo.nickName + ","+ $scope.sendWalkiesTo.id + ",walkieId:"+walkieId);
-        userService.SendWalkieService($scope.sendWalkiesTo.id, walkieId)
+
+        var userId = $rootScope.userId;
+        userService.SendWalkieService($stateParams.walkId, userId, $scope.sendWalkiesTo.id, walkieId)
         .success(function(data) {
 
-            if ( data.statusCode > 0 ){
+            if ( !angular.isDefined(data.statusCode) || data.statusCode > 0 ){
                 errorService.ShowError('Server appeared to be offline or in maintainance, Please try again later');                
                 return;
             }            
-            
+            /*
             $scope.lastMessage  = data.lastMessage;  
             $scope.playSound();
+            $scope.modal.hide();
+            */
             $scope.modal.hide();
             $ionicLoading.hide();
         })

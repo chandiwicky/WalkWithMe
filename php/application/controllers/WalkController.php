@@ -354,13 +354,39 @@ class WalkController extends CI_Controller {
 			// Bypass get the post data
 			$data 			= $_POST;
 			$walkId 		= $data['walkId'];			
-			$walkingUsers=$this->Walknow->getWalkingStats($walkId);
-
-			$registerRes = array_merge(array("statusCode" => (int)0000),array("participants" =>$walkingUsers )); 
+			$userId 		= $data['userId'];			
+			
+			$walkingUsers 	= $this->Walknow->getWalkingStats($walkId);
+			$lastMessage 	= $this->Message->getLastMessage($walkId, $userId);
+			$registerRes = array_merge(array("statusCode" => (int)0000),array("participants" =>$walkingUsers ), array("lastMessage" => $lastMessage)); 
 			print_r(json_encode($registerRes));	
 		}catch(Exception $e){
 			log_message('error', "walkStats-err:".$e->getMessage());
 			$errorRes = array('statusCode' => 101 , 'statusDesc' => "Err-walkStats:".$e->getMessage() );
+			print_r(json_encode($errorRes));	
+		}	
+	}
+
+
+	public function sendWalkie()
+	{
+		try {
+			// JSON object data
+			$data 		= json_decode(file_get_contents("php://input"),TRUE);
+			// Bypass get the post data
+			$data 		= $_POST;
+			$id 		= trim($this->getGUID(),'{}');
+			$walkId 	= $data['walkId'];
+			$fromId		= $data['fromId'];
+			$toId		= $data['toId'];
+			$walkieId	= $data['walkieId'];
+			$result  	= $this->Message->sendWalkie($id,$walkId, $fromId, $toId, $walkieId);
+
+			$registerRes =array("statusCode" => (int)0, "statusDesc" => "ok" ) ; 
+			print_r(json_encode($registerRes));	
+		}catch(Exception $e){
+			log_message('error', "sendWalkie-err:".$e->getMessage());
+			$errorRes = array('statusCode' => 101 , 'statusDesc' => "Err-sendWalkie:".$e->getMessage() );
 			print_r(json_encode($errorRes));	
 		}	
 	}

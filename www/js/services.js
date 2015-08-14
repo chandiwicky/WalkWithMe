@@ -100,11 +100,11 @@ angular.module('WalkWithMeApp.services',[]).factory('userService', function(URLS
               });
       },
 
-      WalkNowService : function (walkId){              
+      WalkNowService : function (walkId, userId){              
               return $http({
                   method : 'POST',
                   url: URLS.sURL_WalkNowService,
-                  data : {"walkId" : walkId}
+                  data : {"walkId" : walkId, "userId": userId}
               });
       },
 
@@ -116,11 +116,11 @@ angular.module('WalkWithMeApp.services',[]).factory('userService', function(URLS
               });
       },
 
-      SendWalkieService : function (toId, walkieId){              
+      SendWalkieService : function (walkId, fromId, toId, walkieId){              
               return $http({
-                  method : 'GET',
+                  method : 'POST',
                   url: URLS.sURL_SendWalkieService,
-                  data : {"to":toId, "walkieId" : walkieId}
+                  data : { "walkId": walkId, "fromId": fromId, "toId": toId, "walkieId" : walkieId}
               });
       }
       // end function
