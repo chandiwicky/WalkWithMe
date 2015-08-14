@@ -422,13 +422,20 @@ class WalkController extends CI_Controller {
 	{
 
         $walkId = "0244469F-7CD6-8E32-31FB-ADA274EF4242";
-        $sender = "Chandi";
-        $receiver = "Hiran Herath";
+        $sender = "0232f355-aed7-4567-8754-7184d631125a";
+        $receiver = "0132f355-aed7-4567-8754-7184d631125a";
         $walkie = "WALKIE_001";
 
-        //$lastMessage = $this->Message->getLastMessage($walkId);
-        $walkie = $this->Message->sendWalkie($walkId, $sender, $receiver, $walkie);
-        //print_r(json_encode($lastMessage));
+		/*
+        $lastMessage = $this->Message->getLastMessage($walkId,$receiver);
+        if($lastMessage->messageTo == "All"){
+        	$lastMessage->messageTo = getWalkingUsers($walkId); Getting the participants
+        }
+        print_r(json_encode($lastMessage)); */
+
+        //Creating a new GUID
+        $id = trim(com_create_guid(), '{}');
+        $walkie = $this->Message->sendWalkie($id,$walkId, $sender, $receiver, $walkie);
         print_r(json_encode($walkie));
 
 	}
