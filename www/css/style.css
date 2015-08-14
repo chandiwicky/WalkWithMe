@@ -170,6 +170,15 @@ ion-header-bar
     left: 20px;
 }
 
+.title-bar .action{
+    position: absolute;
+    width: auto;
+    font-size:13px;
+    text-align: left;
+    right: 20px;
+    top:20px;
+}
+
 .title-bar button{
     position: absolute;
     width:auto;
@@ -703,11 +712,10 @@ h6 > img {
 }
 
 .walkies-button {
-    width: 80px;
-    height: 80px;
+    width: 100px;
+    height: 100px;
     border-radius: 40px;
-    margin: 12px 20px;
-    background: #fff;
+    margin: 12px 10px;
     border: none;
     cursor: pointer;
     outline: none;
@@ -874,7 +882,8 @@ h6 > img {
     padding: 0;
     background: #ffd800;
     display: block;
-    float: left;
+    position: fixed;
+    bottom: 50px;
 }
 
 .panel-footer-walk-now .button-bar > a {
