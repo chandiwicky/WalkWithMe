@@ -149,7 +149,7 @@ angular.module('WalkWithMeApp.controllers', ['angularMoment'])
 })
 
 
-.controller('RegisterCtrl', function($window, $scope, $ionicLoading, $state, $stateParams, userService, errorService) {
+.controller('RegisterCtrl', function($window, $rootScope, $scope, $ionicLoading, $state, $stateParams, userService, errorService) {
     console.log("RegisterCtrl:Init");
     var registrationData = [];
     registrationData.mobileNo = "";
@@ -226,8 +226,9 @@ angular.module('WalkWithMeApp.controllers', ['angularMoment'])
                 // Save user Id information and nickName
                 $window.localStorage['userId'] = userId;
                 $window.localStorage['nickName'] = $stateParams.nickName;                
-
-            $state.go('menu');  
+            
+            $rootScope.userId = userId;
+            $state.go('firstTime');  
             
             $ionicLoading.hide();            
         }).error( function(data, status) {
@@ -236,7 +237,6 @@ angular.module('WalkWithMeApp.controllers', ['angularMoment'])
             errorService.ShowError('Server appeared to be offline or in maintainance(HTTP), Please try again later');
             return;
         });
-
        
     }
 })
@@ -274,6 +274,7 @@ angular.module('WalkWithMeApp.controllers', ['angularMoment'])
                     $scope.myNextWalk.participants = data.nextWalk.participants;
                     $scope.myNextWalk.walkId = data.nextWalk.walkId;
                     $scope.myNextWalk.status = parseInt(data.nextWalk.status);
+                    $scope.myNextWalk.userId = data.nextWalk.userId;
                 }
                 // Setting the walking invitiations
                 $scope.myInvitations = data.invitations;
@@ -306,11 +307,10 @@ angular.module('WalkWithMeApp.controllers', ['angularMoment'])
     // Change walk status
     $scope.showWalk = function(){
         // Show invite if its only my walk
-        if ( $scope.myNextWalk.status >= 10 ){
-            return;
-        }
-        //invite({ 'walkId':myNextWalk.walkId , 'walkDate': myNextWalk.walkDate })
-        $state.go('invite', { 'walkId':$scope.myNextWalk.walkId , 'walkDate': $scope.myNextWalk.walkDate } );
+        if ( $scope.myNextWalk.status < 10 && $scope.myNextWalk.userId == $rootScope.userId ){
+            //invite({ 'walkId':myNextWalk.walkId , 'walkDate': myNextWalk.walkDate })
+            $state.go('invite', { 'walkId':$scope.myNextWalk.walkId , 'walkDate': $scope.myNextWalk.walkDate } );
+        }        
     }    
     // 
     $scope.startWalk = function(walkId){
@@ -829,12 +829,12 @@ angular.module('WalkWithMeApp.controllers', ['angularMoment'])
                     var userId      = $rootScope.userId;
                     userService.JoinService(walkId, userId, status)
                         .success(function(data){
-
                             if ( !angular.isDefined(data.statusCode) || data.statusCode > 0 ){
                                 errorService.ShowError('Server appeared to be offline or in maintainance, Please try again later');
                                 $state.go('join');
                                 return;
                             }
+                            $state.go('menu');
                             errorService.ShowError('Updated!');
                             loadService.Hide();
                         })

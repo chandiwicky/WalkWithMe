@@ -141,6 +141,12 @@ angular.module('WalkWithMeApp', ['ionic', 'WalkWithMeApp.controllers', 'WalkWith
             templateUrl: "templates/start.html",
             controller: 'StartCtrl'
         })
+        
+        .state('firstTime', {
+            url: "/firstTime",
+            templateUrl: "templates/firstTime.html",
+            controller: 'RegisterCtrl'
+        })
 
         .state('login', {
             url: "/login",

@@ -65,7 +65,7 @@ class Walk extends CI_Model {
     function getNextWalk ($userId)
     {
 
-        $nextWalkQuery = $this->db->query("SELECT walkparticipants.walkId, userwalks.dateOfWalk, walkparticipants.status from walkparticipants 
+        $nextWalkQuery = $this->db->query("SELECT walkparticipants.walkId, userwalks.dateOfWalk, walkparticipants.status, userwalks.userId from walkparticipants 
                                             INNER JOIN userwalks on userwalks.id = walkparticipants.walkId
                                             INNER Join user on user.id = walkparticipants.participantId
                                             WHERE userwalks.dateOfWalk >= now() and ( walkparticipants.status = 1 OR walkparticipants.status = 10 )  and
