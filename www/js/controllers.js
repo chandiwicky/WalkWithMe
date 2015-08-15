@@ -228,6 +228,8 @@ angular.module('WalkWithMeApp.controllers', ['angularMoment'])
                 $window.localStorage['nickName'] = $stateParams.nickName;                
             
             $rootScope.userId = userId;
+            $rootScope.nickName = $stateParams.nickName;
+            $rootScope.nickName = $stateParams.nickName;
             $state.go('firstTime');  
             
             $ionicLoading.hide();            

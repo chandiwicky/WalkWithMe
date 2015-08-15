@@ -873,7 +873,7 @@ h6 > img {
 .panel-footer-walk-now .notify-bar {
     width: 100%;
     height: 30px;
-    margin: 10px 0;
+    margin: 0;
     display: block;
     vertical-align: middle;
     float: left;
@@ -890,7 +890,7 @@ h6 > img {
 }
 
 .panel-footer-walk-now .notify-bar h2 > img {
-    width: 60px;
+    width: 45px;
     vertical-align: middle;
 }
 
