@@ -865,7 +865,8 @@ h6 > img {
     font-family: 'museo500';
     font-size: 15px;
     letter-spacing: 0;
-    color: #0c3b53;
+    color: #fff;
+   /* color: #0c3b53;*/
     text-align: center;
     vertical-align: middle;
 }
