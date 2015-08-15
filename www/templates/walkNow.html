@@ -12,7 +12,7 @@
 
 	<ion-content class="walking-footer-space">
 
-		<div class="panel-walking-list" data-ng-repeat="participant in participants" ng-click="showWalkies(participant.id,participant.nickName)">
+		<div class="panel-walking-list" data-ng-repeat="participant in participants" ng-click="showWalkies(participant.id,participant.nickName, participant.status)">
 			<img ng-src="img/{{participant.profilePic}}">
 			<h2>{{participant.nickName}}</h2>
 

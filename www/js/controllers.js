@@ -542,7 +542,8 @@ angular.module('WalkWithMeApp.controllers', ['angularMoment'])
          $state.go('menu');
     }
 
-    $scope.showWalkies = function(toId, toNickName){
+    $scope.showWalkies = function(toId, toNickName, status){
+        if ( status != 10 ) return;
         $scope.panelType = 0; 
         $scope.sendWalkiesTo = {};
         $scope.sendWalkiesTo.id = toId;
