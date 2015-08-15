@@ -69,7 +69,8 @@ angular.module('WalkWithMeApp', ['ionic', 'WalkWithMeApp.controllers', 'WalkWith
     sURL_SendWalkieService: 'http://dev.juztmove.com/dev/walkwithme/index.php/WalkController/sendWalkie',
     sURL_DisplayInvitationService: 'http://dev.juztmove.com/dev/walkwithme/index.php/WalkController/getInvitations',
     sURL_JoinService: 'http://dev.juztmove.com/dev/walkwithme/index.php/WalkController/updateInvitation',
-    sURL_UploadService: 'http://dev.juztmove.com/dev/walkwithme/index.php/WalkController/sendPicture'
+    sURL_UploadService: 'http://dev.juztmove.com/dev/walkwithme/index.php/WalkController/sendPicture',
+    sURL_DeleteWalkService: 'http://dev.juztmove.com/dev/walkwithme/index.php/WalkController/deleteWalk'
 })
 
 

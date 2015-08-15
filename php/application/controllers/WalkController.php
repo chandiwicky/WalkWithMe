@@ -321,6 +321,28 @@ class WalkController extends CI_Controller {
 		}
 	}
 
+public function deleteWalk()
+	{
+		try {
+			// JSON object data
+			$data 			= json_decode(file_get_contents("php://input"),TRUE);
+			// Bypass POST			
+			$data 			= $_POST;
+			$walkId 		= $data['walkId'];
+
+			$resultSet 		= array();
+			//save a walk & get WalkId
+			$this->Walk->deleteWalk($walkId);
+
+			$resultSet = array("statusCode" => 0 , "walkId" =>$walkId );
+	    	print_r(json_encode($resultSet));
+		}catch(Exception $e){
+			log_message('error', "deleteWalk-err:".$e->getMessage());
+			$errorRes = array('statusCode' => 180 , 'statusDesc' => "Err-delete:".$e->getMessage() );
+			print_r(json_encode($errorRes));	
+		}
+	}
+
 	
 	public function updateWalkStatus()
 	{

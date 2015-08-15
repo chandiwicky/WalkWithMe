@@ -416,7 +416,7 @@ angular.module('WalkWithMeApp.controllers', ['angularMoment'])
     //Setting the time
     $scope.hour = 05;
     $scope.minutes = 30;
-    $scope.am = "am";
+    $scope.am = "AM";
     $scope.increaseHour = function()
     {      
           $scope.increaseHour =  function () {
@@ -445,10 +445,10 @@ angular.module('WalkWithMeApp.controllers', ['angularMoment'])
 
     $scope.change = function()
     {
-        if($scope.am == "am")
-            $scope.am = "pm";
+        if($scope.am == "AM")
+            $scope.am = "PM";
         else
-            $scope.am = "pm";
+            $scope.am = "AM";
         $scope.walkDate = moment().format("YYYY-MM-") +$scope.selectedDate+ " " + $scope.hour + ":"+ $scope.minutes + " " + $scope.am;
     }
 
@@ -479,7 +479,6 @@ angular.module('WalkWithMeApp.controllers', ['angularMoment'])
     }
 
     
-
     $scope.onSwipeRight = function(){
          $state.go('menu');
     }      
@@ -748,6 +747,30 @@ angular.module('WalkWithMeApp.controllers', ['angularMoment'])
                 return;
             });
     }
+
+    $scope.deleteWalk = function(){
+        
+        var userId      = $rootScope.userId;        
+
+        console.log("Delete walk:"+$scope.walkId);
+        //$ionicLoading.show({ template: '<div class="animation"><div><span>Loading</span></div></div>' });  
+        loadService.Show();
+        userService.DeleteWalkService($scope.walkId)
+                .success(function(data) {
+                    if ( !angular.isDefined(data.statusCode) || data.statusCode > 0 ){
+                        errorService.ShowError('Server appeared to be offline or in maintainance, Please try again later');                        
+                        return;
+                    }                               
+                    
+                    errorService.ShowError('Walk deleted');                    
+                    $state.go('menu');                    
+                })
+                .error(function(data) {
+                    errorService.ShowError('Server appeared to be offline or in maintainance(HTTP), Please try again later');
+                    return;
+                }); 
+    }
+
     $scope.listUsers();
 })
 

@@ -56,6 +56,14 @@ angular.module('WalkWithMeApp.services',[]).factory('userService', function(URLS
               });
       },
       
+      DeleteWalkService : function (walkId){              
+              return $http({
+                  method : 'POST',
+                  url: URLS.sURL_DeleteWalkService,
+                  data : {"walkId" : walkId }
+              });
+      },
+
       InviteUserService : function (walkId, userId){              
               
               return $http({

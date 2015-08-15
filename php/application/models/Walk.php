@@ -132,4 +132,13 @@ class Walk extends CI_Model {
         $this->inviteWalk($inviteId, $walkId, $userId, 1);        
     }
 
+    function deleteWalk($walkId){
+        $deleteWalkQuery = $this->db->query("DELETE FROM `walkparticipants` WHERE `walkId`='".$walkId."'");                                     
+        
+        $deleteWalkQuery = $this->db->query("DELETE FROM `walkmessage` WHERE `walkId`='".$walkId."'");                                     
+
+        $deleteWalkQuery = $this->db->query("DELETE FROM `userwalks` WHERE `id`='".$walkId."'");                                     
+    }
+    
+
 }
