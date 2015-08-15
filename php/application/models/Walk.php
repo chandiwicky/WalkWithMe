@@ -127,6 +127,8 @@ class Walk extends CI_Model {
         $saveWalkQuery = $this->db->query("INSERT INTO `userwalks`(`id`, `userId`, `dateOfWalk`, `suggestedEndOfWalk`, `milestone`)
                                          VALUES ('".$walkId."','".$userId."','".$dateOfWalk."','".$endOfWalk."','p')");                                     
         // invite myself
+        log_message('error', "INSERT INTO `userwalks`(`id`, `userId`, `dateOfWalk`, `suggestedEndOfWalk`, `milestone`)
+                                         VALUES ('".$walkId."','".$userId."','".$dateOfWalk."','".$endOfWalk."','p')");
         $this->inviteWalk($inviteId, $walkId, $userId, 1);        
     }
 

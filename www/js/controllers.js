@@ -3,13 +3,21 @@
     RootScope variables
     $rootScope.userId       : userId returned by registration saved after validation ( add in login and reg-step2 )
     $rootScope.nickName     : used for greetings ( add in login and reg-step2 )
+    
+    $rootScope.menuTicker
+    $rootScope.isMenuRefresh
 
+    $rootScope.isWalkRefresh
+    $rootScope.walkNowTicker
 */
 angular.module('WalkWithMeApp.controllers', ['angularMoment'])
 
-.controller('StartCtrl', function($window, $rootScope, $scope,$ionicLoading, $state, userService, errorService) {
+.controller('StartCtrl', function($window, $rootScope, $scope,$ionicLoading, $state, $interval, userService, errorService) {
 
     $ionicLoading.show({ template: 'Loading...' });
+    
+    $rootScope.isMenuRefresh = true;
+    $rootScope.isWalkRefresh = true;
 
     userService.ServerStats()
         .success(function(data) {
@@ -42,6 +50,33 @@ angular.module('WalkWithMeApp.controllers', ['angularMoment'])
             errorService.ShowError('Server appeared to be offline or in maintainance(HTTP), Please try again later');
             return;
         });
+
+    $rootScope.$on('$stateChangeStart',
+        function(event, toState, toParams, fromState, fromParams){
+            //console.log(event +","+ toState + "," + toParams +  "," + fromState + "," + fromParams);
+            // TODO: scope.destroy not working using the state change since its working
+            if ( fromState.name === "menu" ){
+                // Stop the timer
+                $rootScope.isMenuRefresh = false;
+            }
+
+            if ( toState.name === "menu" ){
+                // Start the timer
+                $rootScope.isMenuRefresh = true;
+            }
+
+            if ( fromState.name === "walkNow" ){
+                // Stop the timer
+                $rootScope.isWalkRefresh = false;
+            }
+
+            if ( toState.name === "walkNow" ){
+                // Start the timer
+                $rootScope.isWalkRefresh = true;
+            }
+            // transitionTo() promise will be rejected with
+            // a 'transition prevented' error
+        })
 
 })
 
@@ -220,7 +255,7 @@ angular.module('WalkWithMeApp.controllers', ['angularMoment'])
     $scope.reloadMenu = function(userId) {
         
         console.log("Refresh menu");   
-        loadService.Show();     
+        //loadService.Show();     
         userService.MenuService(userId)
             .success(function(data) {
 
@@ -235,6 +270,7 @@ angular.module('WalkWithMeApp.controllers', ['angularMoment'])
                 if ( angular.isDefined(data.nextWalk.dateOfWalk) ){
                     $scope.myNextWalk.date = moment(data.nextWalk.dateOfWalk).format("ddd D, MMM YYYY");
                     $scope.myNextWalk.time = moment(data.nextWalk.dateOfWalk).format("hh:mm a");
+                    $scope.myNextWalk.walkDate = data.nextWalk.dateOfWalk;
                     $scope.myNextWalk.participants = data.nextWalk.participants;
                     $scope.myNextWalk.walkId = data.nextWalk.walkId;
                     $scope.myNextWalk.status = parseInt(data.nextWalk.status);
@@ -246,7 +282,7 @@ angular.module('WalkWithMeApp.controllers', ['angularMoment'])
 
                 $scope.isStartWalking = true;   //TODO : Check date and time difference
 
-                loadService.Hide();
+                //loadService.Hide();
 
                 $scope.range = function(n) {
                     return new Array(n);
@@ -267,6 +303,15 @@ angular.module('WalkWithMeApp.controllers', ['angularMoment'])
             });
     }
         
+    // Change walk status
+    $scope.showWalk = function(){
+        // Show invite if its only my walk
+        if ( $scope.myNextWalk.status >= 10 ){
+            return;
+        }
+        //invite({ 'walkId':myNextWalk.walkId , 'walkDate': myNextWalk.walkDate })
+        $state.go('invite', { 'walkId':$scope.myNextWalk.walkId , 'walkDate': $scope.myNextWalk.walkDate } );
+    }    
     // 
     $scope.startWalk = function(walkId){
 
@@ -291,27 +336,25 @@ angular.module('WalkWithMeApp.controllers', ['angularMoment'])
                 }); 
     }
 
+    // Define the ticker if not already defined
+        // Clear the previous interval if defined and create a new one
+    if ( angular.isDefined($rootScope.menuTicker) ){
+        $interval.cancel($rootScope.menuTicker);
+    }
+
+    $rootScope.menuTicker = $interval( 
+        function(){
+            console.log("Menu:Tick = isRef : "+ $rootScope.isMenuRefresh);        
+            // hacked because dont know how to clear a interval when moving away from the current state.
+            if ( $rootScope.isMenuRefresh ){
+                console.log("Menu:Tick !");
+                $scope.reloadMenu(userId);
+            }
+        }, 
+    10000);
     
-    $scope.reloadMenu(userId);
-    /*
-    menuReloadTicker = $interval( function(){        
-        // hacked because dont know how to clear a interval when moving away from the current state.
-        console.log("Menu:"+$state.current.name);
-        if ( !$state.is('menu')){
-            $interval.cancel(menuReloadTicker);
-        }else{
-            $scope.reloadMenu(mobileNumber, username);
-        }
-    }, 10000);
-    */
-    
-    $scope.$on('$destroy', function () {
-        console.log("MenuCtrl:destroy");        
-    });
-    
-    //Load it first time
-    //$scope.reloadMenu(mobileNumber, username);
-    
+    // Do it the first time
+    $scope.reloadMenu(userId);    
 })
 
 
@@ -357,7 +400,9 @@ angular.module('WalkWithMeApp.controllers', ['angularMoment'])
         $scope.selectedDate = _index;
         $scope.setClass(_index);
         // 2015.08.12 : Get the date in one variable
+
         $scope.walkDate = moment().format("YYYY-MM-") +$scope.selectedDate+ " " + $scope.hour + ":"+ $scope.minutes + " " + $scope.am;
+        console.log("Selected date " + $scope.walkDate );
     }
 
     //function to set the class of the days
@@ -371,7 +416,7 @@ angular.module('WalkWithMeApp.controllers', ['angularMoment'])
     //Setting the time
     $scope.hour = 05;
     $scope.minutes = 30;
-    $scope.am = "AM";
+    $scope.am = "am";
     $scope.increaseHour = function()
     {      
           $scope.increaseHour =  function () {
@@ -382,6 +427,7 @@ angular.module('WalkWithMeApp.controllers', ['angularMoment'])
                 $scope.hour = $scope.hour + 1;
             }
         }
+        $scope.walkDate = moment().format("YYYY-MM-") +$scope.selectedDate+ " " + $scope.hour + ":"+ $scope.minutes + " " + $scope.am;
     }
 
     $scope.increaseMinutes = function()
@@ -394,24 +440,24 @@ angular.module('WalkWithMeApp.controllers', ['angularMoment'])
         {
             $scope.minutes = parseInt($scope.minutes) + 15;
         }
-        
+        $scope.walkDate = moment().format("YYYY-MM-") +$scope.selectedDate+ " " + $scope.hour + ":"+ $scope.minutes + " " + $scope.am;
     }
 
     $scope.change = function()
     {
-        if($scope.am == "AM")
-            $scope.am = "PM";
+        if($scope.am == "am")
+            $scope.am = "pm";
         else
-            $scope.am = "AM";
-        
+            $scope.am = "pm";
+        $scope.walkDate = moment().format("YYYY-MM-") +$scope.selectedDate+ " " + $scope.hour + ":"+ $scope.minutes + " " + $scope.am;
     }
 
     $scope.createWalk = function(){
         
         var userId      = $rootScope.userId;        
-        var dateOfWalk  = $scope.walkDate;
+        var dateOfWalk  = moment($scope.walkDate).format('YYYY-MM-DD HH:mm:ss');
 
-        console.log("Create new walk:"+$scope.walkDate);
+        console.log("Create new walk:"+dateOfWalk);
         //$ionicLoading.show({ template: '<div class="animation"><div><span>Loading</span></div></div>' });  
         loadService.Show();
         userService.CreateWalkService(userId, dateOfWalk)
@@ -446,9 +492,9 @@ angular.module('WalkWithMeApp.controllers', ['angularMoment'])
     console.log("WalkCtrl:Init");
     // Initialize the last played message Id / Dont play the same message again and again
     $scope.lastPlayedMessageId = 0;
-    $scope.walkId = $stateParams.walkId;
-    
-
+    $scope.walkId   = $stateParams.walkId;
+    var walkId      = $stateParams.walkId;
+    console.log(">>>>>>>>>>>>>"+walkId);
         //Initialize the modal for walkies
         $ionicModal.fromTemplateUrl('templates/walkies.html', function($ionicModal) {
             $scope.modal = $ionicModal;
@@ -463,10 +509,11 @@ angular.module('WalkWithMeApp.controllers', ['angularMoment'])
     // Set interval and get information from server
     // If exceeding the planned time "doneWalking"
     // Update the list of users and their walking states
-    $scope.reloadWalkNow = function(){
-        console.log("reload walk now" );
-        var userId = $rootScope.userId;
-        userService.WalkNowService($scope.walkId, userId)
+    $scope.reloadWalkNow = function(wId){
+        
+        var userId = $rootScope.userId;        
+        console.log("reload walk now : " + wId );
+        userService.WalkNowService(wId, userId)
             .success(function(data) {
 
                 if ( data.statusCode > 0 ){
@@ -478,7 +525,7 @@ angular.module('WalkWithMeApp.controllers', ['angularMoment'])
                 $scope.walkId = data.walkId;
                 $scope.participants = data.participants;
                 $scope.lastMessage = data.lastMessage;              
-                
+                $scope.playSound();
             })
             .error(function(data, status) {
                 // htpp error
@@ -520,7 +567,7 @@ angular.module('WalkWithMeApp.controllers', ['angularMoment'])
             if ( !angular.isDefined(data.statusCode) || data.statusCode > 0 ){
                 errorService.ShowError('Server appeared to be offline or in maintainance, Please try again later');                
                 return;
-            }            
+            }                        
             /*
             $scope.lastMessage  = data.lastMessage;  
             $scope.playSound();
@@ -551,9 +598,9 @@ angular.module('WalkWithMeApp.controllers', ['angularMoment'])
                 options.fileName    = imageURI.substr(imageURI.lastIndexOf('/')+1);
                 options.mimeType    = "image/jpeg";
                     var params = {};
-                    params.walkId = 'xxxxx'; // some other POST fields
-                    params.userId = $rootScope.userId;
-                    params.toId   = 'ddddd';                    
+                    params.walkId = $stateParams.walkId; // some other POST fields
+                    params.fromId = $rootScope.userId;
+                    params.toId   = 'All';                    
                 options.params = params;
 
 
@@ -580,8 +627,9 @@ angular.module('WalkWithMeApp.controllers', ['angularMoment'])
     $scope.playSound = function(){
         try{
             // TODO: play a sound
-            if ( $scope.lastMessage ){//&& $scope.lastMessage.messageId != $scope.lastPlayedMessageId ){
-                $scope.lastPlayedMessageId = $scope.lastMessage.messageId;
+            console.log( $scope.lastMessage.id + "," + $scope.lastPlayedMessageId );
+            if ( $scope.lastMessage && $scope.lastMessage.id != $scope.lastPlayedMessageId ){
+                $scope.lastPlayedMessageId = $scope.lastMessage.id;
                 var media = new Media("/android_asset/www/walkies/WALKIE_001.mp3",  null, function(e){ alert("err:"+JSON.stringify(e))}, mediaStatusCallback);
                 media.play();        
             }
@@ -594,20 +642,6 @@ angular.module('WalkWithMeApp.controllers', ['angularMoment'])
     var mediaStatusCallback = function(status) {
         //$ionicLoading.show({ template: "media"+status, noBackdrop: true, duration: 1000 });        
     }
-
-   
-    //$scope.reloadWalkNow();
-    /*
-    walkNowReloadTicker = $interval( function(){        
-        // hacked because dont know how to clear a interval when moving away from the current state.        
-        console.log("WN:"+$state.current.name);
-        if ( !$state.is('walkNow')){
-            $interval.cancel(walkNowReloadTicker);
-        }else{
-            $scope.reloadWalkNow();
-        }
-    }, 10000)
-    */
 
     $scope.endWalk = function(){
 
@@ -633,13 +667,30 @@ angular.module('WalkWithMeApp.controllers', ['angularMoment'])
                 }); 
     }
 
-
     // Clear the modal window
     $scope.$on('$destroy', function() {
         console.log("WalkNowCtrl:destroy");
         $scope.modal.remove();
     });
 
+    // Clear the previous interval if defined and create a new one
+    if ( angular.isDefined($rootScope.walkNowTicker) ){
+        $interval.cancel($rootScope.walkNowTicker);
+    }
+
+    $rootScope.walkNowTicker = $interval( 
+        function(){
+            console.log("Walk:Tick = isRef : "+ $rootScope.isWalkRefresh);        
+            // hacked because dont know how to clear a interval when moving away from the current state.
+            if ( $rootScope.isWalkRefresh ){
+                console.log("Walk:Tick !");
+                $scope.reloadWalkNow(walkId);
+            }
+        }, 
+    10000);
+    
+
+    $scope.reloadWalkNow(walkId);
     
 })
 

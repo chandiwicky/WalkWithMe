@@ -9,7 +9,7 @@
 			<!-- bind the next walk object -->
 
 			<div class="panel-title">
-				<label class="title" >My Next Walk</label>
+				<label class="title"  ng-click="showWalk()" >My Next Walk</label>
 				<button ng-if="isStartWalking" ng-click="startWalk(myNextWalk.walkId)">{{ myNextWalk.status != 10 ? 'Start':'' }} Walking</button>
 			</div>
 

@@ -303,9 +303,9 @@ class WalkController extends CI_Controller {
 			$userId 		= $data['userId'];
 			$dateOfWalk		= $data['dateOfWalk'];			
 			$endOfWalkDt	= new DateTime($dateOfWalk);
-			$startOfWalk	= $endOfWalkDt->format('Y-m-d h:i:s a');
+			$startOfWalk	= $endOfWalkDt->format('Y-m-d H:i:s');
 			$endOfWalkDt->modify("+1 hours");
-			$endOfWalk 		= $endOfWalkDt->format('Y-m-d h:i:s a');
+			$endOfWalk 		= $endOfWalkDt->format('Y-m-d H:i:s');
 
 			$resultSet 		= array();
 
@@ -379,7 +379,7 @@ class WalkController extends CI_Controller {
 			$fromId		= $data['fromId'];
 			$toId		= $data['toId'];
 			$walkieId	= $data['walkieId'];
-			$result  	= $this->Message->sendWalkie($id,$walkId, $fromId, $toId, $walkieId);
+			$result  	= $this->Message->sendMessage($id,$walkId, $fromId, $toId, $walkieId, 0);
 
 			$registerRes =array("statusCode" => (int)0, "statusDesc" => "ok" ) ; 
 			print_r(json_encode($registerRes));	
@@ -399,13 +399,18 @@ class WalkController extends CI_Controller {
 			// Bypass get the post data
 			$data 		= $_POST;
 			$id 		= trim($this->getGUID(),'{}');
-
+			$walkId 	= $data['walkId'];
+			$fromId		= $data['fromId'];
+			$toId		= $data['toId'];
+		
 
 			$target_dir = getcwd() . "/uploads/";
+			$fileName	= basename($_FILES["file"]["name"]);
 			$target_file = $target_dir . basename($_FILES["file"]["name"]);
 			$check = getimagesize($_FILES["file"]["tmp_name"]);
 			move_uploaded_file($_FILES["file"]["tmp_name"], $target_file);
 			
+			$result  	= $this->Message->sendMessage($id,$walkId, $fromId, $toId, $fileName, 1);
 
 			//$walkId 	= $data['walkId'];
 			//$fromId		= $data['fromId'];
