@@ -1,4 +1,4 @@
-<ion-pane data-ng-controller="WalkCtrl">
+<ion-pane>
 	<ion-header-bar class="panel-header-1 marginTop40">
 		<div class="logo">
 			<img src="img/logo_header.png"/>
@@ -33,12 +33,19 @@
 			<div>Sa</div>
 		</div>
 
-		<div id="dayPanel" class="panel-days">
-			
-			<div data-ng-if="isFirstWeek" data-ng-repeat ="day in weekOne track by $index" ng-click="selectDate({{day}})"><span  ng-class= "setClass({{day}})">{{day}}</span></div>
-			<div data-ng-if="!isFirstWeek" data-ng-repeat ="day in weekTwo track by $index" ng-click="selectDate({{day}})"><span  ng-class= "setClass({{day}})">{{day}}</span></div>
+		<div id="dayPanel" class="panel-days">			
+			<div ng-repeat="dayInfo in weekCurrent" ng-click="selectDate({{dayInfo.day}})">
+				<span  ng-class= "setClass({{dayInfo.day}}, {{dayInfo.isInUse}})">{{dayInfo.day}}</span>
+			</div>			
 			
 		</div>
+<!--
+		<div id="dayPanel" class="panel-days" ng-if="!isFirstWeek">			
+
+			<div ng-repeat ="day in weekTwo" ng-click="selectDate({{day}})"><span  ng-class= "setClass({{day}})">{{day}}</span></div>
+			
+		</div>
+-->
 
 	</ion-content>
 

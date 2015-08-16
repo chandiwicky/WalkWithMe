@@ -21,8 +21,10 @@ class Walk extends CI_Model {
                                                     from walkparticipants wp 
                                                     INNER JOIN userwalks on userwalks.id = wp.walkId
                                                     INNER Join user on user.id = userwalks.userId
-                                                    WHERE userwalks.dateOfWalk >= now() and 
-                                                    wp.participantId = '".$userId."' and userwalks.userId != '".$userId."' ORDER BY userwalks.dateOfWalk");
+                                                    WHERE userwalks.dateOfWalk >= now() and wp.status != 3 and
+                                                    wp.participantId = '".$userId."' ORDER BY userwalks.dateOfWalk");
+        // 2015.08.15 : Get all the invitations not only others
+        //and userwalks.userId != '".$userId."'
 
         return $invitationQuery->result();
     

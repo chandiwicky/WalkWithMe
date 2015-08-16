@@ -43,7 +43,7 @@
 
 
 		<div class="panel-invitations">
-			<label class="title">Walking Invitations</label>
+			<label class="title">My walks &amp; Invitations</label>
 		</div>
 
 
@@ -55,7 +55,7 @@
 							
 							<td class="image"><img ng-src="img/{{invitation.profilePicture}}"></td>
 							<td class="text"  >
-									<h2> with {{invitation.inviterName}}<h2>
+									<h2> {{invitation.inviterId == $root.userId ? 'My walk' : 'with ' +invitation.inviterName}}<h2>
 									<h3>{{invitation.dateOfWalk | moment:'ddd D, MMM YYYY'}}<br/>{{invitation.dateOfWalk | moment:'hh:mm a'}}</h3>									
 							</td>
 
@@ -81,12 +81,12 @@
 			<!-- bind the next walk object -->
 
 			<div class="form-content">
-			 	<button class="button-big-blue" ui-sref="newWalk" ion-nav-animation="slide-in-up">Create new walk</button>
+			 	<button class="button-big-blue" ng-click="createWalk()" ion-nav-animation="slide-in-up">Create new walk</button>
 			</div>
 
 			<div class="panel-history" data-ng-if="!isFirstTime()"  >
-					<div data-ng-repeat="histry in historyWalk track by $index" data-month="{{histry.month}}">
-						<!-- <div data-ng-repeat="_range in range((histry.countWalks)*1) track by $index"></div>-->
+					<div data-ng-repeat="history in historyWalk track by $index" data-month="{{history.month}}">
+						<div data-ng-repeat="_range in  [].constructor(history.Count*1) track by $index"></div>
 					</div>
 					<a ui-sref="history">More..</a>
 			</div> 

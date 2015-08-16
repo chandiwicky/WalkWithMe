@@ -15,7 +15,7 @@
 	<ion-content>
 		
 		<div class="panel-join-a-walk-list"  data-ng-repeat="intivation in invites track by $index" data-ng-if="!isFirstTime()">
-			<label class="title">{{intivation.inviterName}}</label>
+			<label class="title">{{ intivation.inviterId == $root.userId ? 'My walk' : intivation.inviterName}}</label>
 			<div>
 				<label>
 					<span class="icon"><img src="img/icon_calendar_48_blue.png"/></span>
@@ -37,7 +37,7 @@
 				</div>
 			</div>
 
-			<div class="status">
+			<div class="status" ng-if="intivation.inviterId != $root.userId">
 				<button ng-if="intivation.status != 1" data-ng-click="changeStatus(intivation.walkId,1)">Accept</button>
 				<button ng-if="intivation.status != 2" data-ng-click="changeStatus(intivation.walkId,2)">May be</button>
 				<button ng-if="intivation.status != 3" data-ng-click="changeStatus(intivation.walkId,3)">Decline</button>

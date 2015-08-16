@@ -1323,6 +1323,15 @@ h6 > img {
     line-height: 32px;
 }
 
+.panel-days > div > span.isInUse{
+    padding: 6px;
+    border-radius: 16px;
+    background: #fff;
+    color: #ffe96c;
+    text-align: center;
+    line-height: 32px;
+}
+
 .panel-days > div > span.selected{
     padding: 6px;
     border-radius: 16px;

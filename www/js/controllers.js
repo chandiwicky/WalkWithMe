@@ -148,7 +148,6 @@ angular.module('WalkWithMeApp.controllers', ['angularMoment'])
     }
 })
 
-
 .controller('RegisterCtrl', function($window, $rootScope, $scope, $ionicLoading, $state, $stateParams, userService, errorService) {
     console.log("RegisterCtrl:Init");
     var registrationData = [];
@@ -287,10 +286,6 @@ angular.module('WalkWithMeApp.controllers', ['angularMoment'])
 
                 //loadService.Hide();
 
-                $scope.range = function(n) {
-                    return new Array(n);
-                };
-
                 $scope.isNextWalk = function() {
                     return !angular.equals($scope.myNextWalk, {});
                 };
@@ -313,6 +308,11 @@ angular.module('WalkWithMeApp.controllers', ['angularMoment'])
             //invite({ 'walkId':myNextWalk.walkId , 'walkDate': myNextWalk.walkDate })
             $state.go('invite', { 'walkId':$scope.myNextWalk.walkId , 'walkDate': $scope.myNextWalk.walkDate } );
         }        
+    }    
+
+    $scope.createWalk = function(){
+        // Show invite if its only my walk
+          $state.go('newWalk');      
     }    
     // 
     $scope.startWalk = function(walkId){
@@ -359,7 +359,6 @@ angular.module('WalkWithMeApp.controllers', ['angularMoment'])
     $scope.reloadMenu(userId);    
 })
 
-
 .controller('WalkCtrl', function($scope,$ionicLoading, $state, $window, $rootScope, userService, errorService, loadService) {
 
     //Setting date
@@ -368,54 +367,113 @@ angular.module('WalkWithMeApp.controllers', ['angularMoment'])
     $scope.month    = moment().format("MMM"); 
     $scope.year     = moment().format("YY"); 
     $scope.calTitle = moment().format("MMM YYYY");
+
+    $scope.weekCurrent  = [];
     $scope.weekOne  = [];
     $scope.weekTwo  = [];
+
+    // Get status in parallel
+    loadService.Show();
+    userService.DisplayInvitationService($rootScope.userId)
+        .success(function(data) {
+
+            if ( !angular.isDefined(data.statusCode) || data.statusCode > 0 ){
+                errorService.ShowError('Server appeared to be offline or in maintainance, Please try again later');
+                $state.go('menu');
+                return;
+            }
+            
+            $scope.invites = data.invitations;
+
+            for(var x=0; x< $scope.weekOne.length; x++){
+                for(var y=0; y< $scope.invites.length; y++){
+                    if ( $scope.weekOne[x].day == moment($scope.invites[y].dateOfWalk).format("DD") ){
+                        console.log("is use >>>>>>>>>>>>>>>>>>>>>>" + $scope.weekOne[x].day)
+                        $scope.weekOne[x].isInUse = true;
+                         $scope.setClass($scope.weekOne[x].day, true);
+                    }
+                }
+            }
+
+            for(var x=0; x< $scope.weekTwo.length; x++){
+                for(var y=0; y< $scope.invites.length; y++){
+                    if ( $scope.weekTwo[x].day == moment($scope.invites[y].dateOfWalk).format("DD") ){
+                        console.log("is use >>>>>>>>>>>>>>>>>>>>>>" + $scope.weekTwo[x].day)
+                        $scope.weekTwo[x].isInUse = true;
+                        $scope.setClass($scope.weekTwo[x].day, true);
+                    }
+                }
+            }
+
+            $scope.selectDate({day:moment().format("DD"), isInUse: false});
+            loadService.Hide();
+        })       
+        .error(function(data) {
+            // htpp error
+            //show error message and exit the application
+            errorService.ShowError('Server appeared to be offline or in maintainance(HTTP), Please try again later');
+            return;
+        });
+
     // 2015.08.12 : Get the date in one variable
     $scope.walkDate = moment().format("YYYY-MM-DD") + " " + $scope.hour + ":"+ $scope.minutes + " " + $scope.am;
 
+    for(var i=0;i<=6;i++){
+        $scope.weekOne[i] = { day:moment().weekday(i).format("DD"), isInUse : false };
+    }
+
+    for(var i=7,j=0;i<=13,j<=6;i++,j++){
+        $scope.weekTwo[j] = { day:moment().weekday(i).format("DD"), isInUse : false };
+    }
+
     $scope.setThisWeek = function(){
-        $scope.isFirstWeek = 1;
-        $scope.selectedDate = null;
-        $scope.dateCopy = $scope.date;
-        for(var i=0;i<=6;i++){
-            $scope.weekOne[i] = moment().weekday(i).format("DD");
-        }
-        
+        $scope.isFirstWeek      = true;
+        $scope.selectedDate     = null;
+        $scope.dateCopy         = $scope.date;
+        $scope.weekCurrent      = $scope.weekOne;        
     }
 
     $scope.setNextWeek = function(){
         //$scope.dateCopy = null;
         $scope.selectedDate = null;
-        $scope.isFirstWeek = 0;
-        
-        for(var i=7,j=0;i<=13,j<=6;i++,j++){
-            $scope.weekTwo[j] = moment().weekday(i).format("DD");
-        }
-
+        $scope.isFirstWeek = false;
+        $scope.weekCurrent      = $scope.weekTwo;
+    
     }
     //Setting current week on the calender
     $scope.setThisWeek();
 
     //Calender click event
-    $scope.selectDate = function(_index){
+    $scope.selectDate = function(day){
 
-        $scope.selectedDate = _index;
-        $scope.setClass(_index);
+        // Check if already a invitation
+        for(var x=0; x< $scope.invites.length; x++){
+            if ( day == moment($scope.invites[x].dateOfWalk).format("DD") ){
+                errorService.ShowError('Opps! already booked');
+                return;
+            }
+        }
+
+        $scope.selectedDate = day;
+        $scope.setClass(day);
         // 2015.08.12 : Get the date in one variable
 
         $scope.walkDate = moment().format("YYYY-MM-") +$scope.selectedDate+ " " + $scope.hour + ":"+ $scope.minutes + " " + $scope.am;
         console.log("Selected date " + $scope.walkDate );
     }
 
+    
+
     //function to set the class of the days
-    $scope.setClass = function(_date){
-       if($scope.selectedDate == _date)
+    $scope.setClass = function(day, isInUse){
+        if ( isInUse ) return "isInUse";
+       if($scope.selectedDate == day)
             return "selected";
-        if($scope.dateCopy == _date)
+        if($scope.dateCopy == day)
             return "today";
     }
 
-    //Setting the time
+        //Setting the time
     $scope.hour = 05;
     $scope.minutes = 30;
     $scope.am = "AM";
@@ -454,6 +512,8 @@ angular.module('WalkWithMeApp.controllers', ['angularMoment'])
         $scope.walkDate = moment().format("YYYY-MM-") +$scope.selectedDate+ " " + $scope.hour + ":"+ $scope.minutes + " " + $scope.am;
     }
 
+    
+
     $scope.createWalk = function(){
         
         var userId      = $rootScope.userId;        
@@ -487,7 +547,6 @@ angular.module('WalkWithMeApp.controllers', ['angularMoment'])
     
 })
 
-
 .controller('WalkNowCtrl', function($window, $rootScope, $scope,$ionicLoading, $state, $stateParams, $ionicModal, $interval, URLS, userService, errorService, loadService) {
     // WalkCtrl initialization
     console.log("WalkCtrl:Init");
@@ -495,7 +554,7 @@ angular.module('WalkWithMeApp.controllers', ['angularMoment'])
     $scope.lastPlayedMessageId = 0;
     $scope.walkId   = $stateParams.walkId;
     var walkId      = $stateParams.walkId;
-    console.log(">>>>>>>>>>>>>"+walkId);
+
         //Initialize the modal for walkies
         $ionicModal.fromTemplateUrl('templates/walkies.html', function($ionicModal) {
             $scope.modal = $ionicModal;
