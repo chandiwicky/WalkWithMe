@@ -28,21 +28,21 @@ class User extends CI_Model {
     }
 
     //Extracts the userId for a given mobile number
-     function getUserId($mobileNumber)
+    function getUserId($mobileNumber)
     {
         $userId = $this->db->query("SELECT user.id as 'id' FROM user where user.mobileNumber = $mobileNumber");
         return $userId->row()->id;
     }
-
+    
     //Returns the userId if it matches
     function login($mobileNumber,$nickName)
     {
         $credentials = null;
-        $credentials = $this->db->query("SELECT user.id as 'id' FROM user 
+        $credentials = $this->db->query("SELECT user.id as 'id', user.verificationCode FROM user 
                                         where user.mobileNumber = '$mobileNumber' AND user.nickName = '$nickName' ");
         log_message('error', "SELECT user.id as 'id' FROM user 
                                         where user.mobileNumber = '$mobileNumber' AND user.nickName = '$nickName' ");
-        return $credentials->row() ? $credentials->row()->id : -1;
+        return $credentials->row();
     }
 
     // Create a new user / validation pending
@@ -64,4 +64,14 @@ class User extends CI_Model {
             throw new Exception('Error: ' . $e->getMessage());
         }
     }
+
+    function getUser($userId)
+    {
+        $credentials = null;
+        $credentials = $this->db->query("SELECT * FROM user 
+                                        where user.id = '$userId'");
+        
+        return $credentials->row();
+    }
+
 }

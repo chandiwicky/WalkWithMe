@@ -35,11 +35,17 @@ angular.module('WalkWithMeApp.controllers', ['angularMoment'])
                     $state.go('login');
                     },1000);
             }else{
-                
+
                 // Save to the rootScope can be used anywhere in the application
                 //$rootScope.mobileNo = $window.localStorage['mobileNo'];
                 $rootScope.userId = $window.localStorage['userId'];
                 $rootScope.nickName = $window.localStorage['nickName'];    
+                
+                console.log(" start state :"+$state.current.name );
+                if ( $state.current.name === 'firstTime' ){
+                    return;
+                }
+
                 $state.go('menu');
             }
             
@@ -122,6 +128,13 @@ angular.module('WalkWithMeApp.controllers', ['angularMoment'])
                 return;
             }            
             
+            // Check if halfway registered
+            if ( data.verificationCode != "DONE" ){
+                $state.go('register-step2', {userId:data.userId, code:data.verificationCode } );
+                $ionicLoading.hide();
+                return;
+            }
+
             // Save user Id information and nickName
             $window.localStorage['userId'] = data.userId;
             $window.localStorage['nickName'] = $scope.loginData.nickName;   
@@ -175,6 +188,10 @@ angular.module('WalkWithMeApp.controllers', ['angularMoment'])
             errorService.ShowError('Mobile no has to contain numbers');
             return;
         }
+        if ( mobileNo.length < 9 ){
+            errorService.ShowError('Mobile number needs to be 9 digits');
+            return;
+        }
         if ( !nickName || nickName == "" ){
             errorService.ShowError('Nick name no cannot be empty');
             return;
@@ -223,12 +240,11 @@ angular.module('WalkWithMeApp.controllers', ['angularMoment'])
             }
 
                 // Save user Id information and nickName
-                $window.localStorage['userId'] = userId;
-                $window.localStorage['nickName'] = $stateParams.nickName;                
+                $window.localStorage['userId'] = data.user.id;
+                $window.localStorage['nickName'] = data.user.nickName;                
             
-            $rootScope.userId = userId;
-            $rootScope.nickName = $stateParams.nickName;
-            $rootScope.nickName = $stateParams.nickName;
+            $rootScope.userId = userId;            
+            $rootScope.nickName = data.user.nickName;
             $state.go('firstTime');  
             
             $ionicLoading.hide();            

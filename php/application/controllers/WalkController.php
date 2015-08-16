@@ -70,8 +70,9 @@ class WalkController extends CI_Controller {
 			$userId 		= $data['userId'];
 			
 			$this->User->validate($userId);
+			$row = $this->User->getUser($userId);
 
-			$registerRes = array('statusCode' => 0 , 'statusDesc' => "Ok" );
+			$registerRes = array('statusCode' => 0 , 'statusDesc' => "Ok" , 'user' => $row);
 			print_r(json_encode($registerRes));	
 		}catch(Exception $e){
 			log_message('error', "validate-err:".$e->getMessage());
@@ -94,10 +95,10 @@ class WalkController extends CI_Controller {
 			$nickName 		= $data['nickName'];
 			
 			//Get the userId for the relevant mobile number
-			$userId = $this->User->login($mobileNumber, $nickName);
+			$row = $this->User->login($mobileNumber, $nickName);
 				
-			if($userId != -1)
-				$status = array('statusCode' => 0 , 'statusDesc' => "Validated", 'userId' => $userId );
+			if($row)
+				$status = array('statusCode' => 0 , 'statusDesc' => "Validated", 'userId' => $row->id, 'verificationCode' => $row->verificationCode );
 			else
 				$status = array('statusCode' => 300 , 'statusDesc' => "Invalid Credentials" );
 
