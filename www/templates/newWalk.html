@@ -34,8 +34,8 @@
 		</div>
 
 		<div id="dayPanel" class="panel-days">			
-			<div ng-repeat="dayInfo in weekCurrent" ng-click="selectDate({{dayInfo.day}})">
-				<span  ng-class= "setClass({{dayInfo.day}}, {{dayInfo.isInUse}})">{{dayInfo.day}}</span>
+			<div ng-repeat="dayInfo in weekCurrent" ng-click="selectDate(dayInfo)">
+				<span  ng-class= "setClass({{dayInfo.day}}, {{dayInfo.isInUse}}, dayInfo)">{{dayInfo.day}}</span>
 			</div>			
 			
 		</div>

@@ -311,7 +311,7 @@ angular.module('WalkWithMeApp.controllers', ['angularMoment'])
     }    
 
     $scope.createWalk = function(){
-        // Show invite if its only my walk
+        // Show invite if its only my walk            
           $state.go('newWalk');      
     }    
     // 
@@ -355,6 +355,12 @@ angular.module('WalkWithMeApp.controllers', ['angularMoment'])
         }, 
     10000);
     
+     // Clear the modal window
+    $scope.$on('$destroy', function() {
+        console.log("MenuCtrl:destroy");
+    });
+
+
     // Do it the first time
     $scope.reloadMenu(userId);    
 })
@@ -373,7 +379,7 @@ angular.module('WalkWithMeApp.controllers', ['angularMoment'])
     $scope.weekTwo  = [];
 
     // Get status in parallel
-    loadService.Show();
+    //loadService.Show();
     userService.DisplayInvitationService($rootScope.userId)
         .success(function(data) {
 
@@ -382,7 +388,7 @@ angular.module('WalkWithMeApp.controllers', ['angularMoment'])
                 $state.go('menu');
                 return;
             }
-            
+            /*
             $scope.invites = data.invitations;
 
             for(var x=0; x< $scope.weekOne.length; x++){
@@ -390,7 +396,7 @@ angular.module('WalkWithMeApp.controllers', ['angularMoment'])
                     if ( $scope.weekOne[x].day == moment($scope.invites[y].dateOfWalk).format("DD") ){
                         console.log("is use >>>>>>>>>>>>>>>>>>>>>>" + $scope.weekOne[x].day)
                         $scope.weekOne[x].isInUse = true;
-                         $scope.setClass($scope.weekOne[x].day, true);
+                        //$scope.setClass($scope.weekOne[x].day, true);
                     }
                 }
             }
@@ -400,13 +406,13 @@ angular.module('WalkWithMeApp.controllers', ['angularMoment'])
                     if ( $scope.weekTwo[x].day == moment($scope.invites[y].dateOfWalk).format("DD") ){
                         console.log("is use >>>>>>>>>>>>>>>>>>>>>>" + $scope.weekTwo[x].day)
                         $scope.weekTwo[x].isInUse = true;
-                        $scope.setClass($scope.weekTwo[x].day, true);
+                        //$scope.setClass($scope.weekTwo[x].day, true);
                     }
                 }
             }
-
-            $scope.selectDate({day:moment().format("DD"), isInUse: false});
-            loadService.Hide();
+            */
+            //$scope.selectDate({day:moment().format("DD"), isInUse: false});
+            //loadService.Hide();
         })       
         .error(function(data) {
             // htpp error
@@ -417,14 +423,23 @@ angular.module('WalkWithMeApp.controllers', ['angularMoment'])
 
     // 2015.08.12 : Get the date in one variable
     $scope.walkDate = moment().format("YYYY-MM-DD") + " " + $scope.hour + ":"+ $scope.minutes + " " + $scope.am;
+    
+    // Todays day
+    var nowDay = moment().format("DD");
+    var weekOne  = [];
+    var weekTwo  = [];
 
     for(var i=0;i<=6;i++){
-        $scope.weekOne[i] = { day:moment().weekday(i).format("DD"), isInUse : false };
-    }
+        
+        var firstWeekDay = moment().weekday(i).format("DD");
+        var secondWeekDay = moment().weekday(i+7).format("DD");
 
-    for(var i=7,j=0;i<=13,j<=6;i++,j++){
-        $scope.weekTwo[j] = { day:moment().weekday(i).format("DD"), isInUse : false };
+        weekOne[i] = { day:firstWeekDay, isInUse : false, isToday : firstWeekDay === nowDay , isPast : firstWeekDay < nowDay };
+        weekTwo[i] = { day:secondWeekDay, isInUse : false,  isToday : secondWeekDay === nowDay , isPast : secondWeekDay < nowDay };
     }
+    
+    $scope.weekOne = weekOne;
+    $scope.weekTwo = weekTwo;
 
     $scope.setThisWeek = function(){
         $scope.isFirstWeek      = true;
@@ -444,18 +459,19 @@ angular.module('WalkWithMeApp.controllers', ['angularMoment'])
     $scope.setThisWeek();
 
     //Calender click event
-    $scope.selectDate = function(day){
+    $scope.selectDate = function(dayInfo){
 
         // Check if already a invitation
+        /*
         for(var x=0; x< $scope.invites.length; x++){
             if ( day == moment($scope.invites[x].dateOfWalk).format("DD") ){
                 errorService.ShowError('Opps! already booked');
                 return;
             }
         }
-
-        $scope.selectedDate = day;
-        $scope.setClass(day);
+        */
+        $scope.selectedDate = dayInfo.day;
+        $scope.setClass(dayInfo.day, dayInfo.isInUse, dayInfo);
         // 2015.08.12 : Get the date in one variable
 
         $scope.walkDate = moment().format("YYYY-MM-") +$scope.selectedDate+ " " + $scope.hour + ":"+ $scope.minutes + " " + $scope.am;
@@ -465,7 +481,9 @@ angular.module('WalkWithMeApp.controllers', ['angularMoment'])
     
 
     //function to set the class of the days
-    $scope.setClass = function(day, isInUse){
+    $scope.setClass = function(day, isInUse, dayInfo){
+        console.log(">>>>>>>>>SetClass>>>>>>>>>>>>>"+dayInfo.day + "," + dayInfo.isToday);
+
         if ( isInUse ) return "isInUse";
        if($scope.selectedDate == day)
             return "selected";
@@ -479,14 +497,13 @@ angular.module('WalkWithMeApp.controllers', ['angularMoment'])
     $scope.am = "AM";
     $scope.increaseHour = function()
     {      
-          $scope.increaseHour =  function () {
-            if ($scope.hour == "12") {
-                $scope.hour = 1;
-            }
-            else {
-                $scope.hour = $scope.hour + 1;
-            }
+          
+        if ($scope.hour == "12") {
+            $scope.hour = 1;
+        } else {
+           $scope.hour = $scope.hour + 1;
         }
+        
         $scope.walkDate = moment().format("YYYY-MM-") +$scope.selectedDate+ " " + $scope.hour + ":"+ $scope.minutes + " " + $scope.am;
     }
 
@@ -539,6 +556,7 @@ angular.module('WalkWithMeApp.controllers', ['angularMoment'])
                     return;
                 }); 
     }
+
 
     
     $scope.onSwipeRight = function(){
