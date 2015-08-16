@@ -313,6 +313,12 @@ angular.module('WalkWithMeApp.controllers', ['angularMoment'])
     $scope.createWalk = function(){
         // Show invite if its only my walk            
           $state.go('newWalk');      
+    }  
+
+    $scope.join = function(){
+        // Show invite if its only my walk         
+          $state.transitionTo('join', null , { location: true, inherit: true, notify: true, reload : true} );   
+          //$state.go('join');      
     }    
     // 
     $scope.startWalk = function(walkId){
@@ -376,6 +382,15 @@ angular.module('WalkWithMeApp.controllers', ['angularMoment'])
     $scope.weekCurrent  = [];
     $scope.weekOne  = [];
     $scope.weekTwo  = [];
+    
+    //Setting the time
+    $scope.hour     = 05;
+    $scope.minutes  = 30;
+    $scope.am       = "AM";
+
+    // 2015.08.12 : Get the date in one variable
+    $scope.walkDate = moment().format("YYYY-MM-DD") + " " + $scope.hour + ":"+ $scope.minutes + " " + $scope.am;
+    $scope.selectedDay = moment().format("DD");
 
     // Get status in parallel
     //loadService.Show();
@@ -392,20 +407,11 @@ angular.module('WalkWithMeApp.controllers', ['angularMoment'])
 
             for(var x=0; x< $scope.weekOne.length; x++){
                 for(var y=0; y< $scope.invites.length; y++){
-                    if ( $scope.weekOne[x].day == moment($scope.invites[y].dateOfWalk).format("DD") ){
-                        console.log("is use >>>>>>>>>>>>>>>>>>>>>>" + $scope.weekOne[x].day)
-                        $scope.weekOne[x].isInUse = true;
-                        //$scope.setClass($scope.weekOne[x].day, true);
+                    if ( $scope.weekOne[x].day == moment($scope.invites[y].dateOfWalk).format("DD") ){                        
+                        $scope.weekOne[x].isInUse = true;                        
                     }
-                }
-            }
-
-            for(var x=0; x< $scope.weekTwo.length; x++){
-                for(var y=0; y< $scope.invites.length; y++){
-                    if ( $scope.weekTwo[x].day == moment($scope.invites[y].dateOfWalk).format("DD") ){
-                        console.log("is use >>>>>>>>>>>>>>>>>>>>>>" + $scope.weekTwo[x].day)
-                        $scope.weekTwo[x].isInUse = true;
-                        //$scope.setClass($scope.weekTwo[x].day, true);
+                    if ( $scope.weekTwo[x].day == moment($scope.invites[y].dateOfWalk).format("DD") ){                        
+                        $scope.weekTwo[x].isInUse = true;                        
                     }
                 }
             }
@@ -422,8 +428,7 @@ angular.module('WalkWithMeApp.controllers', ['angularMoment'])
             return;
         });
 
-    // 2015.08.12 : Get the date in one variable
-    $scope.walkDate = moment().format("YYYY-MM-DD") + " " + $scope.hour + ":"+ $scope.minutes + " " + $scope.am;
+  
     
     // Todays day
     var nowDay = moment().format("DD");
@@ -486,10 +491,7 @@ angular.module('WalkWithMeApp.controllers', ['angularMoment'])
         if ( dayInfo.isToday ) return "today";
     }
 
-        //Setting the time
-    $scope.hour = 05;
-    $scope.minutes = 30;
-    $scope.am = "AM";
+
     $scope.increaseHour = function()
     {      
           
@@ -897,9 +899,10 @@ angular.module('WalkWithMeApp.controllers', ['angularMoment'])
 })
 
 .controller('JoinCtrl', function($window, $rootScope, $scope,$ionicLoading, $state, userService, errorService, loadService) {
-
     
+    $scope.invites = {};
     var userId      = $rootScope.userId;
+
     loadService.Show();
     userService.DisplayInvitationService(userId)
         .success(function(data) {
@@ -909,8 +912,7 @@ angular.module('WalkWithMeApp.controllers', ['angularMoment'])
                 $state.go('menu');
                 return;
             }
-            
-            
+                        
             $scope.invites = data.invitations;
             loadService.Hide();
             
@@ -952,6 +954,12 @@ angular.module('WalkWithMeApp.controllers', ['angularMoment'])
             return;
         });
 
+    $scope.showWalk = function(walkId, userId, walkDate){
+        // Show invite if its only my walk
+        if ( userId == $rootScope.userId ){            
+            $state.transitionTo('invite', { 'walkId':walkId , 'walkDate': walkDate }, { location: true, inherit: false, relative: null, notify: true } );
+        }        
+    }   
 })
 
 .controller('MotivationCtrl', function($scope,$ionicLoading, $state) {

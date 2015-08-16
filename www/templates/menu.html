@@ -48,8 +48,8 @@
 
 
 		<ion-scroll zooming="true" direction="x" style="width: 100%; height: 100px; background: #ffd800;">
-			<div class="walking-list" >
-				<div data-ng-repeat="invitation in myInvitations track by $index" ui-sref="join">
+			<div class="walking-list"  ng-click="join()">
+				<div data-ng-repeat="invitation in myInvitations track by $index" >
 					<table >
 						<tr>
 							

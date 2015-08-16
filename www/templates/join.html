@@ -14,12 +14,12 @@
 
 	<ion-content>
 		
-		<div class="panel-join-a-walk-list"  data-ng-repeat="intivation in invites track by $index" data-ng-if="!isFirstTime()">
-			<label class="title">{{ intivation.inviterId == $root.userId ? 'My walk' : intivation.inviterName}}</label>
+		<div class="panel-join-a-walk-list"  data-ng-repeat="invitation in invites" data-ng-if="!isFirstTime()" ng-click="showWalk(invitation.walkId, invitation.inviterId, invitation.dateOfWalk)">
+			<label class="title">{{ invitation.inviterId == $root.userId ? 'My walk' : invitation.inviterName}} </label>
 			<div>
 				<label>
 					<span class="icon"><img src="img/icon_calendar_48_blue.png"/></span>
-					<h1>{{invitation.dateOfWalk | moment:'ddd D, MMM YYYY'}}</h1>
+					<h1>{{ invitation.dateOfWalk | moment:'ddd D, MMM YYYY'}} </h1>
 				</label>
 				<label>
 					<span class="icon"><img src="img/icon_clock_48_blue.png"/></span>
@@ -32,15 +32,15 @@
 			</div>
 
 			<div class="image-list">
-				<div data-ng-repeat="participant in intivation.participants track by $index">
+				<div data-ng-repeat="participant in invitation.participants">
 				 <img ng-src="img/{{participant.profilePicture}}">
 				</div>
 			</div>
 
-			<div class="status" ng-if="intivation.inviterId != $root.userId">
-				<button ng-if="intivation.status != 1" data-ng-click="changeStatus(intivation.walkId,1)">Accept</button>
-				<button ng-if="intivation.status != 2" data-ng-click="changeStatus(intivation.walkId,2)">May be</button>
-				<button ng-if="intivation.status != 3" data-ng-click="changeStatus(intivation.walkId,3)">Decline</button>
+			<div class="status" ng-if="invitation.inviterId != $root.userId">
+				<button ng-if="invitation.status != 1" data-ng-click="changeStatus(invitation.walkId,1)">Accept</button>
+				<button ng-if="invitation.status != 2" data-ng-click="changeStatus(invitation.walkId,2)">May be</button>
+				<button ng-if="invitation.status != 3" data-ng-click="changeStatus(invitation.walkId,3)">Decline</button>
 			</div>
 
 		</div>

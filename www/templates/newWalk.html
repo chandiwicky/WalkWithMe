@@ -12,7 +12,7 @@
 
 	<ion-content scroll="false">
 		<div class="panel-create-walk">
-				<h1> {{date}} <span class="yellow-color">{{month}}</span> {{year}}</h1> 
+				<h1> {{ walkDate | moment:'DD'}} <span class="yellow-color">{{ walkDate | moment:' MMM YY'}}</h1> 
 		</div>
 
 		<div class="panel-week-selector">

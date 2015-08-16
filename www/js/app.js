@@ -188,7 +188,8 @@ angular.module('WalkWithMeApp', ['ionic', 'WalkWithMeApp.controllers', 'WalkWith
         .state('join', {
             url: "/join",
             templateUrl: "templates/join.html",
-            controller: 'JoinCtrl'
+            controller: 'JoinCtrl',
+            cache: false
         })
 
         .state('history', {
@@ -212,6 +213,7 @@ angular.module('WalkWithMeApp', ['ionic', 'WalkWithMeApp.controllers', 'WalkWith
 
 .filter('moment', function() {
     return function(dateString, format) {
+        console.log("Moment:" +dateString)
         return moment(dateString).format(format);
     };
 });
