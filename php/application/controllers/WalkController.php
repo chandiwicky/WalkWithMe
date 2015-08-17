@@ -78,6 +78,23 @@ class WalkController extends CI_Controller {
 			$verificationCode = rand(100,900); 
 			$userId 		= trim($this->getGUID(),'{}');
 
+
+			try
+			{
+				$API_KEY="3fa54e045e7eaa9bbe311c3ad3c8ebd7829cbbd0";
+			// Create a Clockwork object using your API key
+				$clockwork = new Clockwork( $API_KEY );		 
+				// Setup and send a message
+				$options 	= array( 'ssl' => false );
+				$clockwork 	= new Clockwork( $API_KEY, $options );
+				$message 	= array( 'to' =>'0711737449', 'message' =>'WalkWithMe verification code :'.$verificationCode ,'from' =>'WalkWithMe'); //Remove the hard coded number
+				$result 	= $clockwork->send( $message );		 			
+			}
+			catch (ClockworkException $e)
+			{
+				log_message('error', "SMS-err:".$e->getMessage());			
+			}
+
 			//TODO: log entries
 			// Save user	
 			// TODO; how to put try catch statements
