@@ -1,7 +1,7 @@
 //TODO: Change the GET to a GET
 // User services - authentication / server stat / registration
 
-angular.module('WalkWithMeApp.services',[]).factory('userService', function(URLS,$http){
+angular.module('WalkWithMeApp.services',[]).factory('userService', function(URLS,$http, errorService){
    
     return {      
 
@@ -12,6 +12,9 @@ angular.module('WalkWithMeApp.services',[]).factory('userService', function(URLS
               return $http({
                   method : 'GET',
                   url: URLS.sURL_ServerStats
+              }).error(function(data){
+                errorService.showError('Server appeared to be offline or in maintainance(HTTP), Please try again later');
+                return;
               });
       }, // end function    
       
@@ -20,6 +23,9 @@ angular.module('WalkWithMeApp.services',[]).factory('userService', function(URLS
                   method : 'POST',
                   url: URLS.sURL_LoginService,
                   data : {"mobileNumber" : mobileNumber , "nickName" : nickName}
+              }).error(function(data){
+                errorService.showError('Server appeared to be offline or in maintainance(HTTP), Please try again later');
+                return;
               });
       },
 
@@ -28,6 +34,9 @@ angular.module('WalkWithMeApp.services',[]).factory('userService', function(URLS
                   method : 'POST',
                   url: URLS.sURL_Register,
                   data : {"mobileNumber" : mobileNumber , "nickName" : nickName}
+              }).error(function(data){
+                errorService.showError('Server appeared to be offline or in maintainance(HTTP), Please try again later');
+                return;
               });
       },
 
@@ -36,6 +45,9 @@ angular.module('WalkWithMeApp.services',[]).factory('userService', function(URLS
                   method : 'POST',
                   url: URLS.sURL_Validate,
                   data : {"userId" : userId}
+              }).error(function(data){
+                errorService.showError('Server appeared to be offline or in maintainance(HTTP), Please try again later');
+                return;
               });
       },
 
@@ -45,7 +57,10 @@ angular.module('WalkWithMeApp.services',[]).factory('userService', function(URLS
                   method : 'POST',
                   url: URLS.sURL_MenuService,
                   data : {"userId" : userId}
-        });
+              }).error(function(data){
+                errorService.showError('Server appeared to be offline or in maintainance(HTTP), Please try again later');
+                return;
+              });
       },
 
       CreateWalkService : function (userId, dateOfWalk){              
@@ -53,6 +68,9 @@ angular.module('WalkWithMeApp.services',[]).factory('userService', function(URLS
                   method : 'POST',
                   url: URLS.sURL_CreateWalkService,
                   data : {"userId" : userId , "dateOfWalk" : dateOfWalk}
+              }).error(function(data){
+                errorService.showError('Server appeared to be offline or in maintainance(HTTP), Please try again later');
+                return;
               });
       },
       
@@ -61,6 +79,9 @@ angular.module('WalkWithMeApp.services',[]).factory('userService', function(URLS
                   method : 'POST',
                   url: URLS.sURL_DeleteWalkService,
                   data : {"walkId" : walkId }
+              }).error(function(data){
+                errorService.showError('Server appeared to be offline or in maintainance(HTTP), Please try again later');
+                return;
               });
       },
 
@@ -70,7 +91,10 @@ angular.module('WalkWithMeApp.services',[]).factory('userService', function(URLS
                   method : 'POST',
                   url: URLS.sURL_InviteUserService,
                   data : {"walkId": walkId, "userId" : userId }
-        });
+              }).error(function(data){
+                errorService.showError('Server appeared to be offline or in maintainance(HTTP), Please try again later');
+                return;
+              });
       },
 
       InviteService : function (walkId, userId){              
@@ -79,7 +103,10 @@ angular.module('WalkWithMeApp.services',[]).factory('userService', function(URLS
                   method : 'POST',
                   url: URLS.sURL_InviteService,
                   data : {"walkId": walkId, "userId" : userId }
-        });
+              }).error(function(data){
+                errorService.showError('Server appeared to be offline or in maintainance(HTTP), Please try again later');
+                return;
+              });
       },
 
       HistoryService : function (userId){              
@@ -88,7 +115,10 @@ angular.module('WalkWithMeApp.services',[]).factory('userService', function(URLS
                   method : 'POST',
                   url: URLS.sURL_HistoryService,
                   data : {"userId" : userId }
-        });
+              }).error(function(data){
+                errorService.showError('Server appeared to be offline or in maintainance(HTTP), Please try again later');
+                return;
+              });
       },
 
       JoinService : function ( walkId, userId, status){              
@@ -97,7 +127,10 @@ angular.module('WalkWithMeApp.services',[]).factory('userService', function(URLS
                   method : 'POST',
                   url: URLS.sURL_JoinService,
                   data : { "walkId" : walkId, "userId":userId, "status" : status}
-        });
+              }).error(function(data){
+                errorService.showError('Server appeared to be offline or in maintainance(HTTP), Please try again later');
+                return;
+              });
       },
 
       DisplayInvitationService : function (userId){              
@@ -105,6 +138,9 @@ angular.module('WalkWithMeApp.services',[]).factory('userService', function(URLS
                   method : 'POST',
                   url: URLS.sURL_DisplayInvitationService,
                   data : {"userId" : userId }
+              }).error(function(data){
+                errorService.showError('Server appeared to be offline or in maintainance(HTTP), Please try again later');
+                return;
               });
       },
 
@@ -113,6 +149,9 @@ angular.module('WalkWithMeApp.services',[]).factory('userService', function(URLS
                   method : 'POST',
                   url: URLS.sURL_WalkNowService,
                   data : {"walkId" : walkId, "userId": userId}
+              }).error(function(data){
+                errorService.showError('Server appeared to be offline or in maintainance(HTTP), Please try again later');
+                return;
               });
       },
 
@@ -121,6 +160,9 @@ angular.module('WalkWithMeApp.services',[]).factory('userService', function(URLS
                   method : 'POST',
                   url: URLS.sURL_WalkNowUpdateStatus,
                   data : {"walkId" : walkId , "userId" : userId, "time" : statTime, "status": status}
+              }).error(function(data){
+                errorService.showError('Server appeared to be offline or in maintainance(HTTP), Please try again later');
+                return;
               });
       },
 
@@ -129,6 +171,9 @@ angular.module('WalkWithMeApp.services',[]).factory('userService', function(URLS
                   method : 'POST',
                   url: URLS.sURL_SendWalkieService,
                   data : { "walkId": walkId, "fromId": fromId, "toId": toId, "walkieId" : walkieId}
+              }).error(function(data){
+                errorService.showError('Server appeared to be offline or in maintainance(HTTP), Please try again later');
+                return;
               });
       }
       // end function
@@ -139,7 +184,7 @@ angular.module('WalkWithMeApp.services',[]).factory('userService', function(URLS
 // Show error service
 .factory('errorService', function($ionicLoading){
     return {      
-      ShowError : function (msgHtml){              
+      showError : function (msgHtml){              
       	$ionicLoading.show({ template: "<div class='error'><div><span>"+msgHtml+"</span></div></div>", noBackdrop: true, duration: 2000 });
       } // end function
     }; // end return     
@@ -148,10 +193,10 @@ angular.module('WalkWithMeApp.services',[]).factory('userService', function(URLS
 
 .factory('loadService', function($ionicLoading){
     return {      
-      Show : function (){              
+      show : function (){              
         $ionicLoading.show({ template: "<div class='animation'><div><span>Loading</span></div></div>" });
       }, // end function
-      Hide : function (){        
+      hide : function (){        
         $ionicLoading.hide();
       } // end function
     }; // end return         

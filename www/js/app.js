@@ -5,7 +5,7 @@
 // the 2nd parameter is an array of 'requires'
 angular.module('WalkWithMeApp', ['ionic', 'WalkWithMeApp.controllers', 'WalkWithMeApp.services', 'ui.router', 'angularMoment'])
 
-.run(function($ionicPlatform, $state, $ionicLoading, $rootScope) {
+.run(function($ionicPlatform, $state, $ionicLoading, $rootScope, errorService) {
     // For back button counter
     $rootScope.backButtonClickCount = 0;
     $ionicPlatform.ready(function() {
@@ -27,7 +27,8 @@ angular.module('WalkWithMeApp', ['ionic', 'WalkWithMeApp.controllers', 'WalkWith
 
          $rootScope.backButtonClickCount++;
          if ( $rootScope.backButtonClickCount == 1){
-            $ionicLoading.show({ template: "Press back again to exit app", noBackdrop: true, duration: 1000 });
+            //$ionicLoading.show({ template: "Press back again to exit app", noBackdrop: true, duration: 1000 });
+            errorService.showError("Press back again to exit app");
             var backCountTimer = setInterval( function(){
                     clearInterval(backCountTimer);                    
                         $rootScope.backButtonClickCount=0;
@@ -170,7 +171,8 @@ angular.module('WalkWithMeApp', ['ionic', 'WalkWithMeApp.controllers', 'WalkWith
         .state('menu', {
             url: "/menu",
             templateUrl: "templates/menu.html",
-            controller: 'MenuCtrl'
+            controller: 'MenuCtrl',
+            cache: false
         })
         
         .state('newWalk', {
@@ -182,7 +184,8 @@ angular.module('WalkWithMeApp', ['ionic', 'WalkWithMeApp.controllers', 'WalkWith
         .state('walkNow', {
             url: "/walkNow/:walkId",
             templateUrl: "templates/walkNow.html",
-            controller: 'WalkNowCtrl'
+            controller: 'WalkNowCtrl',
+            cache: false
         })
 
         .state('join', {
@@ -212,8 +215,7 @@ angular.module('WalkWithMeApp', ['ionic', 'WalkWithMeApp.controllers', 'WalkWith
 })
 
 .filter('moment', function() {
-    return function(dateString, format) {
-        console.log("Moment:" +dateString)
+    return function(dateString, format) {        
         return moment(dateString).format(format);
     };
 });

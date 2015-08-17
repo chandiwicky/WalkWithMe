@@ -28,7 +28,7 @@
 	</ion-content>
 
 	<ion-footer-bar>
-		<div class="panel-footer-walk-now">
+		<div class="panel-footer-walk-now" ng-style="aniStyle">
 			<div class="notify-bar" ng-if="lastMessage.type*1 == 1">				
 				<h2 ng-click="showPicture(lastMessage.content)">{{lastMessage.fromNickName}} shared a photo <img src="img/icon_photo.png"> </h2>
 			</div>

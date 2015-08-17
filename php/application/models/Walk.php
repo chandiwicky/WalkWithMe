@@ -9,6 +9,18 @@ class Walk extends CI_Model {
         parent::__construct();
     }
 
+
+/*
+
+  0   : Pending
+  1   : Accepted
+  2   : Maybe
+  3   : Decline
+  10  : Walking
+  11  : Completed
+  12  : Completed-Forced
+
+*/
     //Extracts the walks where the user is a participant
     function getInvitations($userId)
     {        
@@ -21,7 +33,7 @@ class Walk extends CI_Model {
                                                     from walkparticipants wp 
                                                     INNER JOIN userwalks on userwalks.id = wp.walkId
                                                     INNER Join user on user.id = userwalks.userId
-                                                    WHERE userwalks.dateOfWalk >= now() and wp.status != 3 and
+                                                    WHERE userwalks.dateOfWalk >= now() and wp.status != 3 and wp.status < 10 and
                                                     wp.participantId = '".$userId."' ORDER BY userwalks.dateOfWalk");
         // 2015.08.15 : Get all the invitations not only others
         //and userwalks.userId != '".$userId."'
@@ -70,8 +82,8 @@ class Walk extends CI_Model {
         $nextWalkQuery = $this->db->query("SELECT walkparticipants.walkId, userwalks.dateOfWalk, walkparticipants.status, userwalks.userId from walkparticipants 
                                             INNER JOIN userwalks on userwalks.id = walkparticipants.walkId
                                             INNER Join user on user.id = walkparticipants.participantId
-                                            WHERE userwalks.dateOfWalk >= now() and ( walkparticipants.status = 1 OR walkparticipants.status = 10 )  and
-                                            walkparticipants.participantId = '".$userId."' ORDER BY userwalks.dateOfWalk DESC
+                                            WHERE userwalks.dateOfWalk >= now() and ( walkparticipants.status = 1 OR walkparticipants.status = 2 OR walkparticipants.status = 10 )  and
+                                            walkparticipants.participantId = '".$userId."' ORDER BY userwalks.dateOfWalk
                                             LIMIT 0,1");
       return $nextWalkQuery->result();
     }

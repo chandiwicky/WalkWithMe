@@ -15,13 +15,10 @@ class User extends CI_Model {
         $getUsersQuery = $this->db->query("SELECT id,nickName,profilePicture, 
                         (select id from walkparticipants w 
                             WHERE w.walkId = '".$walkId."' and 
-                            w.participantId = u.id ) isInvited 
-                            FROM user u where id != '".$userId."'");
-
-        log_message('error', "SELECT id,nickName,profilePicture, 
-                        (select id from walkparticipants w 
+                            w.participantId = u.id ) isInvited, 
+                        (select status from walkparticipants w 
                             WHERE w.walkId = '".$walkId."' and 
-                            w.participantId = u.id ) isInvited 
+                            w.participantId = u.id ) status
                             FROM user u where id != '".$userId."'");
 
         return $getUsersQuery->result();
