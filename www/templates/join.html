@@ -35,7 +35,6 @@
 					<h2>Maybe</h2>
 				</label>-->
 			</div>
-			</div>
 
 			<div class="panel-single-row-full marginTop18">
 				<label>People Walking with me</label>
@@ -50,7 +49,8 @@
 			<div class="status" ng-if="invitation.inviterId != $root.userId">
 				<button ng-if="invitation.status != 1" data-ng-click="changeStatus(invitation.walkId,1)" class="accept">Accept</button>
 				<button ng-if="invitation.status != 2" data-ng-click="changeStatus(invitation.walkId,2)" class="maybe">May be</button>
-				<button ng-if="invitation.status != 3" data-ng-click="changeStatus(invitation.walkId,3)" class="decline"> Decline</button>
+				<button ng-if="invitation.status != 3" data-ng-click="changeStatus(invitation.walkId,3)" class="decline">Decline</button>
+
 			</div>
 
 		</div>

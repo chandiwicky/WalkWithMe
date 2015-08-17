@@ -1105,7 +1105,7 @@ h6 > img {
     float: left;
 }
 
-.panel-join-a-walk-list > .status > button{
+.panel-join-a-walk-list > .status > button {
     width:60px;
     height: 20px;
     line-height: 19px;
@@ -1559,7 +1559,7 @@ h6 > img {
 }
 
 .panel-invite-list > button{
-    width:60px;
+    width:70px;
     height: 20px;
     line-height: 19px;
     margin-top: 6px;
@@ -1580,7 +1580,7 @@ h6 > img {
 }
 
 .panel-invite-list > button.accepted {
-    color: #ffd800;
+    color: #048cd4;
     background: #fff;
 }
 
