@@ -1007,6 +1007,7 @@ h6 > img {
 }
 
 .panel-join-a-walk-list{
+    position: relative;
     width: 100%;
     height:auto;
     padding:20px 20px;
@@ -1118,19 +1119,44 @@ h6 > img {
     float: left;
 }
 
-.panel-join-a-walk-list > .status > button:nth-child(1){
+.panel-join-a-walk-list > .status > button.accept{
     color: #fff;
     background: #048cd4;
 }
-.panel-join-a-walk-list > .status > button:nth-child(2){
+.panel-join-a-walk-list > .status > button.maybe{
     color: #000;
     background: #f1f1f1;
 }
 
-.panel-join-a-walk-list > .status > button:nth-last-child(1){
+.panel-join-a-walk-list > .status > button.decline {
     color: #fff;
     background: #000;
     margin: 0;
+}
+
+.panel-join-a-walk-list .status-update{
+    position: absolute;
+    top:20px;
+    right:0px;
+    width:40px;
+    height:40px;
+    font-family:'museo500';
+}
+
+.panel-join-a-walk-list .status-update > span{
+    display: block;
+    width:22px;
+    height:22px;
+    margin:0 0 5px 9px;
+}
+
+.panel-join-a-walk-list .status-update > h2{
+    display: block;
+    font-size: 9px;
+    text-align: center;
+    padding-top:8px;
+    color:#000;
+    letter-spacing: 0;
 }
 
 
@@ -1548,10 +1574,27 @@ h6 > img {
     float: right;
 }
 
-.panel-invite-list > button.active {
+.panel-invite-list > button.invited {
     color: #000;
     background: #ffd800;
 }
+
+.panel-invite-list > button.accepted {
+    color: #ffd800;
+    background: #fff;
+}
+
+.panel-invite-list > button.maybe {
+    color: #000;
+    background: #f1f1f1;
+}
+
+.panel-invite-list > button.declined {
+    color: #fff;
+    background: #000;
+}
+
+
 
 .panel-space{
     width: 100%;
