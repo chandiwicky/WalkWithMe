@@ -34,7 +34,7 @@
             <img ng-src="img/{{invities.profilePicture}}">
             <h2>{{invities.nickName}}</h2>
             <button ng-if="invities.isInvited == null" ng-click="invite('{{invities.id}}')">Invite</button>
-            <button ng-if="invities.isInvited != null" class="active">{{ invities.status == 1 ? 'Accepted' : (invities.status == 2 ? 'Maybe' : (invities.status == 3 ? 'Declined' : 'Invited') )  }}</button>
+            <button ng-if="invities.isInvited != null" class="accepted">{{ invities.status == 1 ? 'Accepted' : (invities.status == 2 ? 'Maybe' : (invities.status == 3 ? 'Declined' : 'Invited') )  }}</button>
         </div>
 
        
