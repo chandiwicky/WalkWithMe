@@ -1575,18 +1575,18 @@ h6 > img {
 }
 
 .panel-invite-list > button.invited {
+    color: #ffd800;
+    background: #055d86;
+}
+
+.panel-invite-list > button.accepted {
     color: #000;
     background: #ffd800;
 }
 
-.panel-invite-list > button.accepted {
-    color: #048cd4;
-    background: #fff;
-}
-
 .panel-invite-list > button.maybe {
     color: #000;
-    background: #f1f1f1;
+    background: #83caf0;
 }
 
 .panel-invite-list > button.declined {
