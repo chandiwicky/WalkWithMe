@@ -25,9 +25,9 @@
 					<span class="icon"><img src="img/icon_clock_48_blue.png"/></span>
 					<h1>{{invitation.dateOfWalk | moment:'hh:mm a'}}</h1>
 				</label>
-				<label class="status-update">
-					<span class="icon"><img src="img/icon-accepted.png"/></span>
-					<h2>Accepted</h2>
+				<label class="status-update" ng-if="invitation.status != 0" >
+					<span class="icon"><img ng-src="img/icon-{{ invitation.status == 1 ? 'accepted': 'maybe' }}.png"/></span>
+					<h2>{{ invitation.status == 1 ? 'Accepted': 'Maybe'}}</h2>
 				</label>
 
 <!--				<label class="status-update">

@@ -93,9 +93,11 @@ class Walk extends CI_Model {
     function getHistoryOfWalks ($userId){
         $historyQuery = $this->db->query( "SELECT DATE_FORMAT(userwalks.dateOfWalk, '%M') as `month`, COUNT(*) as `Count` FROM userwalks
                                           INNER JOIN walkparticipants on userwalks.id = walkparticipants.walkId 
-                                          WHERE walkparticipants.`participantId` = '".$userId."' AND 
-                                          userwalks.dateOfWalk < now() AND (MONTH(now()) - MONTH(userwalks.dateOfWalk) IN (0,1,2))
+                                          WHERE walkparticipants.`participantId` = '".$userId."' AND
+                                          walkparticipants.status > 10 AND                                            
+                                          (MONTH(now()) - MONTH(userwalks.dateOfWalk) IN (0,1,2))
                                           GROUP BY DATE_FORMAT(userwalks.dateOfWalk, '%M')");
+        //userwalks.dateOfWalk < now() AND 
         return $historyQuery->result();
     }
 
@@ -104,18 +106,10 @@ class Walk extends CI_Model {
                                           FROM userwalks
                                           INNER JOIN walkparticipants on userwalks.id = walkparticipants.walkId
                                           where walkparticipants.participantId = '".$userId."' AND
-                                          walkparticipants.status = 1 AND         
-                                          userwalks.dateOfWalk < now() AND
+                                          walkparticipants.status > 10 AND 
                                           (MONTH(now()) -  MONTH(userwalks.dateOfWalk))=".$month."
                                           ORDER BY userwalks.dateOfWalk");
-        log_message('error', "SELECT walkId , userwalks.dateOfWalk, walkparticipants.participantId,walkparticipants.status, userwalks.userId, If( userwalks.userId = 'CAB410D4-4A7F-B68B-ACA7-9123BD537E77', 0, 1) AS Type
-                                          FROM userwalks
-                                          INNER JOIN walkparticipants on userwalks.id = walkparticipants.walkId
-                                          where walkparticipants.participantId = '".$userId."' AND
-                                          walkparticipants.status = 1 AND         
-                                          userwalks.dateOfWalk < now() AND
-                                          (MONTH(now()) -  MONTH(userwalks.dateOfWalk))=".$month."
-                                          ORDER BY userwalks.dateOfWalk");
+      // userwalks.dateOfWalk < now() AND
         return $historyQuery->result();
     }
 

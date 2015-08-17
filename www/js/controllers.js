@@ -668,8 +668,8 @@ angular.module('WalkWithMeApp.controllers', ['angularMoment'])
 
                 // Play animation
                 //animation-name: messageAnimation;
-                $scope.aniStyle =  {'-webkit-animation-name': 'messageAnimation'};
-                $timeout( function(){ $scope.aniStyle ={} }, 10000);
+                //$scope.aniStyle =  {'-webkit-animation-name': 'messageAnimation'};
+                //$timeout( function(){ $scope.aniStyle ={} }, 10000);
 
                 var media = new Media("/android_asset/www/walkies/WALKIE_001.mp3",  null, function(e){ alert("err:"+JSON.stringify(e))}, mediaStatusCallback);
                 media.play();        
@@ -770,6 +770,15 @@ angular.module('WalkWithMeApp.controllers', ['angularMoment'])
                 }                
                 $scope.listUsers();
             });
+    }
+
+    $scope.getClass = function(status){
+        console.log("status : " + status);
+        if ( status == null ) return 'invite';
+        if ( status == 0 ) return 'invited';
+        if ( status == 1 ) return 'accepted';
+        if ( status == 2 ) return 'maybe';
+        if ( status == 3 ) return 'declined';        
     }
 
     $scope.deleteWalk = function(){
